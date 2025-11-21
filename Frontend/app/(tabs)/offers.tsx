@@ -32,7 +32,11 @@ export default function OffersScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 70 }}
+      >
         {/* Main Banner */}
         <View style={styles.mainBanner}>
           <View style={styles.bannerContent}>

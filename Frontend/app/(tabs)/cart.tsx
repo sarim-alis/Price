@@ -111,7 +111,7 @@ export default function CartScreen() {
                 </View>
               </View>
             )}
-            contentContainerStyle={styles.listContent}
+            contentContainerStyle={[styles.listContent, { paddingBottom: 70 }]}
           />
 
           {/* Voucher Section */}

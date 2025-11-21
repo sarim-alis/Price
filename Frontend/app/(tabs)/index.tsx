@@ -38,7 +38,11 @@ export default function ForYouScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 70 }}
+      >
         {/* Banner Carousel */}
         <View style={styles.bannerContainer}>
           <View style={styles.banner}>

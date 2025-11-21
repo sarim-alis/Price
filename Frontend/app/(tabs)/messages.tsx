@@ -37,6 +37,7 @@ export default function MessagesScreen() {
       <FlatList
         data={dummyMessages}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 70 }}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.messageItem}>
             <View style={styles.avatar}>
