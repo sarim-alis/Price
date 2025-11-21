@@ -4,39 +4,8 @@ import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-ic
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#FF6D00',
-        tabBarInactiveTintColor: '#999',
-        headerShown: false,
-        tabBarStyle: {
-          height: Platform.OS === 'ios' ? 88 : 65,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 8,
-          paddingTop: 8,
-          backgroundColor: '#fff',
-          borderTopWidth: 1,
-          borderTopColor: '#f0f0f0',
-          elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
-        },
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '500',
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'For You',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="flame" size={size} color={color} />
-          ),
-        }}
-      />
+    <Tabs screenOptions={{ tabBarActiveTintColor: '#FF6D00', tabBarInactiveTintColor: '#999', headerShown: false, tabBarStyle: { height: Platform.OS === 'ios' ? 88 : 65, paddingBottom: Platform.OS === 'ios' ? 25 : 8, paddingTop: 8, backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#f0f0f0', elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.1, shadowRadius: 3}, tabBarLabelStyle: { fontSize: 11, fontWeight: '500' }}}>
+      <Tabs.Screen name="index" options={{ title: 'For You', tabBarIcon: ({ color, size }) => (<Ionicons name="flame" size={size} color={color} />)}} />
       
       <Tabs.Screen
         name="messages"
@@ -106,73 +75,14 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  centerButton: {
-    position: 'relative',
-    marginTop: -20,
-  },
-  centerButtonInner: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#FF6D00',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#FF6D00',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    borderWidth: 4,
-    borderColor: '#fff',
-  },
-  centerButtonFocused: {
-    backgroundColor: '#FF8F00',
-    transform: [{ scale: 1.05 }],
-  },
-  offerBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 3,
-  },
-  offerTextContainer: {
-    position: 'absolute',
-    top: -8,
-    left: '50%',
-    transform: [{ translateX: -20 }],
-  },
-  offerText: {
-    backgroundColor: '#FF1744',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  badge: {
-    position: 'absolute',
-    top: -2,
-    right: -4,
-  },
-  badgeDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#FF1744',
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -6,
-  },
-  cartBadgeInner: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#FF1744',
-  },
+  centerButton: { position: 'relative', marginTop: -20 },
+  centerButtonInner:   { width: 60, height: 60, borderRadius: 30, backgroundColor: '#FF6D00', justifyContent: 'center', alignItems: 'center', elevation: 5, shadowColor: '#FF6D00', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, borderWidth: 4, borderColor: '#fff' },
+  centerButtonFocused: { backgroundColor: '#FF8F00', transform: [{ scale: 1.05 }]},
+  offerBadge: { position: 'absolute', top: -2, right: -2, backgroundColor: '#fff', borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center', elevation: 3 },
+  offerTextContainer: { position: 'absolute', top: -8, left: '50%', transform: [{ translateX: -20 }]},
+  offerText: { backgroundColor: '#FF1744', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8 },
+  badge: { position: 'absolute', top: -2, right: -4 },
+  badgeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#FF1744' },
+  cartBadge: { position: 'absolute', top: -4, right: -6 },
+  cartBadgeInner: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#FF1744' },
 });
