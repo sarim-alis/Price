@@ -158,5 +158,5 @@ app.post("/api/predictions", async (req, res) => {
 // Server.
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT} 🧝💗⭐`);
-  console.log(`Database: PostgreSQL via Prisma`);
+  console.log(`Database connected 🐬🔰👑`);
 });

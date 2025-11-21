@@ -1,28 +1,22 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Mobile {
   id          String   @id @default(cuid())
-  brand       String
-  model       String
+  brand       String   // in text
+  model       String   // in text
   ram         Int      // in GB
   storage     Int      // in GB
   screenSize  Float    // in inches
-  camera      Int      // main camera in MP
+  frontCamera Int      // main camera in MP
+  rearCamera  Int      // back camera in MP
   battery     Int      // in mAh
-  processor   String
+  processor   String   // in text
   price       Float    // actual price
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -33,15 +27,16 @@ model Mobile {
 
 model Prediction {
   id             String   @id @default(cuid())
-  brand          String
-  model          String
-  ram            Int
-  storage        Int
-  screenSize     Float
-  camera         Int
-  battery        Int
-  processor      String
-  predictedPrice Float
+  brand          String   // in text
+  model          String   // in text
+  ram            Int      // in GB
+  storage        Int      // in GB
+  screenSize     Float    // in inches
+  frontCamera    Int      // main camera in MP
+  rearCamera     Int      // back camera in MP
+  battery        Int      // in percentage
+  processor      String   // in text
+  predictedPrice Float    // in rupees
   createdAt      DateTime @default(now())
 
   @@index([createdAt])
