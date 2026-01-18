@@ -1,7 +1,8 @@
 // Imports.
 import express from "express";
 import dotenv from "dotenv";
-import { prisma } from "./prisma/client.js";
+import mongoose from "mongoose";
+import connectDB from "./src/config/db.js";
 dotenv.config();
 
 // App.
@@ -19,15 +20,23 @@ app.get("/", (req, res) => {
 // Health check.
 app.get("/health", async (req, res) => {
   try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({  status: "healthy",  database: "connected", timestamp: new Date().toISOString()});
+    const dbState = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+    if (dbState === "connected") {
+      res.json({ status: "healthy", database: dbState, timestamp: new Date().toISOString() });
+    } else {
+      res.status(503).json({ status: "unhealthy", database: dbState });
+    }
   } catch (error) {
     res.status(503).json({ status: "unhealthy", database: "disconnected", error: error.message });
   }
 });
 
 // Server.
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT} 🧝💗⭐`);
-  console.log(`Database connected 🐬🔰👑`);
-});
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT} 🧝💗⭐`);
+  });
+};
+
+startServer();
