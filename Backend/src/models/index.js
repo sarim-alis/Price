@@ -6,5 +6,6 @@ import Review from "./Review.js";
 import ReviewSummary from "./ReviewSummary.js";
 import PriceHistory from "./PriceHistory.js";
 import Chat from "./Chat.js";
+import Prediction from "./Prediction.js";
 
-export { Mobile, User, Order, Seller, Review, ReviewSummary, PriceHistory, Chat };
+export { Mobile, User, Order, Seller, Review, ReviewSummary, PriceHistory, Chat, Prediction };

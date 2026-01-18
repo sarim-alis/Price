@@ -14,7 +14,10 @@ const mobileSchema = new mongoose.Schema(
     processor:   { type: String, required: true },
     price:       { type: Number, required: true, index: true },
     stock:       { type: Number, default: 1 },
-    status:      { type: String, enum: ["active", "inactive", "sold"], default: "active", index: true }
+    status:      { type: String, enum: ["active", "inactive", "sold"], default: "active", index: true },
+    condition:   { type: String, enum: ["new", "used", "refurbished"], default: "used" },
+    location:    { type: String },
+    images:      [{ type: String }]
   }, { timestamps: true }
 );
 
