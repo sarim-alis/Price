@@ -6,22 +6,22 @@ import { isLoggedIn } from "./services/auth";
 
 // Protected Route.
 function ProtectedRoute({ children }) {
-  return isLoggedIn() ? children : <Navigate to="/login" replace />;
+  return isLoggedIn() ? children : <Navigate to="/admin/login" replace />;
 }
 
 // Public Route (redirect if logged in).
 function PublicRoute({ children }) {
-  return isLoggedIn() ? <Navigate to="/dashboard" replace /> : children;
+  return isLoggedIn() ? <Navigate to="/admin/dashboard" replace /> : children;
 }
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/admin/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

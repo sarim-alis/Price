@@ -22,7 +22,7 @@ export default function Register() {
     setError("");
     try {
       await register(name, email, password);
-      navigate("/dashboard");
+      navigate("/admin/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -114,7 +114,7 @@ export default function Register() {
           {/* Link */}
           <p className="text-center mt-6 text-text-secondary">
             Already have an account?{" "}
-            <Link to="/login" className="text-primary font-semibold hover:underline">
+            <Link to="/admin/login" className="text-primary font-semibold hover:underline">
               Login
             </Link>
           </p>
