@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,67 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { useRouter } from 'expo-router';
+import { isLoggedIn, getUser, logout } from '../../services/auth';
+import { colors } from '../../styles/colors';
 
 export default function AccountScreen() {
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const authenticated = await isLoggedIn();
+    setLoggedIn(authenticated);
+    if (authenticated) {
+      const userData = await getUser();
+      setUser(userData);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setLoggedIn(false);
+    setUser(null);
+  };
+
+  // Show login/register UI if not authenticated
+  if (!loggedIn) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <StatusBar style="dark" />
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Account</Text>
+        </View>
+        <View style={styles.authContainer}>
+          <View style={styles.authIconContainer}>
+            <Ionicons name="person-circle-outline" size={100} color={colors.primary} />
+          </View>
+          <Text style={styles.authTitle}>Welcome!</Text>
+          <Text style={styles.authSubtitle}>Sign in to access your account</Text>
+          
+          <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={() => router.push('/login')}
+          >
+            <Text style={styles.loginButtonText}>Sign In</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.registerButton}
+            onPress={() => router.push('/register')}
+          >
+            <Text style={styles.registerButtonText}>Create Account</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -34,14 +92,14 @@ export default function AccountScreen() {
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.profileAvatar}>
-            <Ionicons name="person" size={40} color="#FF6D00" />
+            <Ionicons name="person" size={40} color={colors.primary} />
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Guest User</Text>
-            <Text style={styles.profileEmail}>guest@example.com</Text>
+            <Text style={styles.profileName}>{user?.name || 'User'}</Text>
+            <Text style={styles.profileEmail}>{user?.email || ''}</Text>
           </View>
           <TouchableOpacity style={styles.editButton}>
-            <Ionicons name="create-outline" size={20} color="#FF6D00" />
+            <Ionicons name="create-outline" size={20} color={colors.primary} />
           </TouchableOpacity>
         </View>
 
@@ -176,7 +234,7 @@ export default function AccountScreen() {
         </View>
 
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={22} color="#FF1744" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
@@ -189,19 +247,7 @@ export default function AccountScreen() {
   );
 }
 
-function MenuItem({
-  icon,
-  label,
-  badge,
-  rightText,
-  onPress,
-}: {
-  icon: any;
-  label: string;
-  badge?: string;
-  rightText?: string;
-  onPress: () => void;
-}) {
+function MenuItem({ icon, label, badge, rightText, onPress }) {
   return (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={styles.menuLeft}>
@@ -389,5 +435,53 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 12,
     color: '#999',
+  },
+  authContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  authIconContainer: {
+    marginBottom: 24,
+  },
+  authTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  authSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  loginButton: {
+    width: '100%',
+    backgroundColor: '#7b5740',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  registerButton: {
+    width: '100%',
+    backgroundColor: '#fff',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#7b5740',
+  },
+  registerButtonText: {
+    color: '#7b5740',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
