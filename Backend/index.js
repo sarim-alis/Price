@@ -3,6 +3,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import connectDB from "./src/config/db.js";
+import userRoutes from "./src/routes/user/user.route.js";
+import mobileRoutes from "./src/routes/mobile/mobile.route.js";
 dotenv.config();
 
 // App.
@@ -16,6 +18,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Server running 🐶⭐💖");
 });
+app.use("/api/users", userRoutes);
+app.use("/api/mobiles", mobileRoutes);
 
 // Health check.
 app.get("/health", async (req, res) => {
