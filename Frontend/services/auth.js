@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://192.168.100.63:5000/api";
 
 // Login.
 export const login = async (email, password) => {
