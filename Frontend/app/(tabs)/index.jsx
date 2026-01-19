@@ -91,21 +91,21 @@ export default function ForYouScreen() {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788916/m7nsyey6omkboehfcie6.jpg"
               price="Rs.186"
               originalPrice="Rs.620"
               discount="-70%"
               sold="1.0k sold"
             />
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788978/fdpkoh6lbo6jntwduvdk.jpg"
               price="Rs.832"
               originalPrice="Rs.2,980"
               discount="-72%"
               sold="Only 1 left"
             />
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789237/n0fk2lyr64nvvrrh5z6q.jpg"
               price="Rs.430"
               originalPrice="Rs.1,000"
               discount="-57%"
@@ -117,26 +117,26 @@ export default function ForYouScreen() {
         {/* Daily Choice Section */}
         <View style={styles.dailyChoiceSection}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Daily Sasti CHOICE</Text>
+            <Text style={styles.sectionTitle}>Trending mobiles</Text>
             <TouchableOpacity>
               <Text style={styles.moreLink}>Shop Now | Free Gift! {'>'}</Text>
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789028/r1fubc2z7du0t5gnpm8o.jpg"
               price="Rs.292"
               badge="HOT"
               label="BUY 1 GET 1 FREE"
             />
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp"
               price="Rs.191"
               badge="HOT"
               label="SUPER PACK"
             />
             <ProductCard
-              image="https://via.placeholder.com/150"
+              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg"
               price="Rs.240"
               badge="HOT"
             />
@@ -174,7 +174,7 @@ function ProductCard({ image, price, originalPrice, discount, sold, badge, label
   return (
     <View style={styles.productCard}>
       <View style={styles.productImageContainer}>
-        <View style={styles.productImagePlaceholder} />
+        <Image source={{ uri: image }} style={styles.productImage} />
         {label && (
           <View style={styles.productLabel}>
             <Text style={styles.productLabelText}>{label}</Text>
@@ -403,11 +403,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     height: 140,
+    backgroundColor: colors.background,
   },
-  productImagePlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: colors.backgroundDark,
+  productImage: {
+    width: 140,
+    height: 140,
+    resizeMode: 'contain',
   },
   productLabel: {
     position: 'absolute',
@@ -481,6 +482,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: 16,
     marginTop: 12,
-    marginBottom: 20,
+    marginBottom: 60,
   },
 });

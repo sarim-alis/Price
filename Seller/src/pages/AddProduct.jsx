@@ -13,8 +13,9 @@ import {
   message,
   Divider,
 } from "antd";
-import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { UploadOutlined, ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { getToken } from "../services/auth";
+import { uploadImage } from "../services/cloudinary";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -23,6 +24,7 @@ export default function AddProduct() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
@@ -53,6 +55,20 @@ export default function AddProduct() {
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+  };
+
+  const customUpload = async ({ file, onSuccess, onError }) => {
+    setUploading(true);
+    try {
+      const result = await uploadImage(file);
+      onSuccess({ url: result.url, publicId: result.publicId });
+      message.success(`${file.name} uploaded successfully`);
+    } catch (error) {
+      onError(error);
+      message.error(`Upload failed: ${error.message}`);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -248,13 +264,14 @@ export default function AddProduct() {
               listType="picture-card"
               fileList={fileList}
               onChange={handleUploadChange}
-              beforeUpload={() => false}
+              customRequest={customUpload}
               maxCount={5}
+              disabled={uploading}
             >
               {fileList.length < 5 && (
                 <div>
-                  <UploadOutlined />
-                  <div className="mt-2">Upload</div>
+                  {uploading ? <LoadingOutlined /> : <UploadOutlined />}
+                  <div className="mt-2">{uploading ? 'Uploading...' : 'Upload'}</div>
                 </div>
               )}
             </Upload>
