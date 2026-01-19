@@ -30,7 +30,7 @@ export default function RegisterScreen() {
       await register(name, email, password);
       Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
       router.replace("/(tabs)");
-    } catch (error: any) {
+    } catch (error) {
       Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
     } finally {
       setLoading(false);
