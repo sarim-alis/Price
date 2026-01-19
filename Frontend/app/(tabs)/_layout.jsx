@@ -3,11 +3,13 @@ import { Tabs } from 'expo-router';
 import { Platform, StyleSheet, View } from 'react-native';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Layout.
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: colors.primary, tabBarInactiveTintColor: colors.textMuted, headerShown: false, tabBarStyle: { position: 'absolute', bottom: 0, left: 0, right: 0, height: Platform.OS === 'ios' ? 88 : 65, paddingBottom: Platform.OS === 'ios' ? 25 : 8, paddingTop: 8, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.borderLight, elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.1, shadowRadius: 3}, tabBarLabelStyle: { fontSize: 11, fontWeight: '500' }}}>
+     <Tabs screenOptions={{ tabBarActiveTintColor: colors.primary, tabBarInactiveTintColor: colors.textMuted, headerShown: false, tabBarStyle: { position: 'absolute', left: 0, right: 0, bottom: 0, height: Platform.OS === 'ios' ? 88 + insets.bottom : 65 + insets.bottom, paddingBottom: Platform.OS === 'ios' ? 25 + insets.bottom : 8 + insets.bottom, paddingTop: 8, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.borderLight, elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.1, shadowRadius: 3 }, tabBarLabelStyle: { fontSize: 11, fontWeight: '500' } }}>
       <Tabs.Screen name="index"    options={{ title: 'For You',  tabBarIcon: ({ color, size }) => (<Ionicons name="flame" size={size} color={color} />)}} />
       <Tabs.Screen name="messages" options={{ title: 'Messages', tabBarIcon: ({ color, size }) => (<View><Ionicons name="chatbubble-outline" size={size} color={color} /><View style={styles.badge}><View style={styles.badgeDot} /></View></View>)}} />
       <Tabs.Screen name="offers"   options={{ title: '',         tabBarIcon: ({ focused })     => (<View style={styles.centerButton}><View style={[styles.centerButtonInner, focused && styles.centerButtonFocused]}><MaterialCommunityIcons name="sale" size={24} color={colors.textLight} /><View style={styles.offerBadge}><MaterialIcons name="local-offer" size={10} color={colors.primary} /></View></View><View style={styles.offerTextContainer}><View style={styles.offerText}>Offer</View></View></View>)}} />
@@ -17,6 +19,7 @@ export default function TabLayout() {
   );
 }
 
+// Styling.
 const styles = StyleSheet.create({
   centerButton:        { position: 'relative', marginTop: -20 },
   centerButtonInner:   { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', elevation: 5, shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, borderWidth: 4, borderColor: colors.surface },
