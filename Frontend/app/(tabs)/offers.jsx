@@ -29,7 +29,7 @@ export default function OffersScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Special Offers</Text>
         <TouchableOpacity>
-          <Ionicons name="notifications-outline" size={24} color="#333" />
+          <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>
 

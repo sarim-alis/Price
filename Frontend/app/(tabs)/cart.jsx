@@ -50,13 +50,13 @@ export default function CartScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Cart ({cartItems.length})</Text>
         <TouchableOpacity>
-          <MaterialCommunityIcons name="delete-sweep-outline" size={24} color="#FF1744" />
+          <MaterialCommunityIcons name="delete-sweep-outline" size={24} color={colors.error} />
         </TouchableOpacity>
       </View>
 
       {cartItems.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="cart-outline" size={100} color="#ccc" />
+          <Ionicons name="cart-outline" size={100} color={colors.border} />
           <Text style={styles.emptyText}>Your cart is empty</Text>
           <Text style={styles.emptySubtext}>Add items to get started</Text>
           <TouchableOpacity style={styles.shopButton}>
@@ -92,21 +92,21 @@ export default function CartScreen() {
                         style={styles.quantityButton}
                         onPress={() => updateQuantity(item.id, false)}
                       >
-                        <Ionicons name="remove" size={16} color="#333" />
+                        <Ionicons name="remove" size={16} color={colors.textPrimary} />
                       </TouchableOpacity>
                       <Text style={styles.quantityText}>{item.quantity}</Text>
                       <TouchableOpacity
                         style={styles.quantityButton}
                         onPress={() => updateQuantity(item.id, true)}
                       >
-                        <Ionicons name="add" size={16} color="#333" />
+                        <Ionicons name="add" size={16} color={colors.textPrimary} />
                       </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                       style={styles.deleteButton}
                       onPress={() => removeItem(item.id)}
                     >
-                      <Ionicons name="trash-outline" size={20} color="#FF1744" />
+                      <Ionicons name="trash-outline" size={20} color={colors.error} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -117,9 +117,9 @@ export default function CartScreen() {
 
           {/* Voucher Section */}
           <View style={styles.voucherSection}>
-            <MaterialCommunityIcons name="ticket-percent" size={24} color="#FF6D00" />
+            <MaterialCommunityIcons name="ticket-percent" size={24} color={colors.primary} />
             <Text style={styles.voucherText}>Apply voucher code</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
           </View>
 
           {/* Price Summary */}
@@ -140,7 +140,7 @@ export default function CartScreen() {
             </View>
             {subtotal < 500 && (
               <View style={styles.freeShippingInfo}>
-                <Ionicons name="information-circle" size={16} color="#42A5F5" />
+                <Ionicons name="information-circle" size={16} color={colors.info} />
                 <Text style={styles.freeShippingText}>
                   Add Rs.{500 - subtotal} more for free shipping
                 </Text>
@@ -160,7 +160,7 @@ export default function CartScreen() {
             </View>
             <TouchableOpacity style={styles.checkoutButton}>
               <Text style={styles.checkoutButtonText}>Checkout</Text>
-              <Ionicons name="arrow-forward" size={20} color="#fff" />
+              <Ionicons name="arrow-forward" size={20} color={colors.textLight} />
             </TouchableOpacity>
           </View>
         </>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   freeShippingInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E3F2FD',
+    backgroundColor: colors.infoLight,
     padding: 10,
     borderRadius: 8,
     marginBottom: 12,

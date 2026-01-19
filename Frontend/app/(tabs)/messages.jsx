@@ -20,17 +20,17 @@ export default function MessagesScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Messages</Text>
         <TouchableOpacity>
-          <Ionicons name="ellipsis-vertical" size={24} color="#333" />
+          <Ionicons name="ellipsis-vertical" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <Ionicons name="search" size={20} color={colors.textMuted} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search messages..."
-          placeholderTextColor="#999"
+          placeholderTextColor={colors.textMuted}
         />
       </View>
 
@@ -42,7 +42,7 @@ export default function MessagesScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.messageItem}>
             <View style={styles.avatar}>
-              <Ionicons name="chatbubble" size={24} color="#FF6D00" />
+              <Ionicons name="chatbubble" size={24} color={colors.primary} />
             </View>
             <View style={styles.messageContent}>
               <View style={styles.messageHeader}>
@@ -64,7 +64,7 @@ export default function MessagesScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="mail-open-outline" size={80} color="#ccc" />
+            <Ionicons name="mail-open-outline" size={80} color={colors.border} />
             <Text style={styles.emptyText}>No messages yet</Text>
             <Text style={styles.emptySubtext}>Start a conversation with sellers</Text>
           </View>

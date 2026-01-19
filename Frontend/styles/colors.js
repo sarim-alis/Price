@@ -30,6 +30,10 @@ export const colors = {
   error: '#FF1744',
   warning: '#FFC107',
   info: '#2196F3',
+  infoLight: '#E3F2FD',
+  
+  // Shadow.
+  shadow: '#000000',
 };
 
 export default colors;
