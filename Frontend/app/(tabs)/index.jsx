@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -6,15 +5,12 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image,
-  Dimensions,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { colors } from '../../styles/colors';
-
-const { width } = Dimensions.get('window');
 
 export default function ForYouScreen() {
   return (
@@ -54,30 +50,20 @@ export default function ForYouScreen() {
 
         {/* Quick Access Icons */}
         <View style={styles.quickAccessContainer}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <QuickAccessItem icon="pricetag" label="Shop here" color="#FFA726" />
-            <QuickAccessItem icon="sparkles" label="Beauty" color="#EC407A" />
-            <QuickAccessItem icon="gift" label="Free Delivery" color="#26A69A" />
-            <QuickAccessItem icon="trophy" label="Free Freebie" color="#AB47BC" />
-            <QuickAccessItem icon="cart" label="DarazMall" color="#5C6BC0" />
-          </ScrollView>
-        </View>
-
-        {/* Vouchers Section */}
-        <View style={styles.voucherSection}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Claim Vouchers to Save More</Text>
-            <TouchableOpacity>
-              <Text style={styles.moreLink}>More Vouchers {'>'}</Text>
-            </TouchableOpacity>
+          <Text style={styles.sectionTitle}>Categories</Text>
           </View>
-          <View style={styles.voucherCards}>
-            <VoucherCard discount="4%OFF" subtitle="Voucher Max" color="#FF5252" />
-            <VoucherCard discount="Rs.200" subtitle="Free shipping" color="#42A5F5" />
-          </View>
-          <TouchableOpacity style={styles.collectAllButton}>
-            <Text style={styles.collectAllText}>Collect All</Text>
-          </TouchableOpacity>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <QuickAccessItem icon="pricetag"        label="Apple"   color="#FFA726" />
+            <QuickAccessItem icon="sparkles"        label="Samsung" color="#EC407A" />
+            <QuickAccessItem icon="gift"            label="Xiaomi"  color="#26A69A" />
+            <QuickAccessItem icon="trophy"          label="Realme"  color="#AB47BC" />
+            <QuickAccessItem icon="cart"            label="Oppo"    color="#5C6BC0" />
+            <QuickAccessItem icon="phone-portrait"  label="Vivo"    color="#29B6F6" />
+            <QuickAccessItem icon="headset"         label="OnePlus" color="#66BB6A" />
+            <QuickAccessItem icon="laptop"          label="Huawei"  color="#FF7043" />
+            <QuickAccessItem icon="game-controller" label="Google"  color="#8D6E63" />
+          </ScrollView>
         </View>
 
         {/* Flash Sale Section */}
@@ -320,6 +306,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+    marginLeft: 12,
   },
   sectionTitle: {
     fontSize: 16,
