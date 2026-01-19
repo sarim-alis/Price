@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { colors } from '../../styles/colors';
 
 const dummyCartItems = [
   { id: '1', name: 'Wireless Earbuds Pro 6', price: 832, quantity: 1, originalPrice: 2980, image: '' },
@@ -19,7 +20,7 @@ const dummyCartItems = [
 export default function CartScreen() {
   const [cartItems, setCartItems] = useState(dummyCartItems);
 
-  const updateQuantity = (id: string, increment: boolean) => {
+  const updateQuantity = (id, increment) => {
     setCartItems(items =>
       items.map(item =>
         item.id === id
@@ -29,7 +30,7 @@ export default function CartScreen() {
     );
   };
 
-  const removeItem = (id: string) => {
+  const removeItem = (id) => {
     setCartItems(items => items.filter(item => item.id !== id));
   };
 
@@ -171,7 +172,7 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -179,21 +180,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   listContent: {
     paddingBottom: 16,
   },
   cartItem: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 12,
     marginTop: 12,
     borderRadius: 12,
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   itemImage: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.backgroundDark,
     borderRadius: 8,
   },
   itemDetails: {
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 6,
   },
   priceRow: {
@@ -232,12 +233,12 @@ const styles = StyleSheet.create({
   itemPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FF6D00',
+    color: colors.primary,
     marginRight: 8,
   },
   originalPrice: {
     fontSize: 14,
-    color: '#999',
+    color: colors.textMuted,
     textDecorationLine: 'line-through',
   },
   savingsRow: {
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   },
   savingsText: {
     fontSize: 12,
-    color: '#4CAF50',
+    color: colors.success,
     fontWeight: '600',
   },
   itemActions: {
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 8,
   },
   quantityButton: {
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   quantityText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
     paddingHorizontal: 16,
   },
   deleteButton: {
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
   voucherSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 12,
     marginTop: 12,
     padding: 16,
@@ -286,10 +287,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: '#333',
+    color: colors.textPrimary,
   },
   summarySection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 12,
     marginTop: 12,
     padding: 16,
@@ -302,15 +303,15 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 15,
-    color: '#666',
+    color: colors.textSecondary,
   },
   summaryValue: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   discountValue: {
-    color: '#4CAF50',
+    color: colors.success,
   },
   freeShippingInfo: {
     flexDirection: 'row',
@@ -323,33 +324,33 @@ const styles = StyleSheet.create({
   },
   freeShippingText: {
     fontSize: 13,
-    color: '#42A5F5',
+    color: colors.info,
     flex: 1,
   },
   totalRow: {
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: colors.borderLight,
     paddingTop: 12,
     marginBottom: 0,
   },
   totalLabel: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   totalValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6D00',
+    color: colors.primary,
   },
   checkoutSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: colors.borderLight,
   },
   checkoutLeft: {
     flex: 1,
@@ -357,24 +358,24 @@ const styles = StyleSheet.create({
   checkoutTotal: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   checkoutSavings: {
     fontSize: 13,
-    color: '#4CAF50',
+    color: colors.success,
     marginTop: 2,
   },
   checkoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 10,
     gap: 8,
   },
   checkoutButtonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -387,23 +388,23 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 22,
     fontWeight: '600',
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 20,
   },
   emptySubtext: {
     fontSize: 15,
-    color: '#999',
+    color: colors.textMuted,
     marginTop: 8,
   },
   shopButton: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 32,
     paddingVertical: 14,
     borderRadius: 10,
     marginTop: 24,
   },
   shopButtonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: '600',
   },

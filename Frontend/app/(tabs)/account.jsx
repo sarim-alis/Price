@@ -270,7 +270,7 @@ function MenuItem({ icon, label, badge, rightText, onPress }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -278,14 +278,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   content: {
     flex: 1,
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     margin: 16,
     padding: 16,
     borderRadius: 12,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#FFF3E0',
+    backgroundColor: colors.backgroundDark,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -318,12 +318,12 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   profileEmail: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   editButton: {
     padding: 8,
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -349,23 +349,23 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 4,
   },
   section: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginBottom: 12,
     paddingVertical: 8,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5',
+    borderBottomColor: colors.background,
   },
   menuLeft: {
     flexDirection: 'row',
@@ -385,18 +385,18 @@ const styles = StyleSheet.create({
   },
   menuLabel: {
     fontSize: 15,
-    color: '#333',
+    color: colors.textPrimary,
     marginLeft: 12,
   },
   badge: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
     marginLeft: 8,
   },
   badgeText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 11,
     fontWeight: 'bold',
   },
@@ -406,14 +406,14 @@ const styles = StyleSheet.create({
   },
   rightText: {
     fontSize: 14,
-    color: '#999',
+    color: colors.textMuted,
     marginRight: 4,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 24,
@@ -421,12 +421,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
     borderWidth: 1,
-    borderColor: '#FF1744',
+    borderColor: colors.error,
   },
   logoutText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FF1744',
+    color: colors.error,
   },
   footer: {
     alignItems: 'center',
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textMuted,
   },
   authContainer: {
     flex: 1,
@@ -448,39 +448,39 @@ const styles = StyleSheet.create({
   authTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   authSubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: 32,
     textAlign: 'center',
   },
   loginButton: {
     width: '100%',
-    backgroundColor: '#7b5740',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     marginBottom: 12,
   },
   loginButtonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: '600',
   },
   registerButton: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#7b5740',
+    borderColor: colors.primary,
   },
   registerButtonText: {
-    color: '#7b5740',
+    color: colors.primary,
     fontSize: 16,
     fontWeight: '600',
   },

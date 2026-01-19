@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { colors } from '../../styles/colors';
 
 const dummyMessages = [
   { id: '1', name: 'Customer Support', lastMessage: 'How can we help you today?', time: '2:30 PM', unread: 2 },
@@ -76,7 +77,7 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -85,17 +86,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
     marginHorizontal: 16,
     marginVertical: 12,
     paddingHorizontal: 12,
@@ -108,19 +109,19 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: '#333',
+    color: colors.textPrimary,
   },
   messageItem: {
     flexDirection: 'row',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   avatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#FFF3E0',
+    backgroundColor: colors.backgroundDark,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -136,11 +137,11 @@ const styles = StyleSheet.create({
   messageName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   messageTime: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textMuted,
   },
   messageFooter: {
     flexDirection: 'row',
@@ -150,10 +151,10 @@ const styles = StyleSheet.create({
   messageText: {
     flex: 1,
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   unreadBadge: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     width: 20,
     height: 20,
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   unreadText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 11,
     fontWeight: 'bold',
   },
@@ -175,12 +176,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 16,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#999',
+    color: colors.textMuted,
     marginTop: 8,
   },
 });

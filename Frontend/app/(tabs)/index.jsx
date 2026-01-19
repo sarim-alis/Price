@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { colors } from '../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -161,7 +162,7 @@ export default function ForYouScreen() {
 }
 
 // Quick Access Item Component
-function QuickAccessItem({ icon, label, color }: { icon: any; label: string; color: string }) {
+function QuickAccessItem({ icon, label, color }) {
   return (
     <TouchableOpacity style={styles.quickAccessItem}>
       <View style={[styles.quickAccessIcon, { backgroundColor: color }]}>
@@ -173,7 +174,7 @@ function QuickAccessItem({ icon, label, color }: { icon: any; label: string; col
 }
 
 // Voucher Card Component
-function VoucherCard({ discount, subtitle, color }: { discount: string; subtitle: string; color: string }) {
+function VoucherCard({ discount, subtitle, color }) {
   return (
     <View style={[styles.voucherCard, { borderLeftColor: color }]}>
       <Text style={[styles.voucherDiscount, { color }]}>{discount}</Text>
@@ -183,23 +184,7 @@ function VoucherCard({ discount, subtitle, color }: { discount: string; subtitle
 }
 
 // Product Card Component
-function ProductCard({
-  image,
-  price,
-  originalPrice,
-  discount,
-  sold,
-  badge,
-  label,
-}: {
-  image: string;
-  price: string;
-  originalPrice?: string;
-  discount?: string;
-  sold?: string;
-  badge?: string;
-  label?: string;
-}) {
+function ProductCard({ image, price, originalPrice, discount, sold, badge, label }) {
   return (
     <View style={styles.productCard}>
       <View style={styles.productImageContainer}>
@@ -234,23 +219,23 @@ function ProductCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 8,
     gap: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   searchContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 42,
@@ -261,19 +246,19 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: '#333',
+    color: colors.textPrimary,
   },
   cameraButton: {
     padding: 4,
   },
   searchButton: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
   },
   searchButtonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -285,25 +270,25 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   banner: {
-    backgroundColor: '#D32F2F',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 20,
     height: 140,
     justifyContent: 'center',
   },
   bannerText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 32,
     fontWeight: 'bold',
   },
   bannerSubtext: {
-    color: '#FFEB3B',
+    color: colors.primaryLight,
     fontSize: 18,
     fontWeight: '600',
     marginTop: 4,
   },
   quickAccessContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     paddingVertical: 16,
     marginTop: 12,
   },
@@ -322,11 +307,11 @@ const styles = StyleSheet.create({
   },
   quickAccessLabel: {
     fontSize: 11,
-    color: '#333',
+    color: colors.textPrimary,
     textAlign: 'center',
   },
   voucherSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     marginTop: 12,
   },
@@ -339,11 +324,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   moreLink: {
     fontSize: 12,
-    color: '#FF6D00',
+    color: colors.primary,
   },
   voucherCards: {
     flexDirection: 'row',
@@ -352,12 +337,12 @@ const styles = StyleSheet.create({
   },
   voucherCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 8,
     padding: 12,
     borderLeftWidth: 4,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   voucherDiscount: {
     fontSize: 18,
@@ -365,22 +350,22 @@ const styles = StyleSheet.create({
   },
   voucherSubtitle: {
     fontSize: 12,
-    color: '#42A5F5',
+    color: colors.info,
     marginTop: 4,
   },
   collectAllButton: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   collectAllText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 14,
     fontWeight: '600',
   },
   flashSaleSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     marginTop: 12,
   },
@@ -392,25 +377,25 @@ const styles = StyleSheet.create({
   flashSaleTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   countdown: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   countdownBox: {
-    backgroundColor: '#FF1744',
+    backgroundColor: colors.error,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
   },
   countdownText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 12,
     fontWeight: 'bold',
   },
   countdownSeparator: {
-    color: '#FF1744',
+    color: colors.error,
     fontSize: 12,
     fontWeight: 'bold',
     marginHorizontal: 2,
@@ -421,11 +406,11 @@ const styles = StyleSheet.create({
   productCard: {
     width: 140,
     marginRight: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 8,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   productImageContainer: {
     position: 'relative',
@@ -435,7 +420,7 @@ const styles = StyleSheet.create({
   productImagePlaceholder: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.backgroundDark,
   },
   productLabel: {
     position: 'absolute',
@@ -447,7 +432,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   productLabelText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 9,
     fontWeight: 'bold',
   },
@@ -461,7 +446,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   soldText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 11,
     fontWeight: '600',
   },
@@ -476,10 +461,10 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FF6D00',
+    color: colors.primary,
   },
   hotBadge: {
-    backgroundColor: '#FFD700',
+    backgroundColor: colors.warning,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -487,7 +472,7 @@ const styles = StyleSheet.create({
   hotBadgeText: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   discountRow: {
     flexDirection: 'row',
@@ -496,17 +481,17 @@ const styles = StyleSheet.create({
   },
   originalPrice: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textMuted,
     textDecorationLine: 'line-through',
     marginRight: 6,
   },
   discountBadge: {
     fontSize: 11,
-    color: '#FF1744',
+    color: colors.error,
     fontWeight: '600',
   },
   dailyChoiceSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     marginTop: 12,
     marginBottom: 20,

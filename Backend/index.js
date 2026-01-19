@@ -21,9 +21,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes.
-app.get("/", (req, res) => {
-  res.send("Server running 🐶⭐💖");
-});
+app.get("/", (req, res) => { res.send("Server running 🐶⭐💖")});
 app.use("/api/users", userRoutes);
 app.use("/api/mobiles", mobileRoutes);
 

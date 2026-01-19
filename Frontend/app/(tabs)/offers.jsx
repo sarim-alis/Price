@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { colors } from '../../styles/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -102,7 +103,7 @@ export default function OffersScreen() {
   );
 }
 
-function CategoryCard({ icon, label, color }: { icon: any; label: string; color: string }) {
+function CategoryCard({ icon, label, color }) {
   return (
     <TouchableOpacity style={styles.categoryCard}>
       <View style={[styles.categoryIcon, { backgroundColor: color }]}>
@@ -113,7 +114,7 @@ function CategoryCard({ icon, label, color }: { icon: any; label: string; color:
   );
 }
 
-function VoucherItem({ code, discount, min }: { code: string; discount: string; min: string }) {
+function VoucherItem({ code, discount, min }) {
   return (
     <TouchableOpacity style={styles.voucherItem}>
       <View style={styles.voucherLeft}>
@@ -134,7 +135,7 @@ function VoucherItem({ code, discount, min }: { code: string; discount: string; 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -142,21 +143,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   content: {
     flex: 1,
   },
   mainBanner: {
     height: 220,
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     margin: 16,
     borderRadius: 16,
     overflow: 'hidden',
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   countdownSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginBottom: 16,
     padding: 16,
@@ -203,14 +204,14 @@ const styles = StyleSheet.create({
   countdownTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   offersGrid: {
     paddingHorizontal: 16,
     marginBottom: 16,
   },
   offerCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#FFF3E0',
+    backgroundColor: colors.backgroundDark,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -232,11 +233,11 @@ const styles = StyleSheet.create({
   offerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   discountBadge: {
-    backgroundColor: '#FF1744',
+    backgroundColor: colors.error,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   discountText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -256,29 +257,29 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   offerFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: colors.borderLight,
     paddingTop: 8,
   },
   itemsText: {
     fontSize: 14,
-    color: '#999',
+    color: colors.textMuted,
   },
   categoriesSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 16,
   },
   categoriesGrid: {
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     width: (width - 60) / 2,
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.background,
     borderRadius: 12,
   },
   categoryIcon: {
@@ -304,10 +305,10 @@ const styles = StyleSheet.create({
   categoryLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   voucherSection: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     padding: 16,
     marginBottom: 20,
   },
@@ -315,11 +316,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.background,
     borderRadius: 12,
     marginBottom: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#FF6D00',
+    borderLeftColor: colors.primary,
   },
   voucherLeft: {
     marginRight: 12,
@@ -330,27 +331,27 @@ const styles = StyleSheet.create({
   voucherCode: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
   },
   voucherDiscount: {
     fontSize: 14,
-    color: '#FF6D00',
+    color: colors.primary,
     fontWeight: '600',
     marginTop: 2,
   },
   voucherMin: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textMuted,
     marginTop: 2,
   },
   collectButton: {
-    backgroundColor: '#FF6D00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
   },
   collectButtonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 12,
     fontWeight: '600',
   },
