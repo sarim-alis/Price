@@ -294,8 +294,9 @@ const styles = StyleSheet.create({
   },
   quickAccessItem: {
     alignItems: 'center',
-    marginHorizontal: 12,
-    width: 70,
+    marginHorizontal: 10,
+    width: 78,
+    paddingHorizontal: 2,
   },
   quickAccessIcon: {
     width: 60,
@@ -309,6 +310,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.textPrimary,
     textAlign: 'center',
+    paddingHorizontal: 2,
   },
   voucherSection: {
     backgroundColor: colors.surface,
