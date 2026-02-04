@@ -10,9 +10,23 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { useRouter } from 'expo-router';
 import { colors } from '../../styles/colors';
 
+const BRAND_CATEGORIES = [
+  { icon: 'pricetag', label: 'Apple', brand: 'apple', color: '#FFA726' },
+  { icon: 'sparkles', label: 'Samsung', brand: 'samsung', color: '#EC407A' },
+  { icon: 'gift', label: 'Xiaomi', brand: 'xiaomi', color: '#26A69A' },
+  { icon: 'trophy', label: 'Realme', brand: 'realme', color: '#AB47BC' },
+  { icon: 'cart', label: 'Oppo', brand: 'oppo', color: '#5C6BC0' },
+  { icon: 'phone-portrait', label: 'Vivo', brand: 'vivo', color: '#29B6F6' },
+  { icon: 'headset', label: 'OnePlus', brand: 'oneplus', color: '#66BB6A' },
+  { icon: 'laptop', label: 'Huawei', brand: 'huawei', color: '#FF7043' },
+  { icon: 'game-controller', label: 'Google', brand: 'google', color: '#8D6E63' },
+];
+
 export default function ForYouScreen() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="dark" />
@@ -54,15 +68,15 @@ export default function ForYouScreen() {
           <Text style={styles.sectionTitle}>Categories</Text>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <QuickAccessItem icon="pricetag"        label="Apple"   color="#FFA726" />
-            <QuickAccessItem icon="sparkles"        label="Samsung" color="#EC407A" />
-            <QuickAccessItem icon="gift"            label="Xiaomi"  color="#26A69A" />
-            <QuickAccessItem icon="trophy"          label="Realme"  color="#AB47BC" />
-            <QuickAccessItem icon="cart"            label="Oppo"    color="#5C6BC0" />
-            <QuickAccessItem icon="phone-portrait"  label="Vivo"    color="#29B6F6" />
-            <QuickAccessItem icon="headset"         label="OnePlus" color="#66BB6A" />
-            <QuickAccessItem icon="laptop"          label="Huawei"  color="#FF7043" />
-            <QuickAccessItem icon="game-controller" label="Google"  color="#8D6E63" />
+            {BRAND_CATEGORIES.map((item) => (
+              <QuickAccessItem
+                key={item.brand}
+                icon={item.icon}
+                label={item.label}
+                color={item.color}
+                onPress={() => router.push({ pathname: '/mobiles', params: { brand: item.brand, category: item.label } })}
+              />
+            ))}
           </ScrollView>
         </View>
 
@@ -148,9 +162,9 @@ export default function ForYouScreen() {
 }
 
 // Quick Access Item Component
-function QuickAccessItem({ icon, label, color }) {
+function QuickAccessItem({ icon, label, color, onPress }) {
   return (
-    <TouchableOpacity style={styles.quickAccessItem}>
+    <TouchableOpacity style={styles.quickAccessItem} onPress={onPress} activeOpacity={0.8}>
       <View style={[styles.quickAccessIcon, { backgroundColor: color }]}>
         <Ionicons name={icon} size={24} color="#fff" />
       </View>
