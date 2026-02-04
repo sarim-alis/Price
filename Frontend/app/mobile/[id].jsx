@@ -124,6 +124,37 @@ export default function MobileDetailScreen() {
           <Text style={styles.model}>{mobile.model}</Text>
         </View>
 
+        {/* Price Prediction */}
+        {mobile.prediction && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Price Prediction (ARIMA)</Text>
+            <View style={styles.predictionCard}>
+              <View style={styles.predictionRow}>
+                <Text style={styles.predictionLabel}>Current</Text>
+                <Text style={styles.predictionValue}>Rs. {mobile.price?.toLocaleString()}</Text>
+              </View>
+              <View style={styles.predictionRow}>
+                <Text style={styles.predictionLabel}>Predicted</Text>
+                <Text style={[styles.predictionValue, styles.predictionHighlight]}>
+                  Rs. {mobile.prediction.predictedPrice?.toLocaleString()}
+                </Text>
+              </View>
+              <View style={styles.predictionRow}>
+                <Text style={styles.predictionLabel}>Trend</Text>
+                <View style={[styles.trendBadge, mobile.prediction.trend === "up" ? styles.trendUp : styles.trendDown]}>
+                  <Ionicons
+                    name={mobile.prediction.trend === "up" ? "trending-up" : "trending-down"}
+                    size={16}
+                    color={colors.textLight}
+                  />
+                  <Text style={styles.trendText}>{mobile.prediction.trend === "up" ? "Up" : "Down"}</Text>
+                </View>
+              </View>
+              <Text style={styles.predictionNote}>Confidence: {mobile.prediction.confidence}% • {mobile.prediction.note || "Dummy forecast"}</Text>
+            </View>
+          </View>
+        )}
+
         {/* Device specs */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Specifications</Text>
@@ -282,6 +313,59 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.textPrimary,
     marginBottom: 12,
+  },
+  predictionCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+  predictionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  predictionLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  predictionValue: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+  predictionHighlight: {
+    color: colors.primary,
+    fontSize: 18,
+  },
+  trendBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    gap: 4,
+  },
+  trendUp: {
+    backgroundColor: colors.success,
+  },
+  trendDown: {
+    backgroundColor: colors.error,
+  },
+  trendText: {
+    color: colors.textLight,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  predictionNote: {
+    fontSize: 11,
+    color: colors.textMuted,
+    marginTop: 8,
+    fontStyle: "italic",
   },
   specsCard: {
     backgroundColor: colors.surface,

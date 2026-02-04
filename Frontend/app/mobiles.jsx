@@ -127,6 +127,12 @@ export default function MobilesScreen() {
                   <Text style={styles.cardBrand}>{mobile.brand}</Text>
                   <Text style={styles.cardModel} numberOfLines={2}>{mobile.model}</Text>
                   <Text style={styles.cardPrice}>Rs. {mobile.price?.toLocaleString()}</Text>
+                  {mobile.prediction && (
+                    <View style={styles.predictionRow}>
+                      <Text style={styles.predictionLabel}>Pred: Rs. {mobile.prediction.predictedPrice?.toLocaleString()}</Text>
+                      <View style={[styles.trendDot, mobile.prediction.trend === "up" ? styles.trendUp : styles.trendDown]} />
+                    </View>
+                  )}
                 </View>
               </TouchableOpacity>
             ))}
@@ -272,5 +278,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.textPrimary,
     marginTop: 6,
+  },
+  predictionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    gap: 4,
+  },
+  predictionLabel: {
+    fontSize: 11,
+    color: colors.textSecondary,
+  },
+  trendDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  trendUp: {
+    backgroundColor: colors.success,
+  },
+  trendDown: {
+    backgroundColor: colors.error,
   },
 });
