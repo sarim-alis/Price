@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   categoryCard: {
-    width: (width - 60) / 2,
+    width: (width - 16 * 2 - 12) / 2,
     alignItems: 'center',
     padding: 16,
     backgroundColor: colors.background,
@@ -306,6 +306,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: colors.textPrimary,
+    textAlign: 'center',
+    paddingHorizontal: 4,
   },
   voucherSection: {
     backgroundColor: colors.surface,

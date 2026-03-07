@@ -1,5 +1,14 @@
 import Mobile from "../../models/Mobile.js";
 
+// Helper: compute dummy prediction (replace with ARIMA/LSTM later).
+const computeDummyPrediction = (mobile) => {
+  const currentPrice = mobile.price;
+  const seed = mobile._id.toString().slice(-6).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const variation = 0.92 + (seed % 17) / 100;
+  const predictedPrice = Math.round(currentPrice * variation);
+  return { predictedPrice, trend: predictedPrice >= currentPrice ? "up" : "down", confidence: 65 + (seed % 25) };
+};
+
 // Create mobile.
 export const createMobile = async (req, res) => {
   try {
@@ -30,9 +39,14 @@ export const getAllMobiles = async (req, res) => {
       .populate("sellerId", "name email phone")
       .skip((page - 1) * limit)
       .limit(Number(limit))
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
     const total = await Mobile.countDocuments(filter);
-    res.json({ mobiles, total, page: Number(page), pages: Math.ceil(total / limit) });
+    const mobilesWithPred = mobiles.map((m) => {
+      const pred = computeDummyPrediction(m);
+      return { ...m, prediction: { ...pred, algorithm: "arima" } };
+    });
+    res.json({ mobiles: mobilesWithPred, total, page: Number(page), pages: Math.ceil(total / limit) });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -45,7 +59,10 @@ export const getMobileById = async (req, res) => {
     if (!mobile) {
       return res.status(404).json({ message: "Mobile not found" });
     }
-    res.json(mobile);
+    const doc = mobile.toObject();
+    const pred = computeDummyPrediction(mobile);
+    doc.prediction = { ...pred, algorithm: "arima", note: "Dummy. Implement ARIMA for real forecasts." };
+    res.json(doc);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -91,6 +108,28 @@ export const deleteMobile = async (req, res) => {
     }
     await Mobile.findByIdAndDelete(req.params.id);
     res.json({ message: "Mobile deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get price prediction (dummy for now - replace with ARIMA/LSTM later).
+export const getPricePrediction = async (req, res) => {
+  try {
+    const mobile = await Mobile.findById(req.params.id);
+    if (!mobile) {
+      return res.status(404).json({ message: "Mobile not found" });
+    }
+    const pred = computeDummyPrediction(mobile);
+    res.json({
+      mobileId: mobile._id,
+      currentPrice: mobile.price,
+      predictedPrice: pred.predictedPrice,
+      trend: pred.trend,
+      confidence: pred.confidence,
+      algorithm: "arima",
+      note: "Dummy prediction. Implement ARIMA model for real forecasts.",
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
