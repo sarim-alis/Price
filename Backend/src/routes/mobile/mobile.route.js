@@ -17,3 +17,4 @@ router.put("/:id", auth, isSeller, updateMobile);
 router.delete("/:id", auth, isSeller, deleteMobile);
 
 export default router;
+
