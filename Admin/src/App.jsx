@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Layout from "./Components/Layout/Layout";
 import { isLoggedIn } from "./services/auth";
 
 function ProtectedRoute({ children }) {
@@ -18,7 +19,7 @@ function App() {
         <Route path="/" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/admin/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
