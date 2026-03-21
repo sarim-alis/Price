@@ -4,12 +4,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { isLoggedIn } from "./services/auth";
 
-// Protected Route.
 function ProtectedRoute({ children }) {
   return isLoggedIn() ? children : <Navigate to="/admin/login" replace />;
 }
-
-// Public Route (redirect if logged in).
 function PublicRoute({ children }) {
   return isLoggedIn() ? <Navigate to="/admin/dashboard" replace /> : children;
 }
