@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { login } from "../services/auth";
 
-// Login.
+// Frontend.
 export default function Login() {
   // States.
   const [email, setEmail] = useState("");

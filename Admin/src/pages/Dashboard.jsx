@@ -1,9 +1,12 @@
+// Imports.
 import { useNavigate } from "react-router-dom";
 import { Users, Smartphone, ShoppingCart, TrendingUp, LogOut, BarChart3, Settings, Bell } from "lucide-react";
 import { logout, getUser } from "../services/auth";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+// Frontend.
 export default function Dashboard() {
+  // States.
   const navigate = useNavigate();
   const user = getUser();
 
@@ -12,6 +15,7 @@ export default function Dashboard() {
     navigate("/admin/login");
   };
 
+  // Stats.
   const stats = [
     { title: "Total Users", value: "1,234", icon: Users, color: "bg-info" },
     { title: "Total Mobiles", value: "567", icon: Smartphone, color: "bg-success" },
@@ -45,10 +49,7 @@ export default function Dashboard() {
               <Bell className="w-5 h-5" />
             </button>
             <div className="h-6 w-px bg-border" />
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 text-error hover:bg-error/10 rounded-lg transition-colors"
-            >
+            <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 text-error hover:bg-error/10 rounded-lg transition-colors">
               <span className="text-sm font-medium">Logout</span>
             </button>
           </div>
@@ -103,16 +104,7 @@ export default function Dashboard() {
             <h3 className="text-lg font-semibold text-text-primary mb-4">Distribution</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
+                <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={100} fill="#8884d8" dataKey="value">
                   {pieData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

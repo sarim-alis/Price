@@ -1,7 +1,16 @@
 // Imports.
+import { useState } from "react";
 import { Users, Mail, Phone, Package, ShoppingCart, TrendingUp } from "lucide-react";
+import { Pagination, ConfigProvider } from "antd";
+import { colors } from "../styles/colors";
 
+// Frontend.
 export default function Seller() {
+  // States.
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
+  // Sellers.
   const sellers = [
     { id: 1, name: "Ahmed Khan", email: "ahmed.khan@email.com", phone: "+92 300 1234567", products: 45, sales: 234, revenue: "₨ 125K", rating: 4.8, status: "Active" },
     { id: 2, name: "Sara Ali", email: "sara.ali@email.com", phone: "+92 301 2345678", products: 32, sales: 189, revenue: "₨ 98K", rating: 4.6, status: "Active" },
@@ -14,22 +23,27 @@ export default function Seller() {
     { id: 9, name: "Bilal Hussain", email: "bilal.hussain@email.com", phone: "+92 308 9012345", products: 29, sales: 164, revenue: "₨ 89K", rating: 4.5, status: "Inactive" },
   ];
 
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentSellers = sellers.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2">
-          <Users className="w-7 h-7" />
-          All Sellers
-        </h2>
+        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2"><Users className="w-7 h-7" />All Sellers</h2>
         <p className="text-text-secondary mt-1">Manage and monitor all registered sellers</p>
       </div>
 
-      {/* Sellers Grid - 3x3 */}
+      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sellers.map((seller) => (
+        {currentSellers.map((seller) => (
           <div key={seller.id} className="bg-surface rounded-xl border border-border p-6 hover:shadow-lg transition-shadow">
-            {/* Seller Header */}
+            {/* Card */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">
@@ -85,6 +99,13 @@ export default function Seller() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <ConfigProvider theme={{token: { colorPrimary: colors.primary, colorPrimaryHover: colors.primaryDark }}}>
+          <Pagination current={currentPage} total={sellers.length} pageSize={pageSize} onChange={handlePageChange} showSizeChanger={false} showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} sellers`} />
+        </ConfigProvider>
       </div>
     </div>
   );
