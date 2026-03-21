@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Users, Smartphone, ShoppingCart, TrendingUp, LogOut, BarChart3, Settings, Bell } from "lucide-react";
 import { logout, getUser } from "../services/auth";
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -16,6 +17,21 @@ export default function Dashboard() {
     { title: "Total Mobiles", value: "567", icon: Smartphone, color: "bg-success" },
     { title: "Total Orders", value: "890", icon: ShoppingCart, color: "bg-warning" },
     { title: "Revenue", value: "₨ 1.2M", icon: TrendingUp, color: "bg-primary" },
+  ];
+
+  const monthlyData = [
+    { month: 'Jan', users: 400, mobiles: 240, orders: 340, revenue: 120000 },
+    { month: 'Feb', users: 600, mobiles: 300, orders: 450, revenue: 180000 },
+    { month: 'Mar', users: 800, mobiles: 400, orders: 600, revenue: 250000 },
+    { month: 'Apr', users: 1000, mobiles: 450, orders: 750, revenue: 320000 },
+    { month: 'May', users: 1100, mobiles: 500, orders: 800, revenue: 400000 },
+    { month: 'Jun', users: 1234, mobiles: 567, orders: 890, revenue: 500000 },
+  ];
+
+  const pieData = [
+    { name: 'Users', value: 1234, color: '#2196F3' },
+    { name: 'Mobiles', value: 567, color: '#4CAF50' },
+    { name: 'Orders', value: 890, color: '#FFC107' },
   ];
 
   return (
@@ -63,27 +79,63 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Quick Actions */}
-        <div className="bg-surface rounded-xl border border-border p-6">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="flex flex-col items-center gap-2 p-4 bg-background rounded-xl hover:border-primary border border-border transition-colors">
-              <Users className="w-8 h-8 text-primary" />
-              <span className="text-sm text-text-primary font-medium">Manage Users</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 bg-background rounded-xl hover:border-primary border border-border transition-colors">
-              <Smartphone className="w-8 h-8 text-primary" />
-              <span className="text-sm text-text-primary font-medium">Manage Mobiles</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 bg-background rounded-xl hover:border-primary border border-border transition-colors">
-              <ShoppingCart className="w-8 h-8 text-primary" />
-              <span className="text-sm text-text-primary font-medium">View Orders</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 bg-background rounded-xl hover:border-primary border border-border transition-colors">
-              <TrendingUp className="w-8 h-8 text-primary" />
-              <span className="text-sm text-text-primary font-medium">Analytics</span>
-            </button>
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Bar Chart - Monthly Overview */}
+          <div className="bg-surface rounded-xl border border-border p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">Monthly Overview</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="users" fill="#2196F3" name="Users" />
+                <Bar dataKey="mobiles" fill="#4CAF50" name="Mobiles" />
+                <Bar dataKey="orders" fill="#FFC107" name="Orders" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+
+          {/* Pie Chart - Distribution */}
+          <div className="bg-surface rounded-xl border border-border p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">Distribution</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Line Chart - Revenue Trend */}
+        <div className="bg-surface rounded-xl border border-border p-6">
+          <h3 className="text-lg font-semibold text-text-primary mb-4">Revenue Trend</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={monthlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="revenue" stroke="#7b5740" strokeWidth={2} name="Revenue (₨)" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
