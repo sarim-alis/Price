@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/user/user.route.js";
 import mobileRoutes from "./src/routes/mobile/mobile.route.js";
+import sellerRoutes from "./src/routes/seller/seller.route.js";
 import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(express.json());
 app.get("/", (req, res) => { res.send("Server running 🐶⭐💖")});
 app.use("/api/users", userRoutes);
 app.use("/api/mobiles", mobileRoutes);
+app.use("/api/sellers", sellerRoutes);
 
 // Health check.
 app.get("/health", async (req, res) => {

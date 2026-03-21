@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Seller from "./pages/Seller";
+import AddSeller from "./pages/AddSeller";
 import Layout from "./Components/Layout/Layout";
 import { isLoggedIn } from "./services/auth";
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin/register"  element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller"    element={<ProtectedRoute><Layout><Seller /></Layout></ProtectedRoute>} />
+        <Route path="/admin/seller/add" element={<ProtectedRoute><Layout><AddSeller /></Layout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
