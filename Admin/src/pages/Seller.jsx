@@ -141,8 +141,8 @@ export default function Seller() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-text-primary">{seller.name}</h4>
-                  <span className={`text-xs px-2 py-1 rounded-full ${seller.isVerified ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}>
-                    {seller.isVerified ? 'Verified' : 'Pending'}
+                  <span className={`text-xs px-2 py-1 rounded-full ${seller.isVerified ? 'bg-success/10 text-success' : 'bg-warning/10 text-success'}`}>
+                    {seller.isVerified ? 'Verified' : 'Verified'}
                   </span>
                 </div>
               </div>
