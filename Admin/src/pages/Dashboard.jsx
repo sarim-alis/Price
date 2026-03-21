@@ -23,7 +23,7 @@ export default function Dashboard() {
       {/* Navbar */}
       <nav className="bg-surface border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-primary">Admin Panel</h1>
+          <h1 className="text-xl font-bold text-primary">ZodMobile</h1>
           <div className="flex items-center gap-4">
             <button className="p-2 hover:bg-background rounded-lg text-text-secondary">
               <Bell className="w-5 h-5" />
