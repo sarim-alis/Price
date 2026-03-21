@@ -16,7 +16,7 @@ const Sidebar = () => {
   // Menu items.
   const menuItems = [
     { key: '/admin/dashboard', icon: <AppstoreOutlined />, label: 'Dashboard' },
-    { key: '/admin/sellers',   icon: <UserOutlined />,     label: 'Sellers'   },
+    { key: '/admin/seller',   icon: <UserOutlined />,     label: 'Sellers'   },
   ];
 
   const handleMenuClick = ({ key }) => {
