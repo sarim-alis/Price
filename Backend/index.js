@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/user/user.route.js";
 import mobileRoutes from "./src/routes/mobile/mobile.route.js";
+import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
 dotenv.config();
 
 // App.
@@ -13,10 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware.
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(",") 
+  : ["*"];
+
 app.use(cors({
-  origin: "*",
+  origin: process.env.NODE_ENV === "production" ? allowedOrigins : "*",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -38,6 +44,9 @@ app.get("/health", async (req, res) => {
     res.status(503).json({ status: "unhealthy", database: "disconnected", error: error.message });
   }
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 // Server.
 const startServer = async () => {

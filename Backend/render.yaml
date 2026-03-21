@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: price-backend
+    runtime: node
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_UPLOAD_PRESET
+        sync: false
+    healthCheckPath: /health
