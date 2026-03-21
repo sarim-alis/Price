@@ -3,6 +3,7 @@ import { Layout, Menu, Avatar, Button, Divider } from 'antd';
 import { AppstoreOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUser } from '../../services/auth';
+import { colors } from '../../styles/colors';
 const { Sider } = Layout;
 
 // Frontend.
@@ -41,8 +42,8 @@ const Sidebar = () => {
           <h1 className="text-xl font-bold text-primary">Zod Mobile</h1>
         </div>
 
-        {/* Main Menu */}
-        <Menu mode="inline" selectedKeys={[location.pathname]} items={menuItems} onClick={handleMenuClick} style={{ border: 'none', flex: 1 }} />
+        {/* Menu */}
+        <Menu mode="inline" selectedKeys={[location.pathname]} items={menuItems} onClick={handleMenuClick} style={{ border: 'none', flex: 1, '--ant-menu-item-selected-bg': colors.primary, '--ant-menu-item-selected-color': colors.textLight, '--ant-menu-item-hover-bg': colors.primaryDark, '--ant-menu-item-hover-color': colors.textLight, '--ant-menu-item-padding-inline': '32px', '--ant-menu-item-height': '64px', '--ant-menu-icon-size': '20px', '--ant-menu-item-font-size': '16px', '--ant-menu-item-margin-block': '8px' }}  />
         <div style={{ flex: 1 }} />
         <Divider style={{ margin: '16px 0' }} />
 
