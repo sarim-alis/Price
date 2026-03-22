@@ -52,15 +52,7 @@ export default function LoginScreen() {
               <Text style={authStyles.label}>Email</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your email"
-                  placeholderTextColor={colors.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                />
+                <TextInput style={authStyles.input} placeholder="Enter your email" placeholderTextColor={colors.textMuted} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
               </View>
             </View>
 
@@ -69,21 +61,14 @@ export default function LoginScreen() {
               <Text style={authStyles.label}>Password</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your password"
-                  placeholderTextColor={colors.textMuted}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
+                <TextInput style={authStyles.input} placeholder="Enter your password" placeholderTextColor={colors.textMuted} value={password} onChangeText={setPassword} secureTextEntry={!showPassword} />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={authStyles.eyeIcon}>
                   <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={colors.textMuted} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Sign In Button */}
+            {/* Button */}
             <TouchableOpacity onPress={handleLogin} disabled={loading} style={authStyles.buttonContainer}>
               <View style={authStyles.primaryButton}>
                 {loading ? <ActivityIndicator color={colors.textLight} /> : <Text style={authStyles.buttonText}>Sign In</Text>}
