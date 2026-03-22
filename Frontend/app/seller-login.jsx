@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
+import { sellerLogin } from "../services/auth";
 import { authStyles } from "../styles/auth";
 import { colors } from "../styles/colors";
 
@@ -25,9 +26,9 @@ export default function SellerLogin() {
     }
     setLoading(true);
     try {
-      // TODO: Add seller login API call
+      await sellerLogin(email, password);
       Toast.show({ type: "success", text1: "Success", text2: "Login successful!" });
-      router.replace("/(seller-tabs)");
+      router.replace("/(seller-tabs)/dashboard");
     } catch (error) {
       Toast.show({ type: "error", text1: "Login Failed", text2: error.message });
     } finally {
@@ -42,7 +43,7 @@ export default function SellerLogin() {
           <View style={authStyles.overlay}>
             {/* Back Button */}
             <TouchableOpacity 
-              onPress={() => router.back()} 
+              onPress={() => router.replace("/role-selection")} 
               style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}
             >
               <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />

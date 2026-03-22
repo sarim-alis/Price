@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.100.39:5000/api";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.100.94:5000/api";
 
 // Login.
 export const login = async (email, password) => {
@@ -51,4 +51,47 @@ export const getUser = async () => {
 export const isLoggedIn = async () => {
   const token = await AsyncStorage.getItem("token");
   return !!token;
+};
+
+// Seller Login.
+export const sellerLogin = async (email, password) => {
+  const response = await fetch(`${API_URL}/users/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  
+  // Check if user has seller role
+  if (data.user.role !== "seller") {
+    throw new Error("This account is not registered as a seller");
+  }
+  
+  await AsyncStorage.setItem("token", data.token);
+  await AsyncStorage.setItem("user", JSON.stringify(data.user));
+  return data;
+};
+
+// Seller Register.
+export const sellerRegister = async (name, email, password, phone, cnic, sellerShopPic, sellerProfilePic) => {
+  const response = await fetch(`${API_URL}/users/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      name, 
+      email, 
+      password, 
+      phone, 
+      cnic, 
+      seller_shop_pic: sellerShopPic,
+      seller_profile_pic: sellerProfilePic,
+      role: "seller" 
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  await AsyncStorage.setItem("token", data.token);
+  await AsyncStorage.setItem("user", JSON.stringify(data.user));
+  return data;
 };

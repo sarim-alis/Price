@@ -6,18 +6,14 @@ export const createSeller = async (req, res) => {
   try {
     const { name, email, password, phone, cnic } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User with this email already exists" });
     }
-
-    // Check if CNIC already exists
     if (cnic) {
       const existingCnic = await Seller.findOne({ cnic });
       if (existingCnic) {
@@ -25,10 +21,8 @@ export const createSeller = async (req, res) => {
       }
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with seller role
     const user = await User.create({
       name,
       email,

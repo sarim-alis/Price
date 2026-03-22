@@ -42,7 +42,10 @@ export default function BuyerLogin() {
         <ScrollView contentContainerStyle={authStyles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={authStyles.overlay}>
             {/* Back Button */}
-            <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}>
+            <TouchableOpacity 
+              onPress={() => router.replace("/role-selection")} 
+              style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}
+            >
               <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
             </TouchableOpacity>
 

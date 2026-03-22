@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
+import { sellerRegister } from "../services/auth";
 import { authStyles } from "../styles/auth";
 import { colors } from "../styles/colors";
 
@@ -14,21 +15,45 @@ export default function SellerRegister() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cnic, setCnic] = useState("");
+  const [sellerShopPic, setSellerShopPic] = useState("");
+  const [sellerProfilePic, setSellerProfilePic] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Handle CNIC formatting.
+  const handleCnicChange = (text) => {
+    // Remove all non-numeric characters
+    const numbers = text.replace(/[^0-9]/g, '');
+    
+    // Limit to 13 digits
+    const limitedNumbers = numbers.slice(0, 13);
+    
+    // Format with hyphens
+    let formatted = limitedNumbers;
+    if (limitedNumbers.length > 5) {
+      formatted = limitedNumbers.slice(0, 5) + '-' + limitedNumbers.slice(5);
+    }
+    if (limitedNumbers.length > 12) {
+      formatted = limitedNumbers.slice(0, 5) + '-' + limitedNumbers.slice(5, 12) + '-' + limitedNumbers.slice(12);
+    }
+    
+    setCnic(formatted);
+  };
+
   // Handle register.
   const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Toast.show({ type: "error", text1: "Error", text2: "Please fill in all fields" });
+    if (!name || !email || !password || !phone || !cnic) {
+      Toast.show({ type: "error", text1: "Error", text2: "Please fill in all required fields" });
       return;
     }
     setLoading(true);
     try {
-      // TODO: Add seller registration API call
+      await sellerRegister(name, email, password, phone, cnic, sellerShopPic, sellerProfilePic);
       Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
-      router.replace("/(seller-tabs)");
+      router.replace("/(seller-tabs)/dashboard");
     } catch (error) {
       Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
     } finally {
@@ -41,6 +66,14 @@ export default function SellerRegister() {
       <KeyboardAvoidingView style={authStyles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <ScrollView contentContainerStyle={authStyles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={authStyles.overlay}>
+            {/* Back Button */}
+            <TouchableOpacity 
+              onPress={() => router.replace("/role-selection")} 
+              style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+            </TouchableOpacity>
+
             {/* Header */}
             <View style={authStyles.header}>
               <Text style={authStyles.welcomeText}>Create Seller Account</Text>
@@ -76,6 +109,71 @@ export default function SellerRegister() {
                   onChangeText={setEmail}
                   autoCapitalize="none"
                   keyboardType="email-address"
+                />
+              </View>
+            </View>
+
+            {/* Phone */}
+            <View style={authStyles.inputContainer}>
+              <Text style={authStyles.label}>Phone</Text>
+              <View style={authStyles.inputWrapper}>
+                <Ionicons name="call-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter your phone number"
+                  placeholderTextColor={colors.textMuted}
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+              </View>
+            </View>
+
+            {/* CNIC */}
+            <View style={authStyles.inputContainer}>
+              <Text style={authStyles.label}>CNIC</Text>
+              <View style={authStyles.inputWrapper}>
+                <Ionicons name="card-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="33205-2456871-1"
+                  placeholderTextColor={colors.textMuted}
+                  value={cnic}
+                  onChangeText={handleCnicChange}
+                  keyboardType="numeric"
+                  maxLength={15}
+                />
+              </View>
+            </View>
+
+            {/* Seller Shop Picture */}
+            <View style={authStyles.inputContainer}>
+              <Text style={authStyles.label}>Shop Picture URL (Optional)</Text>
+              <View style={authStyles.inputWrapper}>
+                <Ionicons name="storefront-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter shop picture URL"
+                  placeholderTextColor={colors.textMuted}
+                  value={sellerShopPic}
+                  onChangeText={setSellerShopPic}
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            {/* Seller Profile Picture */}
+            <View style={authStyles.inputContainer}>
+              <Text style={authStyles.label}>Profile Picture URL (Optional)</Text>
+              <View style={authStyles.inputWrapper}>
+                <Ionicons name="image-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter profile picture URL"
+                  placeholderTextColor={colors.textMuted}
+                  value={sellerProfilePic}
+                  onChangeText={setSellerProfilePic}
+                  autoCapitalize="none"
                 />
               </View>
             </View>
