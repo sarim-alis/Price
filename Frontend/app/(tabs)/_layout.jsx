@@ -4,7 +4,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text } from 'react-native';
 
 // Layout.
 export default function TabLayout() {
