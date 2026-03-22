@@ -1,26 +1,21 @@
-import {useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
+// Imports.
+import { useState } from "react";
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styles/colors";
 import { sellerIdStyles as styles } from "../../styles/seller-id";
 
+// Frontend.
 export default function ChatScreen() {
+  // States.
   const router = useRouter();
   const { sellerId, sellerName, mobileTitle } = useLocalSearchParams();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
+  // Send message.
   const sendMessage = () => {
     const trimmed = message.trim();
     if (!trimmed) return;
@@ -33,6 +28,7 @@ export default function ChatScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
@@ -47,11 +43,8 @@ export default function ChatScreen() {
         </View>
       </View>
 
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-      >
+      {/* Message body */}
+      <KeyboardAvoidingView style={styles.keyboardView} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         {messages.length === 0 ? (
           <View style={styles.emptyChat}>
             <View style={styles.emptyIconWrap}>
@@ -63,43 +56,20 @@ export default function ChatScreen() {
             </Text>
           </View>
         ) : (
-          <ScrollView
-            style={styles.messageList}
-            contentContainerStyle={styles.messageListContent}
-            keyboardShouldPersistTaps="handled"
-          >
+          <ScrollView style={styles.messageList} contentContainerStyle={styles.messageListContent} keyboardShouldPersistTaps="handled">
             {messages.map((msg) => (
-              <View
-                key={msg.id}
-                style={[styles.bubble, msg.sent ? styles.bubbleSent : styles.bubbleReceived]}
-              >
+              <View key={msg.id} style={[styles.bubble, msg.sent ? styles.bubbleSent : styles.bubbleReceived]}>
                 <Text style={[styles.bubbleText, msg.sent && styles.bubbleSentText]}>{msg.text}</Text>
               </View>
             ))}
           </ScrollView>
         )}
 
+        {/* Message input */}
         <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            placeholder="Type a message..."
-            placeholderTextColor={colors.textMuted}
-            value={message}
-            onChangeText={setMessage}
-            multiline
-            maxLength={500}
-            onSubmitEditing={sendMessage}
-          />
-          <TouchableOpacity
-            style={[styles.sendBtn, !message.trim() && styles.sendBtnDisabled]}
-            onPress={sendMessage}
-            disabled={!message.trim()}
-          >
-            <Ionicons
-              name="send"
-              size={22}
-              color={message.trim() ? colors.textLight : colors.textMuted}
-            />
+          <TextInput style={styles.input} placeholder="Type a message..." placeholderTextColor={colors.textMuted} value={message} onChangeText={setMessage} multiline maxLength={500} onSubmitEditing={sendMessage} />
+          <TouchableOpacity style={[styles.sendBtn, !message.trim() && styles.sendBtnDisabled]} onPress={sendMessage} disabled={!message.trim()}>
+            <Ionicons name="send" size={22} color={message.trim() ? colors.textLight : colors.textMuted} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
