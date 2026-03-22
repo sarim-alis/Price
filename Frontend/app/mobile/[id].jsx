@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { getMobileById } from "../../services/api";
+import { getMobileById, getOrCreateConversation } from "../../services/api";
 import { colors } from "../../styles/colors";
 import { detailStyles as styles } from "../../styles/detail";
 
@@ -63,12 +63,25 @@ export default function MobileDetailScreen() {
   const sellerName = seller?.name || "Seller";
   const hasImages = mobile.images?.length > 0;
 
-  const openChat = () => {
-    if (sellerId) {
+  const openChat = async () => {
+    if (!sellerId) return;
+    
+    try {
+      // Create or get existing conversation
+      const conversation = await getOrCreateConversation(sellerId, id);
+      
+      // Navigate to chat screen with conversation ID
       router.push({
-        pathname: "/chat/[sellerId]",
-        params: { sellerId, sellerName, mobileTitle: `${mobile.brand} ${mobile.model}` },
+        pathname: "/chat/[conversationId]",
+        params: { 
+          conversationId: conversation._id,
+          otherUserName: sellerName,
+          otherUserId: sellerId
+        },
       });
+    } catch (error) {
+      console.error('Failed to open chat:', error);
+      alert('Failed to open chat. Please try again.');
     }
   };
 

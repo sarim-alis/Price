@@ -1,5 +1,6 @@
 // Imports.
 import express from "express";
+import http from "http";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -7,7 +8,9 @@ import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/user/user.route.js";
 import mobileRoutes from "./src/routes/mobile/mobile.route.js";
 import sellerRoutes from "./src/routes/seller/seller.route.js";
+import messageRoutes from "./src/routes/message/message.route.js";
 import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
+import { initializeSocket } from "./src/config/socket.js";
 dotenv.config();
 
 // App.
@@ -32,6 +35,7 @@ app.get("/", (req, res) => { res.send("Server running 🐶⭐💖")});
 app.use("/api/users", userRoutes);
 app.use("/api/mobiles", mobileRoutes);
 app.use("/api/sellers", sellerRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Health check.
 app.get("/health", async (req, res) => {
@@ -51,10 +55,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Server.
+const httpServer = http.createServer(app);
+
 const startServer = async () => {
   await connectDB();
-  app.listen(PORT, () => {
+  
+  // Initialize Socket.IO
+  initializeSocket(httpServer);
+  console.log("Socket.IO initialized ⚡");
+  
+  httpServer.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT} 🧝💗⭐`);
+    console.log(`WebSocket server ready for real-time messaging 💬`);
   });
 };
 startServer();
