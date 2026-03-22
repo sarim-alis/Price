@@ -1,6 +1,6 @@
 // Imports.
 import { Tabs } from "expo-router";
-import { Platform } from "react-native";
+import { Platform, StyleSheet, View } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styles/colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
