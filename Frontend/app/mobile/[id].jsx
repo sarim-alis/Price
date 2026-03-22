@@ -1,23 +1,14 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+// Imports.
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { getMobileById } from "../../services/api";
 import { colors } from "../../styles/colors";
+import { detailStyles as styles } from "../../styles/detail";
 
-const { width } = Dimensions.get("window");
-
+// Spec row.
 function SpecRow({ icon, label, value }) {
   return (
     <View style={styles.specRow}>
@@ -28,14 +19,12 @@ function SpecRow({ icon, label, value }) {
   );
 }
 
+// Frontend.
 export default function MobileDetailScreen() {
+  // States.
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const { data: mobile, isLoading, isError, error } = useQuery({
-    queryKey: ["mobile", id],
-    queryFn: () => getMobileById(id),
-    enabled: !!id,
-  });
+  const { data: mobile, isLoading, isError, error } = useQuery({queryKey: ["mobile", id], queryFn: () => getMobileById(id), enabled: !!id});
 
   if (isLoading) {
     return (
@@ -85,6 +74,7 @@ export default function MobileDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      {/* Device details. */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
@@ -92,19 +82,11 @@ export default function MobileDetailScreen() {
         <Text style={styles.headerTitle}>Device Details</Text>
       </View>
 
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Image */}
         <View style={styles.imageSection}>
           {hasImages ? (
-            <Image
-              source={{ uri: mobile.images[0] }}
-              style={styles.mainImage}
-              resizeMode="contain"
-            />
+            <Image source={{ uri: mobile.images[0] }} style={styles.mainImage} resizeMode="contain" />
           ) : (
             <View style={styles.imagePlaceholder}>
               <Ionicons name="phone-portrait-outline" size={80} color={colors.textMuted} />
@@ -205,242 +187,3 @@ export default function MobileDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  backBtn: {
-    padding: 8,
-    marginRight: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-  },
-  errorText: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-  imageSection: {
-    backgroundColor: colors.surface,
-    padding: 16,
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  mainImage: {
-    width: width * 0.6,
-    height: width * 0.6,
-  },
-  imagePlaceholder: {
-    width: width * 0.6,
-    height: width * 0.5,
-    backgroundColor: colors.backgroundDark,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  priceConditionRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 12,
-    gap: 12,
-  },
-  price: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.primary,
-  },
-  conditionChip: {
-    backgroundColor: colors.backgroundDark,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  conditionChipText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.textSecondary,
-    textTransform: "capitalize",
-  },
-  titleSection: {
-    padding: 16,
-    backgroundColor: colors.surface,
-    marginTop: 8,
-  },
-  brand: {
-    fontSize: 12,
-    color: colors.primary,
-    fontWeight: "700",
-    textTransform: "uppercase",
-  },
-  model: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-    marginTop: 4,
-  },
-  section: {
-    padding: 16,
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-    marginBottom: 12,
-  },
-  predictionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.primary,
-  },
-  predictionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  predictionLabel: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-  predictionValue: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.textPrimary,
-  },
-  predictionHighlight: {
-    color: colors.primary,
-    fontSize: 18,
-  },
-  trendBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    gap: 4,
-  },
-  trendUp: {
-    backgroundColor: colors.success,
-  },
-  trendDown: {
-    backgroundColor: colors.error,
-  },
-  trendText: {
-    color: colors.textLight,
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  predictionNote: {
-    fontSize: 11,
-    color: colors.textMuted,
-    marginTop: 8,
-    fontStyle: "italic",
-  },
-  specsCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-  },
-  specRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  specIcon: {
-    marginRight: 12,
-  },
-  specLabel: {
-    flex: 1,
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-  specValue: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.textPrimary,
-  },
-  sellerCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-  },
-  sellerAvatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 14,
-  },
-  sellerInfo: {
-    flex: 1,
-  },
-  sellerName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-  },
-  sellerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-    gap: 6,
-  },
-  sellerDetail: {
-    fontSize: 13,
-    color: colors.textSecondary,
-  },
-  contactBtn: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  contactBtnText: {
-    color: colors.textLight,
-    fontSize: 13,
-    fontWeight: "600",
-    marginTop: 2,
-  },
-});
