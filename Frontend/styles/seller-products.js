@@ -114,4 +114,62 @@ export const sellerProductsStyles = {
     justifyContent: "center",
     alignItems: "center",
   },
+  productImageImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: colors.error,
+    textAlign: "center",
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 60,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: colors.textPrimary,
+    marginTop: 16,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 8,
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    gap: 16,
+  },
+  pageButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.surface,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+  },
+  pageButtonDisabled: {
+    opacity: 0.4,
+  },
+  pageText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
 };

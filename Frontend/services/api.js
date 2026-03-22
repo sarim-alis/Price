@@ -17,3 +17,11 @@ export const getMobileById = async (id) => {
   if (!response.ok) throw new Error(data.message || "Mobile not found");
   return data;
 };
+
+// Get mobiles by seller ID.
+export const getMobilesBySellerId = async (sellerId) => {
+  const response = await fetch(`${API_URL}/mobiles/seller/${sellerId}`);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch seller mobiles");
+  return data;
+};
