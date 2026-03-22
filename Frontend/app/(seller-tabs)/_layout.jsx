@@ -18,6 +18,7 @@ export default function SellerTabsLayout() {
   );
 }
 
+
 // Styling.
 const styles = StyleSheet.create({
   centerButton:        { position: 'relative', marginTop: -20 },
