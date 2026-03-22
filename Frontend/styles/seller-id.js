@@ -96,11 +96,11 @@ export const sellerIdStyles = {
     flexDirection: "row",
     alignItems: "flex-end",
     padding: 12,
-    paddingBottom: Platform.OS === "ios" ? 24 : 12,
+    paddingBottom: Platform.OS === "ios" ? 24 : 20,
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
-    gap: 8,
+    gap: 12,
   },
   input: {
     flex: 1,

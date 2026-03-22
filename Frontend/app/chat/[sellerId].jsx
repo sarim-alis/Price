@@ -44,7 +44,7 @@ export default function ChatScreen() {
       </View>
 
       {/* Message body */}
-      <KeyboardAvoidingView style={styles.keyboardView} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
+      <KeyboardAvoidingView style={styles.keyboardView} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}>
         {messages.length === 0 ? (
           <View style={styles.emptyChat}>
             <View style={styles.emptyIconWrap}>
