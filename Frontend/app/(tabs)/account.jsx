@@ -177,6 +177,11 @@ export default function AccountScreen() {
         {/* Settings Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Settings</Text>
+          <MenuItem
+            icon="swap-horizontal-outline"
+            label="Switch to Seller Mode"
+            onPress={() => router.replace('/role-selection')}
+          />
           <View style={styles.menuItem}>
             <View style={styles.menuLeft}>
               <Ionicons name="notifications-outline" size={22} color="#666" />

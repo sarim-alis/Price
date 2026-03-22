@@ -8,7 +8,7 @@ export default function Index() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/(tabs)");
+      router.replace("/role-selection");
     }, 100);
     return () => clearTimeout(timer);
   }, [router]);

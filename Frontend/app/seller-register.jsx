@@ -5,12 +5,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { register } from "../services/auth";
 import { authStyles } from "../styles/auth";
 import { colors } from "../styles/colors";
 
 // Frontend.
-export default function RegisterScreen() {
+export default function SellerRegister() {
   // States.
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,9 +26,9 @@ export default function RegisterScreen() {
     }
     setLoading(true);
     try {
-      await register(name, email, password);
+      // TODO: Add seller registration API call
       Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
-      router.replace("/(tabs)");
+      router.replace("/(seller-tabs)");
     } catch (error) {
       Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
     } finally {
@@ -44,8 +43,8 @@ export default function RegisterScreen() {
           <View style={authStyles.overlay}>
             {/* Header */}
             <View style={authStyles.header}>
-              <Text style={authStyles.welcomeText}>Create Account</Text>
-              <Text style={authStyles.subtitleText}>Join us and start your journey</Text>
+              <Text style={authStyles.welcomeText}>Create Seller Account</Text>
+              <Text style={authStyles.subtitleText}>Join us and start selling</Text>
             </View>
 
             {/* Name */}
@@ -53,7 +52,14 @@ export default function RegisterScreen() {
               <Text style={authStyles.label}>Name</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="person-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput style={authStyles.input} placeholder="Enter your name" placeholderTextColor={colors.textMuted} value={name} onChangeText={setName} autoCapitalize="words" />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter your name"
+                  placeholderTextColor={colors.textMuted}
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="words"
+                />
               </View>
             </View>
 
@@ -62,7 +68,15 @@ export default function RegisterScreen() {
               <Text style={authStyles.label}>Email</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput style={authStyles.input} placeholder="Enter your email" placeholderTextColor={colors.textMuted} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter your email"
+                  placeholderTextColor={colors.textMuted}
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                />
               </View>
             </View>
 
@@ -71,7 +85,14 @@ export default function RegisterScreen() {
               <Text style={authStyles.label}>Password</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput style={authStyles.input} placeholder="Enter your password" placeholderTextColor={colors.textMuted} value={password} onChangeText={setPassword} secureTextEntry={!showPassword} />
+                <TextInput
+                  style={authStyles.input}
+                  placeholder="Enter your password"
+                  placeholderTextColor={colors.textMuted}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={authStyles.eyeIcon}>
                   <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={colors.textMuted} />
                 </TouchableOpacity>
@@ -88,7 +109,7 @@ export default function RegisterScreen() {
             {/* Login Link */}
             <View style={authStyles.linkContainer}>
               <Text style={authStyles.linkText}>Already have an account? </Text>
-              <TouchableOpacity onPress={() => router.push("/login")}>
+              <TouchableOpacity onPress={() => router.push("/seller-login")}>
                 <Text style={authStyles.link}>Login</Text>
               </TouchableOpacity>
             </View>

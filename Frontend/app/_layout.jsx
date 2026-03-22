@@ -16,9 +16,14 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="role-selection" />
+        <Stack.Screen name="buyer-login" />
+        <Stack.Screen name="seller-login" />
+        <Stack.Screen name="seller-register" />
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(seller-tabs)" />
       </Stack>
       <Toast />
     </QueryClientProvider>

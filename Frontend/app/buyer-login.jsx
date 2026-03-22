@@ -5,33 +5,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { register } from "../services/auth";
+import { login } from "../services/auth";
 import { authStyles } from "../styles/auth";
 import { colors } from "../styles/colors";
 
 // Frontend.
-export default function RegisterScreen() {
+export default function BuyerLogin() {
   // States.
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Handle register.
-  const handleRegister = async () => {
-    if (!name || !email || !password) {
+  // Handle login.
+  const handleLogin = async () => {
+    if (!email || !password) {
       Toast.show({ type: "error", text1: "Error", text2: "Please fill in all fields" });
       return;
     }
     setLoading(true);
     try {
-      await register(name, email, password);
-      Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
+      await login(email, password);
+      Toast.show({ type: "success", text1: "Success", text2: "Login successful!" });
       router.replace("/(tabs)");
     } catch (error) {
-      Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
+      Toast.show({ type: "error", text1: "Login Failed", text2: error.message });
     } finally {
       setLoading(false);
     }
@@ -42,19 +41,15 @@ export default function RegisterScreen() {
       <KeyboardAvoidingView style={authStyles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <ScrollView contentContainerStyle={authStyles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={authStyles.overlay}>
+            {/* Back Button */}
+            <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}>
+              <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+            </TouchableOpacity>
+
             {/* Header */}
             <View style={authStyles.header}>
-              <Text style={authStyles.welcomeText}>Create Account</Text>
-              <Text style={authStyles.subtitleText}>Join us and start your journey</Text>
-            </View>
-
-            {/* Name */}
-            <View style={authStyles.inputContainer}>
-              <Text style={authStyles.label}>Name</Text>
-              <View style={authStyles.inputWrapper}>
-                <Ionicons name="person-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput style={authStyles.input} placeholder="Enter your name" placeholderTextColor={colors.textMuted} value={name} onChangeText={setName} autoCapitalize="words" />
-              </View>
+              <Text style={authStyles.welcomeText}>Buyer Login</Text>
+              <Text style={authStyles.subtitleText}>Sign in to continue shopping</Text>
             </View>
 
             {/* Email */}
@@ -78,18 +73,18 @@ export default function RegisterScreen() {
               </View>
             </View>
 
-            {/* Register Button */}
-            <TouchableOpacity onPress={handleRegister} disabled={loading} style={authStyles.buttonContainer}>
+            {/* Button */}
+            <TouchableOpacity onPress={handleLogin} disabled={loading} style={authStyles.buttonContainer}>
               <View style={authStyles.primaryButton}>
-                {loading ? <ActivityIndicator color={colors.textLight} /> : <Text style={authStyles.buttonText}>Sign Up</Text>}
+                {loading ? <ActivityIndicator color={colors.textLight} /> : <Text style={authStyles.buttonText}>Sign In</Text>}
               </View>
             </TouchableOpacity>
 
-            {/* Login Link */}
+            {/* Register Link */}
             <View style={authStyles.linkContainer}>
-              <Text style={authStyles.linkText}>Already have an account? </Text>
-              <TouchableOpacity onPress={() => router.push("/login")}>
-                <Text style={authStyles.link}>Login</Text>
+              <Text style={authStyles.linkText}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => router.push("/register")}>
+                <Text style={authStyles.link}>Register</Text>
               </TouchableOpacity>
             </View>
           </View>
