@@ -196,6 +196,21 @@ export default function MobileDetailScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Bottom Action Buttons */}
+      <View style={styles.bottomActions}>
+        <TouchableOpacity 
+          style={styles.buyNowButton} 
+          onPress={() => router.push({
+            pathname: '/checkout/[mobileId]',
+            params: { mobileId: id }
+          })}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="card-outline" size={20} color={colors.textLight} />
+          <Text style={styles.buyNowText}>Buy Now</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

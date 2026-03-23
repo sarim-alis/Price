@@ -24,10 +24,10 @@ export default function SellerMessagesScreen() {
     const connectSocket = async () => {
       try {
         if (!socketService.isConnected()) {
-          console.log('🔌 Connecting socket in seller messages screen...');
+          // console.log('🔌 Connecting socket in seller messages screen...');
           await socketService.connect();
           setSocketConnected(true);
-          console.log('✅ Socket connected in seller messages screen');
+          // console.log('✅ Socket connected in seller messages screen');
         } else {
           setSocketConnected(true);
         }

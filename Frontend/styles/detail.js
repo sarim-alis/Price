@@ -241,4 +241,25 @@ export const detailStyles = {
     fontWeight: "600",
     marginTop: 2,
   },
+  bottomActions: {
+    backgroundColor: colors.surface,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+  },
+  buyNowButton: {
+    backgroundColor: colors.primary,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 8,
+  },
+  buyNowText: {
+    color: colors.textLight,
+    fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 8,
+  },
 };

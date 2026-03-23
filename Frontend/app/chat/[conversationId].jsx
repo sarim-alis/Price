@@ -50,12 +50,12 @@ export default function ChatScreen() {
       try {
         // Ensure socket is connected
         if (!socketService.isConnected()) {
-          console.log('🔌 Socket not connected, connecting...');
+          // console.log('🔌 Socket not connected, connecting...');
           await socketService.connect();
         }
         
-        console.log('✅ Socket connected:', socketService.isConnected());
-        console.log('📍 Joining conversation room:', conversationId);
+        // console.log('✅ Socket connected:', socketService.isConnected());
+        // console.log('📍 Joining conversation room:', conversationId);
 
         // Join conversation room
         socketService.joinConversation(conversationId);
@@ -68,15 +68,15 @@ export default function ChatScreen() {
 
     // Listen for new messages
     const handleNewMessage = (newMessage) => {
-      console.log('✅ New message received via Socket.IO:', newMessage);
+      // console.log('✅ New message received via Socket.IO:', newMessage);
       queryClient.setQueryData(['messages', conversationId], (old) => {
-        console.log('Current messages state:', old);
+        // console.log('Current messages state:', old);
         if (!old) return { messages: [newMessage] };
         const updated = {
           ...old,
           messages: [...old.messages, newMessage]
         };
-        console.log('Updated messages state:', updated);
+        // console.log('Updated messages state:', updated);
         return updated;
       });
       
@@ -98,7 +98,7 @@ export default function ChatScreen() {
 
     // Listen for messages read
     const handleMessagesRead = (data) => {
-      console.log('Messages marked as read:', data);
+      // console.log('Messages marked as read:', data);
       refetch();
     };
 
@@ -109,7 +109,7 @@ export default function ChatScreen() {
     // Mark messages as read when entering chat (only if messages exist)
     if (messages.length > 0) {
       markMessagesAsRead(conversationId).catch((err) => {
-        console.log('Could not mark messages as read:', err.message);
+        // console.log('Could not mark messages as read:', err.message);
       });
       socketService.markAsRead(conversationId);
     }
@@ -133,25 +133,25 @@ export default function ChatScreen() {
 
   const handleSendMessage = () => {
     if (!message.trim()) {
-      console.log('Message is empty');
+      // console.log('Message is empty');
       return;
     }
 
     if (!conversationId) {
-      console.log('No conversationId');
+      // console.log('No conversationId');
       return;
     }
 
     if (!otherUserId) {
-      console.log('No otherUserId');
+      // console.log('No otherUserId');
       return;
     }
 
-    console.log('Sending message:', {
-      conversationId,
-      receiverId: otherUserId,
-      message: message.trim()
-    });
+    // console.log('Sending message:', {
+    //   conversationId,
+    //   receiverId: otherUserId,
+    //   message: message.trim()
+    // });
 
     const messageText = message.trim();
     setMessage('');

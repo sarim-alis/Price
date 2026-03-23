@@ -4,14 +4,20 @@ import http from "http";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/user/user.route.js";
 import mobileRoutes from "./src/routes/mobile/mobile.route.js";
 import sellerRoutes from "./src/routes/seller/seller.route.js";
 import messageRoutes from "./src/routes/message/message.route.js";
+import orderRoutes from "./src/routes/order/order.route.js";
 import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
 import { initializeSocket } from "./src/config/socket.js";
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // App.
 const app = express();
@@ -30,12 +36,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Serve static files for uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routes.
 app.get("/", (req, res) => { res.send("Server running 🐶⭐💖")});
 app.use("/api/users", userRoutes);
 app.use("/api/mobiles", mobileRoutes);
 app.use("/api/sellers", sellerRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Health check.
 app.get("/health", async (req, res) => {

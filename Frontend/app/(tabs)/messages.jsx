@@ -25,10 +25,10 @@ export default function MessagesScreen() {
     const connectSocket = async () => {
       try {
         if (!socketService.isConnected()) {
-          console.log('🔌 Connecting socket in messages screen...');
+          // console.log('🔌 Connecting socket in messages screen...');
           await socketService.connect();
           setSocketConnected(true);
-          console.log('✅ Socket connected in messages screen');
+          // console.log('✅ Socket connected in messages screen');
         } else {
           setSocketConnected(true);
         }

@@ -23,7 +23,7 @@ class SocketService {
         return;
       }
 
-      console.log("🔌 Connecting to Socket.IO server:", SOCKET_URL);
+      // console.log("🔌 Connecting to Socket.IO server:", SOCKET_URL);
 
       this.socket = io(SOCKET_URL, {
         auth: { token },
@@ -36,13 +36,13 @@ class SocketService {
       // Wait for connection
       return new Promise((resolve, reject) => {
         this.socket.on("connect", () => {
-          console.log("✅ Socket connected:", this.socket.id);
+          // console.log("✅ Socket connected:", this.socket.id);
           this.connected = true;
           resolve(this.socket);
         });
 
         this.socket.on("disconnect", (reason) => {
-          console.log("❌ Socket disconnected:", reason);
+          // console.log("❌ Socket disconnected:", reason);
           this.connected = false;
         });
 

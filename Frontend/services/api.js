@@ -109,3 +109,165 @@ export const markMessagesAsRead = async (conversationId) => {
   }
   return data;
 };
+
+// ============== ORDER APIs ==============
+
+// Create new order
+export const createOrder = async (mobileId, paymentMethod, sellerPaymentInfo) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ mobileId, paymentMethod, sellerPaymentInfo })
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to create order");
+  return data;
+};
+
+// Get buyer's orders
+export const getBuyerOrders = async (status) => {
+  const token = await AsyncStorage.getItem("token");
+  const url = status ? `${API_URL}/orders/buyer/my-orders?status=${status}` : `${API_URL}/orders/buyer/my-orders`;
+  const response = await fetch(url, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch orders");
+  return data;
+};
+
+// Get seller's orders
+export const getSellerOrders = async (status) => {
+  const token = await AsyncStorage.getItem("token");
+  const url = status ? `${API_URL}/orders/seller/my-orders?status=${status}` : `${API_URL}/orders/seller/my-orders`;
+  const response = await fetch(url, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch orders");
+  return data;
+};
+
+// Get order by ID
+export const getOrderById = async (orderId) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders/${orderId}`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch order");
+  return data;
+};
+
+// Upload payment proof
+export const uploadPaymentProof = async (orderId, imageFile) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const formData = new FormData();
+    
+    // React Native requires specific format for file uploads
+    const fileUri = imageFile.uri;
+    const fileType = imageFile.mimeType || 'image/jpeg';
+    const fileName = imageFile.fileName || `payment-${Date.now()}.jpg`;
+    
+    console.log('Uploading payment proof:', { orderId, fileUri, fileType, fileName });
+    
+    formData.append('paymentProof', {
+      uri: fileUri,
+      type: fileType,
+      name: fileName
+    });
+
+    const response = await fetch(`${API_URL}/orders/${orderId}/payment-proof`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      },
+      body: formData
+    });
+    
+    console.log('Upload response status:', response.status);
+    
+    const data = await response.json();
+    console.log('Upload response data:', data);
+    
+    if (!response.ok) throw new Error(data.message || "Failed to upload payment proof");
+    return data;
+  } catch (error) {
+    console.error('Upload error:', error);
+    throw error;
+  }
+};
+
+// Confirm payment (seller)
+export const confirmPayment = async (orderId) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders/${orderId}/confirm-payment`, {
+    method: "PUT",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to confirm payment");
+  return data;
+};
+
+// Update order status (seller)
+export const updateOrderStatus = async (orderId, status) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ status })
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to update order status");
+  return data;
+};
+
+// Generate invoice
+export const generateInvoice = async (orderId) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders/${orderId}/invoice`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to generate invoice");
+  return data;
+};
+
+// Get invoice
+export const getInvoice = async (orderId) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/orders/${orderId}/invoice`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch invoice");
+  return data;
+};
+
+// Download invoice URL
+export const getInvoiceDownloadUrl = (orderId) => {
+  return `${API_URL}/orders/${orderId}/invoice/download`;
+};
