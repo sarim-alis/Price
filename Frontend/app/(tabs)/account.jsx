@@ -1,492 +1,367 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Switch,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
-import { isLoggedIn, getUser, logout } from '../../services/auth';
-import { colors } from '../../styles/colors';
+// Imports.
+import { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator, Image, Modal } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Toast from "react-native-toast-message";
+import * as ImagePicker from 'expo-image-picker';
+import { colors } from "../../styles/colors";
+import { buyerAccountStyles as styles } from "../../styles/buyer-account";
+import { getProfile, updateProfile } from "../../services/api";
+import { logout } from "../../services/auth";
 
+// Frontend.
 export default function AccountScreen() {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
+  
+  // States.
+  const [isEditing, setIsEditing] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingField, setEditingField] = useState('');
+  const [editValue, setEditValue] = useState('');
+  const [imagePickerVisible, setImagePickerVisible] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  
+  // Form state.
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    profileImage: '',
+  });
 
+  // Query.
+  const { data: userProfile, isLoading: profileLoading, refetch: refetchProfile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  });
+
+  // Update profile.
+  const updateProfileMutation = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      Toast.show({ type: "success", text1: "Success", text2: "Profile updated successfully!" });
+      refetchProfile();
+      setEditModalVisible(false);
+    },
+    onError: (error) => {
+      Toast.show({ type: "error", text1: "Error", text2: error.message || "Failed to update profile" });
+    }
+  });
+
+  // Update form data when profile loads.
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (userProfile) {
+      setFormData({
+        name: userProfile.name || '',
+        email: userProfile.email || '',
+        profileImage: userProfile.profileImage || '',
+      });
+    }
+  }, [userProfile]);
 
-  const checkAuth = async () => {
-    const authenticated = await isLoggedIn();
-    setLoggedIn(authenticated);
-    if (authenticated) {
-      const userData = await getUser();
-      setUser(userData);
+  // Cloudinary upload function
+  const uploadToCloudinary = async (imageUri) => {
+    const uploadPreset = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'villas';
+    const cloudName = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dgk3gaml0';
+    
+    const data = new FormData();
+    data.append('file', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'upload.jpg',
+    });
+    data.append('upload_preset', uploadPreset);
+    data.append('cloud_name', cloudName);
+
+    try {
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+      
+      const response = await fetch(cloudinaryUrl, {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Cloudinary upload failed');
+      }
+      
+      return result.secure_url;
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      throw error;
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    setLoggedIn(false);
-    setUser(null);
+  // Image picker functions
+  const showImagePickerOptions = () => {
+    setImagePickerVisible(true);
   };
 
-  // Show login/register UI if not authenticated
-  if (!loggedIn) {
+  const pickImageFromGallery = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Toast.show({ type: "error", text1: "Permission Denied", text2: "Please allow gallery access" });
+        setImagePickerVisible(false);
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({ 
+        mediaTypes: 'images', 
+        allowsEditing: true, 
+        aspect: [1, 1], 
+        quality: 0.8 
+      });
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        await handleImageUpload(result.assets[0].uri);
+      }
+    } catch (error) {
+      Toast.show({ type: "error", text1: "Error", text2: "Failed to pick image" });
+    }
+    setImagePickerVisible(false);
+  };
+
+  const takePhoto = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Toast.show({ type: "error", text1: "Permission Denied", text2: "Please allow camera access" });
+        setImagePickerVisible(false);
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({ 
+        mediaTypes: 'images', 
+        allowsEditing: true, 
+        aspect: [1, 1], 
+        quality: 0.8 
+      });
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        await handleImageUpload(result.assets[0].uri);
+      }
+    } catch (error) {
+      Toast.show({ type: "error", text1: "Error", text2: "Failed to take photo" });
+    }
+    setImagePickerVisible(false);
+  };
+
+  const handleImageUpload = async (imageUri) => {
+    setUploadingImage(true);
+    try {
+      const imageUrl = await uploadToCloudinary(imageUri);
+      setFormData(prev => ({ ...prev, profileImage: imageUrl }));
+      Toast.show({ type: "success", text1: "Success", text2: "Image uploaded successfully!" });
+    } catch (error) {
+      Toast.show({ type: "error", text1: "Error", text2: "Failed to upload image" });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleEditField = (field, currentValue) => {
+    setEditingField(field);
+    setEditValue(currentValue);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editValue.trim()) {
+      Toast.show({ type: "error", text1: "Error", text2: "Field cannot be empty" });
+      return;
+    }
+
+    updateProfileMutation.mutate({
+      [editingField]: editValue.trim()
+    });
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Logout", 
+          style: "destructive",
+          onPress: async () => {
+            await logout();
+            router.replace('/login');
+          }
+        }
+      ]
+    );
+  };
+
+  const handleSwitchToSeller = () => {
+    router.push('/(seller-tabs)/dashboard');
+  };
+
+  if (profileLoading) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <StatusBar style="dark" />
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Account</Text>
-        </View>
-        <View style={styles.authContainer}>
-          <View style={styles.authIconContainer}>
-            <Ionicons name="person-circle-outline" size={100} color={colors.primary} />
-          </View>
-          <Text style={styles.authTitle}>Welcome!</Text>
-          <Text style={styles.authSubtitle}>Sign in to access your account</Text>
-          
-          <TouchableOpacity 
-            style={styles.loginButton}
-            onPress={() => router.push('/login')}
-          >
-            <Text style={styles.loginButtonText}>Sign In</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.registerButton}
-            onPress={() => router.push('/register')}
-          >
-            <Text style={styles.registerButtonText}>Create Account</Text>
-          </TouchableOpacity>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar style="dark" />
-      
-      {/* Header */}
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Account</Text>
-        <TouchableOpacity>
-          <Ionicons name="settings-outline" size={24} color="#333" />
-        </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        style={styles.content} 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 70 }}
-      >
-        {/* Profile Card */}
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+        {/* Profile Section */}
         <View style={styles.profileCard}>
-          <View style={styles.profileAvatar}>
-            <Ionicons name="person" size={40} color={colors.primary} />
+          <TouchableOpacity style={styles.profileImageContainer} onPress={showImagePickerOptions}>
+            {formData.profileImage ? (
+              <Image source={{ uri: formData.profileImage }} style={styles.profileImage} />
+            ) : (
+              <View style={styles.profileImagePlaceholder}>
+                <Ionicons name="person" size={40} color={colors.textLight} />
+              </View>
+            )}
+            <View style={styles.cameraIcon}>
+              {uploadingImage ? (
+                <ActivityIndicator size="small" color={colors.textLight} />
+              ) : (
+                <Ionicons name="camera" size={20} color={colors.textLight} />
+              )}
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.profileName}>{formData.name || 'Your Name'}</Text>
+          <Text style={styles.profileEmail}>{formData.email || 'your.email@example.com'}</Text>
+          <View style={styles.roleBadge}>
+            <Ionicons name="person" size={16} color={colors.primary} />
+            <Text style={styles.roleText}>Buyer Account</Text>
           </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{user?.name || 'User'}</Text>
-            <Text style={styles.profileEmail}>{user?.email || ''}</Text>
-          </View>
-          <TouchableOpacity style={styles.editButton}>
-            <Ionicons name="create-outline" size={20} color={colors.primary} />
+        </View>
+
+        {/* Personal Information */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <TouchableOpacity 
+            style={styles.detailItem}
+            onPress={() => handleEditField('name', formData.name)}
+          >
+            <View style={styles.detailIcon}>
+              <Ionicons name="person-outline" size={20} color={colors.primary} />
+            </View>
+            <View style={styles.detailContent}>
+              <Text style={styles.detailLabel}>Full Name</Text>
+              <Text style={styles.detailValue}>{formData.name || 'Not set'}</Text>
+            </View>
+            <Ionicons name="create-outline" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.detailItem}
+            onPress={() => handleEditField('email', formData.email)}
+          >
+            <View style={styles.detailIcon}>
+              <Ionicons name="mail-outline" size={20} color={colors.primary} />
+            </View>
+            <View style={styles.detailContent}>
+              <Text style={styles.detailLabel}>Email</Text>
+              <Text style={styles.detailValue}>{formData.email || 'Not set'}</Text>
+            </View>
+            <Ionicons name="create-outline" size={20} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
 
-        {/* Stats Cards */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Ionicons name="receipt-outline" size={28} color="#FF6D00" />
-            <Text style={styles.statValue}>12</Text>
-            <Text style={styles.statLabel}>Orders</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Ionicons name="heart-outline" size={28} color="#FF6D00" />
-            <Text style={styles.statValue}>8</Text>
-            <Text style={styles.statLabel}>Wishlist</Text>
-          </View>
-          <View style={styles.statCard}>
-            <MaterialCommunityIcons name="ticket-percent-outline" size={28} color="#FF6D00" />
-            <Text style={styles.statValue}>5</Text>
-            <Text style={styles.statLabel}>Vouchers</Text>
-          </View>
-        </View>
-
-        {/* My Orders Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>My Orders</Text>
-          <MenuItem
-            icon="cube-outline"
-            label="To Receive"
-            badge="2"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="checkmark-circle-outline"
-            label="Completed"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="return-down-back-outline"
-            label="Returns"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="close-circle-outline"
-            label="Cancelled"
-            onPress={() => {}}
-          />
-        </View>
-
-        {/* My Account Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>My Account</Text>
-          <MenuItem
-            icon="location-outline"
-            label="Addresses"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="card-outline"
-            label="Payment Methods"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="star-outline"
-            label="Reviews"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="heart-outline"
-            label="Wishlist"
-            badge="8"
-            onPress={() => {}}
-          />
-        </View>
-
-        {/* Settings Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Settings</Text>
-          <MenuItem
-            icon="swap-horizontal-outline"
-            label="Switch to Seller Mode"
-            onPress={() => router.replace('/role-selection')}
-          />
-          <View style={styles.menuItem}>
-            <View style={styles.menuLeft}>
-              <Ionicons name="notifications-outline" size={22} color="#666" />
-              <Text style={styles.menuLabel}>Notifications</Text>
-            </View>
-            <Switch
-              value={notificationsEnabled}
-              onValueChange={setNotificationsEnabled}
-              trackColor={{ false: '#ccc', true: '#FFB74D' }}
-              thumbColor={notificationsEnabled ? '#FF6D00' : '#f4f3f4'}
-            />
-          </View>
-          <MenuItem
-            icon="language-outline"
-            label="Language"
-            rightText="English"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="moon-outline"
-            label="Dark Mode"
-            rightText="Off"
-            onPress={() => {}}
-          />
-        </View>
-
-        {/* Support Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
-          <MenuItem
-            icon="help-circle-outline"
-            label="Help Center"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="chatbubble-ellipses-outline"
-            label="Contact Us"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="information-circle-outline"
-            label="About"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="document-text-outline"
-            label="Terms & Conditions"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="shield-checkmark-outline"
-            label="Privacy Policy"
-            onPress={() => {}}
-          />
-        </View>
-
-        {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={22} color="#FF1744" />
-          <Text style={styles.logoutText}>Logout</Text>
+        {/* Actions */}
+        <TouchableOpacity style={styles.switchButton} onPress={handleSwitchToSeller}>
+          <Ionicons name="storefront-outline" size={20} color={colors.primary} />
+          <Text style={styles.switchButtonText}>Switch to Seller</Text>
         </TouchableOpacity>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Version 1.0.0</Text>
-        </View>
+        
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={20} color={colors.error} />
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
       </ScrollView>
+
+      {/* Edit Modal */}
+      <Modal visible={editModalVisible} transparent={true} animationType="slide" onRequestClose={() => setEditModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit {editingField}</Text>
+              <TouchableOpacity onPress={() => setEditModalVisible(false)}>
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            <TextInput
+              style={styles.modalInput}
+              value={editValue}
+              onChangeText={setEditValue}
+              placeholder={`Enter ${editingField}`}
+              autoFocus
+              multiline={editingField === 'bio'}
+            />
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonCancel]} 
+                onPress={() => setEditModalVisible(false)}
+              >
+                <Text style={styles.modalButtonTextCancel}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonSave]} 
+                onPress={handleSaveEdit}
+                disabled={updateProfileMutation.isLoading}
+              >
+                {updateProfileMutation.isLoading ? (
+                  <ActivityIndicator size="small" color={colors.textLight} />
+                ) : (
+                  <Text style={styles.modalButtonTextSave}>Save</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Image Picker Modal */}
+      <Modal visible={imagePickerVisible} transparent={true} animationType="slide" onRequestClose={() => setImagePickerVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Choose Image</Text>
+              <TouchableOpacity onPress={() => setImagePickerVisible(false)}>
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.imagePickerOptions}>
+              <TouchableOpacity style={styles.imagePickerOption} onPress={pickImageFromGallery}>
+                <Ionicons name="images" size={24} color={colors.primary} />
+                <Text style={styles.imagePickerText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.imagePickerOption} onPress={takePhoto}>
+                <Ionicons name="camera" size={24} color={colors.primary} />
+                <Text style={styles.imagePickerText}>Take Photo</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
-
-function MenuItem({ icon, label, badge, rightText, onPress }) {
-  return (
-    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-      <View style={styles.menuLeft}>
-        <Ionicons name={icon} size={22} color="#666" />
-        <Text style={styles.menuLabel}>{label}</Text>
-        {badge && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{badge}</Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.menuRight}>
-        {rightText && <Text style={styles.rightText}>{rightText}</Text>}
-        <Ionicons name="chevron-forward" size={20} color="#999" />
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-  },
-  content: {
-    flex: 1,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  profileAvatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: colors.backgroundDark,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  profileName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginBottom: 4,
-  },
-  profileEmail: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-  editButton: {
-    padding: 8,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginTop: 8,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 4,
-  },
-  section: {
-    backgroundColor: colors.surface,
-    marginBottom: 12,
-    paddingVertical: 8,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.background,
-  },
-  menuLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  menuLabel: {
-    fontSize: 15,
-    color: colors.textPrimary,
-    marginLeft: 12,
-  },
-  badge: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-    marginLeft: 8,
-  },
-  badgeText: {
-    color: colors.textLight,
-    fontSize: 11,
-    fontWeight: 'bold',
-  },
-  menuRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rightText: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginRight: 4,
-  },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 24,
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: colors.error,
-  },
-  logoutText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.error,
-  },
-  footer: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  footerText: {
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  authContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  authIconContainer: {
-    marginBottom: 24,
-  },
-  authTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  authSubtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  loginButton: {
-    width: '100%',
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  loginButtonText: {
-    color: colors.textLight,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  registerButton: {
-    width: '100%',
-    backgroundColor: colors.surface,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  registerButtonText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
