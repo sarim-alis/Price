@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
 import { getMobileById, getOrCreateConversation } from "../../services/api";
 import { colors } from "../../styles/colors";
 import { detailStyles as styles } from "../../styles/detail";
@@ -24,7 +26,20 @@ export default function MobileDetailScreen() {
   // States.
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const [currentUserId, setCurrentUserId] = useState(null);
   const { data: mobile, isLoading, isError, error } = useQuery({queryKey: ["mobile", id], queryFn: () => getMobileById(id), enabled: !!id});
+
+  // Get current user
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        setCurrentUserId(user.id);
+      }
+    };
+    getUserData();
+  }, []);
 
   if (isLoading) {
     return (
@@ -119,8 +134,8 @@ export default function MobileDetailScreen() {
           <Text style={styles.model}>{mobile.model}</Text>
         </View>
 
-        {/* Price Prediction */}
-        {mobile.prediction && (
+        {/* Price Prediction - Hide if current user is the seller */}
+        {mobile.prediction && currentUserId !== sellerId && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Price Prediction (ARIMA)</Text>
             <View style={styles.predictionCard}>
@@ -167,50 +182,54 @@ export default function MobileDetailScreen() {
           </View>
         </View>
 
-        {/* Seller */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Seller</Text>
-          <View style={styles.sellerCard}>
-            <View style={styles.sellerAvatar}>
-              <Ionicons name="person" size={28} color={colors.textLight} />
+        {/* Seller - Hide if current user is the seller */}
+        {currentUserId !== sellerId && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Seller</Text>
+            <View style={styles.sellerCard}>
+              <View style={styles.sellerAvatar}>
+                <Ionicons name="person" size={28} color={colors.textLight} />
+              </View>
+              <View style={styles.sellerInfo}>
+                <Text style={styles.sellerName}>{seller?.name || "Seller"}</Text>
+                {seller?.email ? (
+                  <View style={styles.sellerRow}>
+                    <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
+                    <Text style={styles.sellerDetail}>{seller.email}</Text>
+                  </View>
+                ) : null}
+                {seller?.phone ? (
+                  <View style={styles.sellerRow}>
+                    <Ionicons name="call-outline" size={16} color={colors.textSecondary} />
+                    <Text style={styles.sellerDetail}>{seller.phone}</Text>
+                  </View>
+                ) : null}
+              </View>
+              <TouchableOpacity style={styles.contactBtn} onPress={openChat} activeOpacity={0.8}>
+                <Ionicons name="chatbubble-outline" size={20} color={colors.textLight} />
+                <Text style={styles.contactBtnText}>Chat</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.sellerInfo}>
-              <Text style={styles.sellerName}>{seller?.name || "Seller"}</Text>
-              {seller?.email ? (
-                <View style={styles.sellerRow}>
-                  <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
-                  <Text style={styles.sellerDetail}>{seller.email}</Text>
-                </View>
-              ) : null}
-              {seller?.phone ? (
-                <View style={styles.sellerRow}>
-                  <Ionicons name="call-outline" size={16} color={colors.textSecondary} />
-                  <Text style={styles.sellerDetail}>{seller.phone}</Text>
-                </View>
-              ) : null}
-            </View>
-            <TouchableOpacity style={styles.contactBtn} onPress={openChat} activeOpacity={0.8}>
-              <Ionicons name="chatbubble-outline" size={20} color={colors.textLight} />
-              <Text style={styles.contactBtnText}>Chat</Text>
-            </TouchableOpacity>
           </View>
-        </View>
+        )}
       </ScrollView>
 
-      {/* Bottom Action Buttons */}
-      <View style={styles.bottomActions}>
-        <TouchableOpacity 
-          style={styles.buyNowButton} 
-          onPress={() => router.push({
-            pathname: '/checkout/[mobileId]',
-            params: { mobileId: id }
-          })}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="card-outline" size={20} color={colors.textLight} />
-          <Text style={styles.buyNowText}>Buy Now</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Bottom Action Buttons - Hide if current user is the seller */}
+      {/* {currentUserId !== sellerId && (
+        <View style={styles.bottomActions}>
+          <TouchableOpacity 
+            style={styles.buyNowButton} 
+            onPress={() => router.push({
+              pathname: '/checkout/[mobileId]',
+              params: { mobileId: id }
+            })}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="card-outline" size={20} color={colors.textLight} />
+            <Text style={styles.buyNowText}>Buy Now</Text>
+          </TouchableOpacity>
+        </View>
+      )} */}
     </SafeAreaView>
   );
 }
