@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getMobilesBySellerId, deleteMobile } from "../../services/api";
 import AddMobileForm from "../../components/AddMobileForm";
+import UpdateMobileForm from "../../components/UpdateMobileForm";
 import { colors } from "../../styles/colors";
 import { sellerProductsStyles as styles } from "../../styles/seller-products";
 
@@ -20,6 +21,8 @@ export default function SellerProducts() {
   const [sellerId, setSellerId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [selectedMobile, setSelectedMobile] = useState(null);
 
   // Get user data.
   useEffect(() => {
@@ -84,6 +87,17 @@ export default function SellerProducts() {
   const handleAddSuccess = () => {
     queryClient.invalidateQueries(['sellerMobiles']);
     setCurrentPage(1);
+  };
+
+  const handleUpdateMobile = (mobile) => {
+    setSelectedMobile(mobile);
+    setUpdateModalVisible(true);
+  };
+
+  const handleUpdateSuccess = () => {
+    queryClient.invalidateQueries(['sellerMobiles']);
+    setUpdateModalVisible(false);
+    setSelectedMobile(null);
   };
 
   if (isLoading) {
@@ -166,7 +180,10 @@ export default function SellerProducts() {
                 <TouchableOpacity style={styles.actionButton} onPress={() => handleViewDetails(mobile._id)}>
                   <Ionicons name="eye-outline" size={20} color={colors.primary} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                <TouchableOpacity 
+                  style={styles.actionButton}
+                  onPress={() => handleUpdateMobile(mobile)}
+                >
                   <Ionicons name="create-outline" size={20} color={colors.primary} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionButton} onPress={() => handleDeleteMobile(mobile._id, mobile.model)} disabled={deleteMobileMutation.isLoading}>
@@ -192,6 +209,14 @@ export default function SellerProducts() {
 
       {/* Add Mobile Modal */}
       <AddMobileForm visible={addModalVisible} onClose={() => setAddModalVisible(false)} onSuccess={handleAddSuccess} />
+      
+      {/* Update Mobile Modal */}
+      <UpdateMobileForm 
+        visible={updateModalVisible} 
+        onClose={() => setUpdateModalVisible(false)} 
+        onSuccess={handleUpdateSuccess}
+        mobile={selectedMobile}
+      />
     </SafeAreaView>
   );
 }

@@ -58,6 +58,21 @@ export const deleteMobile = async (mobileId) => {
   return data;
 };
 
+export const updateMobile = async (mobileId, mobileData) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/mobiles/${mobileId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(mobileData)
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to update mobile");
+  return data;
+};
+
 // Seller APIs
 export const getSellerById = async (id) => {
   const response = await fetch(`${API_URL}/seller/${id}`);
