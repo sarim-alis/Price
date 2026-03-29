@@ -5,13 +5,16 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
+import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { colors } from '../../styles/colors';
+import { getFlashSaleMobiles } from '../../services/api';
 
 const BRAND_CATEGORIES = [
   { icon: 'pricetag', label: 'Apple', brand: 'apple', color: '#FFA726' },
@@ -27,6 +30,25 @@ const BRAND_CATEGORIES = [
 
 export default function ForYouScreen() {
   const router = useRouter();
+  const [flashSaleMobiles, setFlashSaleMobiles] = useState([]);
+  const [loadingFlashSale, setLoadingFlashSale] = useState(true);
+
+  useEffect(() => {
+    fetchFlashSaleMobiles();
+  }, []);
+
+  const fetchFlashSaleMobiles = async () => {
+    try {
+      setLoadingFlashSale(true);
+      const mobiles = await getFlashSaleMobiles();
+      setFlashSaleMobiles(mobiles);
+    } catch (error) {
+      console.error('Error fetching flash sale mobiles:', error);
+    } finally {
+      setLoadingFlashSale(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="dark" />
@@ -99,32 +121,54 @@ export default function ForYouScreen() {
                 </View>
               </View>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.moreLink}>Shop More {'>'}</Text>
-            </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788916/m7nsyey6omkboehfcie6.jpg"
-              price="Rs.186"
-              originalPrice="Rs.620"
-              discount="-70%"
-              sold="1.0k sold"
-            />
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788978/fdpkoh6lbo6jntwduvdk.jpg"
-              price="Rs.832"
-              originalPrice="Rs.2,980"
-              discount="-72%"
-              sold="Only 1 left"
-            />
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789237/n0fk2lyr64nvvrrh5z6q.jpg"
-              price="Rs.430"
-              originalPrice="Rs.1,000"
-              discount="-57%"
-              sold="Only 10 left"
-            />
+            {loadingFlashSale ? (
+              <>
+                <ProductCardSkeleton />
+                <ProductCardSkeleton />
+                <ProductCardSkeleton />
+              </>
+            ) : flashSaleMobiles.length > 0 ? (
+              flashSaleMobiles.map((mobile, index) => (
+                <ProductCard
+                  key={mobile._id || index}
+                  image={mobile.image || mobile.images?.[0]}
+                  price={`Rs.${mobile.price}`}
+                  originalPrice={`Rs.${mobile.originalPrice}`}
+                  discount={`-${mobile.discount}%`}
+                  sold={mobile.sold}
+                  onPress={() => router.push(`/mobile/${mobile._id}`)}
+                />
+              ))
+            ) : (
+              <>
+                <ProductCard
+                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789028/r1fubc2z7du0t5gnpm8o.jpg"
+                  price="Rs.292"
+                  originalPrice="Rs.1,200"
+                  discount="-76%"
+                  sold="iPhone 15 Pro"
+                  onPress={() => router.push('/mobiles')}
+                />
+                <ProductCard
+                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp"
+                  price="Rs.832"
+                  originalPrice="Rs.2,980"
+                  discount="-72%"
+                  sold="Samsung S24"
+                  onPress={() => router.push('/mobiles')}
+                />
+                <ProductCard
+                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg"
+                  price="Rs.430"
+                  originalPrice="Rs.1,000"
+                  discount="-57%"
+                  sold="Realme 12"
+                  onPress={() => router.push('/mobiles')}
+                />
+              </>
+            )}
           </ScrollView>
         </View>
 
@@ -132,9 +176,6 @@ export default function ForYouScreen() {
         <View style={styles.dailyChoiceSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Trending mobiles</Text>
-            <TouchableOpacity>
-              <Text style={styles.moreLink}>Shop Now | Free Gift! {'>'}</Text>
-            </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
             <ProductCard
@@ -142,17 +183,20 @@ export default function ForYouScreen() {
               price="Rs.292"
               badge="HOT"
               label="BUY 1 GET 1 FREE"
+              onPress={() => router.push('/mobiles')}
             />
             <ProductCard
               image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp"
               price="Rs.191"
               badge="HOT"
               label="SUPER PACK"
+              onPress={() => router.push('/mobiles')}
             />
             <ProductCard
               image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg"
               price="Rs.240"
               badge="HOT"
+              onPress={() => router.push('/mobiles')}
             />
           </ScrollView>
         </View>
@@ -183,10 +227,26 @@ function VoucherCard({ discount, subtitle, color }) {
   );
 }
 
-// Product Card Component
-function ProductCard({ image, price, originalPrice, discount, sold, badge, label }) {
+// Product Card Skeleton Component
+function ProductCardSkeleton() {
   return (
     <View style={styles.productCard}>
+      <View style={styles.productImageContainer}>
+        <View style={styles.skeletonImage} />
+        <View style={styles.skeletonBadge} />
+      </View>
+      <View style={styles.productInfo}>
+        <View style={styles.skeletonPrice} />
+        <View style={styles.skeletonOriginalPrice} />
+      </View>
+    </View>
+  );
+}
+
+// Product Card Component
+function ProductCard({ image, price, originalPrice, discount, sold, badge, label, onPress }) {
+  return (
+    <TouchableOpacity style={styles.productCard} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.productImageContainer}>
         <Image source={{ uri: image }} style={styles.productImage} />
         {label && (
@@ -212,7 +272,7 @@ function ProductCard({ image, price, originalPrice, discount, sold, badge, label
           </View>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -499,5 +559,33 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 12,
     marginBottom: 60,
+  },
+  // Skeleton loading styles
+  skeletonImage: {
+    width: '100%',
+    height: 140,
+    backgroundColor: colors.background,
+    borderRadius: 0,
+  },
+  skeletonBadge: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 24,
+    backgroundColor: colors.background,
+  },
+  skeletonPrice: {
+    width: 60,
+    height: 16,
+    backgroundColor: colors.background,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+  skeletonOriginalPrice: {
+    width: 80,
+    height: 12,
+    backgroundColor: colors.background,
+    borderRadius: 4,
   },
 });

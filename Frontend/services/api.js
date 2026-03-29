@@ -98,6 +98,77 @@ export const getMobiles = async (params = {}) => {
   return data;
 };
 
+// Get flash sale mobiles (iPhone, Samsung, Realme)
+export const getFlashSaleMobiles = async () => {
+  try {
+    // Fetch iPhone, Samsung, and Realme mobiles with limit 1 each
+    const [iphoneData, samsungData, realmeData] = await Promise.all([
+      getMobiles({ brand: 'apple', limit: 1, sortBy: 'price', order: 'asc' }),
+      getMobiles({ brand: 'samsung', limit: 1, sortBy: 'price', order: 'asc' }),
+      getMobiles({ brand: 'realme', limit: 1, sortBy: 'price', order: 'asc' })
+    ]);
+    
+    const flashSaleMobiles = [];
+    
+    if (iphoneData.mobiles && iphoneData.mobiles.length > 0) {
+      const mobile = iphoneData.mobiles[0];
+      flashSaleMobiles.push({
+        ...mobile,
+        discount: Math.round((1 - mobile.price / (mobile.price * 4)) * 100), // Simulate 75% off
+        originalPrice: Math.round(mobile.price * 4),
+        sold: 'iPhone 15 Pro'
+      });
+    }
+    
+    if (samsungData.mobiles && samsungData.mobiles.length > 0) {
+      const mobile = samsungData.mobiles[0];
+      flashSaleMobiles.push({
+        ...mobile,
+        discount: Math.round((1 - mobile.price / (mobile.price * 3.5)) * 100), // Simulate 72% off
+        originalPrice: Math.round(mobile.price * 3.5),
+        sold: 'Samsung S24'
+      });
+    }
+    
+    if (realmeData.mobiles && realmeData.mobiles.length > 0) {
+      const mobile = realmeData.mobiles[0];
+      flashSaleMobiles.push({
+        ...mobile,
+        discount: Math.round((1 - mobile.price / (mobile.price * 2.3)) * 100), // Simulate 57% off
+        originalPrice: Math.round(mobile.price * 2.3),
+        sold: 'Realme 12'
+      });
+    }
+    
+    return flashSaleMobiles;
+  } catch (error) {
+    // Fallback to hardcoded data if API fails
+    return [
+      {
+        image: "https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789028/r1fubc2z7du0t5gnpm8o.jpg",
+        price: 292,
+        originalPrice: 1200,
+        discount: 76,
+        sold: "iPhone 15 Pro"
+      },
+      {
+        image: "https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp",
+        price: 832,
+        originalPrice: 2980,
+        discount: 72,
+        sold: "Samsung S24"
+      },
+      {
+        image: "https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg",
+        price: 430,
+        originalPrice: 1000,
+        discount: 57,
+        sold: "Realme 12"
+      }
+    ];
+  }
+};
+
 // Get single mobile by id (includes populated seller).
 export const getMobileById = async (id) => {
   const response = await fetch(`${API_URL}/mobiles/${id}`);
