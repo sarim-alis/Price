@@ -73,7 +73,18 @@ export const getProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+
+    if (user.role === "seller") {
+      const Seller = (await import("../../models/Seller.js")).default;
+      const seller = await Seller.findOne({ sellerId: user._id });
+      
+      res.json({
+        ...user.toObject(),
+        seller: seller ? seller.toObject() : null
+      });
+    } else {
+      res.json(user);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -82,12 +93,39 @@ export const getProfile = async (req, res) => {
 // Update user profile.
 export const updateProfile = async (req, res) => {
   try {
-    const { name, phone, profileImage } = req.body;
+    const { name, phone, profileImage, shopName, shopPic, address, bankDetail, easypaisaDetail, jazzcashDetail } = req.body;
+
+    const userUpdateData = {};
+    if (name) userUpdateData.name = name;
+    if (phone) userUpdateData.phone = phone;
+    if (profileImage) userUpdateData.profileImage = profileImage;
+
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { name, phone, profileImage },
+      userUpdateData,
       { new: true }
     ).select("-password");
+
+    if (user.role === "seller") {
+      const Seller = (await import("../../models/Seller.js")).default;
+      const sellerUpdateData = {};
+      
+      if (shopName) sellerUpdateData.shopName = shopName;
+      if (shopPic) sellerUpdateData.shopPic = shopPic;
+      if (address) sellerUpdateData.address = address;
+      if (bankDetail) sellerUpdateData.bankDetail = bankDetail;
+      if (easypaisaDetail) sellerUpdateData.easypaisaDetail = easypaisaDetail;
+      if (jazzcashDetail) sellerUpdateData.jazzcashDetail = jazzcashDetail;
+
+      if (Object.keys(sellerUpdateData).length > 0) {
+        await Seller.findOneAndUpdate(
+          { sellerId: user._id },
+          sellerUpdateData,
+          { new: true }
+        );
+      }
+    }
+
     res.json({ message: "Profile updated", user });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -2,6 +2,49 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.100.39:5000/api";
 
+// Profile APIs
+export const getProfile = async () => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/users/profile`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch profile");
+  return data;
+};
+
+export const updateProfile = async (profileData) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/users/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(profileData)
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to update profile");
+  return data;
+};
+
+// Seller APIs
+export const getSellerById = async (id) => {
+  const response = await fetch(`${API_URL}/seller/${id}`);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Seller not found");
+  return data;
+};
+
+export const getAllSellers = async () => {
+  const response = await fetch(`${API_URL}/seller/all`);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to fetch sellers");
+  return data;
+};
+
 // Get all mobiles (optional: brand, minPrice, maxPrice, condition, page, limit).
 export const getMobiles = async (params = {}) => {
   const qs = new URLSearchParams(params).toString();

@@ -21,7 +21,12 @@ export const sellerAccountStyles = {
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 120,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   profileCard: {
     backgroundColor: colors.surface,
@@ -32,14 +37,34 @@ export const sellerAccountStyles = {
     borderWidth: 1,
     borderColor: colors.borderLight,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+  },
+  profileImagePlaceholder: {
     backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16,
+  },
+  profileInitials: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: colors.textLight,
+  },
+  cameraOverlay: {
+    position: "absolute",
+    bottom: 20,
+    right: 0,
+    backgroundColor: colors.primary,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: colors.surface,
   },
   userName: {
     fontSize: 20,
@@ -69,7 +94,13 @@ export const sellerAccountStyles = {
   section: {
     marginBottom: 20,
   },
-  menuItem: {
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  detailItem: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.surface,
@@ -79,7 +110,7 @@ export const sellerAccountStyles = {
     borderWidth: 1,
     borderColor: colors.borderLight,
   },
-  menuIcon: {
+  detailIcon: {
     width: 44,
     height: 44,
     borderRadius: 22,
@@ -88,18 +119,35 @@ export const sellerAccountStyles = {
     alignItems: "center",
     marginRight: 12,
   },
-  menuContent: {
+  detailContent: {
     flex: 1,
   },
-  menuTitle: {
+  detailLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
+  detailValue: {
     fontSize: 16,
     fontWeight: "600",
     color: colors.textPrimary,
-    marginBottom: 2,
   },
-  menuSubtitle: {
-    fontSize: 12,
-    color: colors.textSecondary,
+  shopImageContainer: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  shopImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+  },
+  shopImagePlaceholder: {
+    backgroundColor: colors.backgroundDark,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: colors.borderLight,
+    borderStyle: "dashed",
   },
   switchButton: {
     flexDirection: "row",
@@ -133,5 +181,71 @@ export const sellerAccountStyles = {
     fontSize: 16,
     fontWeight: "600",
     color: colors.error,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    width: "100%",
+    maxWidth: 400,
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: colors.textPrimary,
+    backgroundColor: colors.background,
+    marginBottom: 20,
+    textAlignVertical: "top",
+  },
+  modalActions: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+  },
+  modalCancelButton: {
+    backgroundColor: colors.backgroundDark,
+  },
+  modalSaveButton: {
+    backgroundColor: colors.primary,
+  },
+  modalCancelText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+  modalSaveText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textLight,
   },
 };
