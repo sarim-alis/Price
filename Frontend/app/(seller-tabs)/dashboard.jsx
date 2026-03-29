@@ -1,9 +1,12 @@
+// Imports.
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styles/colors";
 import { sellerDashboardStyles as styles } from "../../styles/seller-dashboard";
 
+
+// Frontend.
 export default function SellerDashboard() {
   const stats = [
     { title: "Active Listings", value: "24", icon: "phone-portrait", color: colors.info },

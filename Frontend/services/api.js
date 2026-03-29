@@ -30,6 +30,34 @@ export const updateProfile = async (profileData) => {
   return data;
 };
 
+export const addMobile = async (mobileData) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/mobiles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(mobileData)
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to add mobile");
+  return data;
+};
+
+export const deleteMobile = async (mobileId) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await fetch(`${API_URL}/mobiles/${mobileId}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Failed to delete mobile");
+  return data;
+};
+
 // Seller APIs
 export const getSellerById = async (id) => {
   const response = await fetch(`${API_URL}/seller/${id}`);
@@ -64,8 +92,8 @@ export const getMobileById = async (id) => {
 };
 
 // Get mobiles by seller ID.
-export const getMobilesBySellerId = async (sellerId) => {
-  const response = await fetch(`${API_URL}/mobiles/seller/${sellerId}`);
+export const getMobilesBySellerId = async (sellerId, page = 1, limit = 3) => {
+  const response = await fetch(`${API_URL}/mobiles/seller/${sellerId}?page=${page}&limit=${limit}`);
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || "Failed to fetch seller mobiles");
   return data;

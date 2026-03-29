@@ -172,4 +172,33 @@ export const sellerProductsStyles = {
     fontWeight: "600",
     color: colors.textPrimary,
   },
+  circularPagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 24,
+    gap: 12,
+  },
+  paginationDot: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.backgroundDark,
+    borderWidth: 2,
+    borderColor: colors.borderLight,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  paginationDotActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  paginationDotText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.textSecondary,
+  },
+  paginationDotTextActive: {
+    color: colors.textLight,
+  },
 };

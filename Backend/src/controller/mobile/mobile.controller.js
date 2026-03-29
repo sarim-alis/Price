@@ -72,8 +72,22 @@ export const getMobileById = async (req, res) => {
 export const getMobilesBySeller = async (req, res) => {
   try {
     const sellerId = req.params.sellerId || req.user.id;
-    const mobiles = await Mobile.find({ sellerId });
-    res.json(mobiles);
+    const { page = 1, limit = 3 } = req.query;
+    
+    const mobiles = await Mobile.find({ sellerId })
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
+    
+    const total = await Mobile.countDocuments({ sellerId });
+    
+    res.json({ 
+      mobiles, 
+      total, 
+      page: Number(page), 
+      pages: Math.ceil(total / limit),
+      limit: Number(limit)
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -4,6 +4,7 @@ export const sellerDashboardStyles = {
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingBottom: 60
   },
   header: {
     padding: 16,
