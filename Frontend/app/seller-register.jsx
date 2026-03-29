@@ -22,13 +22,13 @@ export default function SellerRegister() {
 
   // Handle CNIC formatting.
   const handleCnicChange = (text) => {
-    // Remove all non-numeric characters
+    // Remove all non-numeric characters.
     const numbers = text.replace(/[^0-9]/g, '');
     
-    // Limit to 13 digits
+    // Limit to 13 digits.
     const limitedNumbers = numbers.slice(0, 13);
     
-    // Format with hyphens
+    // Format with hyphens.
     let formatted = limitedNumbers;
     if (limitedNumbers.length > 5) {
       formatted = limitedNumbers.slice(0, 5) + '-' + limitedNumbers.slice(5);
@@ -36,7 +36,6 @@ export default function SellerRegister() {
     if (limitedNumbers.length > 12) {
       formatted = limitedNumbers.slice(0, 5) + '-' + limitedNumbers.slice(5, 12) + '-' + limitedNumbers.slice(12);
     }
-    
     setCnic(formatted);
   };
 
@@ -64,10 +63,7 @@ export default function SellerRegister() {
         <ScrollView contentContainerStyle={authStyles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={authStyles.overlay}>
             {/* Back Button */}
-            <TouchableOpacity 
-              onPress={() => router.replace("/role-selection")} 
-              style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}
-            >
+            <TouchableOpacity onPress={() => router.replace("/role-selection")} style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}>
               <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
             </TouchableOpacity>
 
@@ -82,14 +78,7 @@ export default function SellerRegister() {
               <Text style={authStyles.label}>Name</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="person-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your name"
-                  placeholderTextColor={colors.textMuted}
-                  value={name}
-                  onChangeText={setName}
-                  autoCapitalize="words"
-                />
+                <TextInput style={authStyles.input} placeholder="Enter your name" placeholderTextColor={colors.textMuted} value={name} onChangeText={setName} autoCapitalize="words" />
               </View>
             </View>
 
@@ -98,15 +87,7 @@ export default function SellerRegister() {
               <Text style={authStyles.label}>Email</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your email"
-                  placeholderTextColor={colors.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                />
+                <TextInput style={authStyles.input} placeholder="Enter your email" placeholderTextColor={colors.textMuted} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
               </View>
             </View>
 
@@ -115,31 +96,16 @@ export default function SellerRegister() {
               <Text style={authStyles.label}>CNIC</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="card-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="33205-2456871-1"
-                  placeholderTextColor={colors.textMuted}
-                  value={cnic}
-                  onChangeText={handleCnicChange}
-                  keyboardType="numeric"
-                  maxLength={15}
-                />
+                <TextInput style={authStyles.input} placeholder="33205-2456871-1" placeholderTextColor={colors.textMuted} value={cnic} onChangeText={handleCnicChange} keyboardType="numeric" maxLength={15} />
               </View>
             </View>
 
-            {/* Password */
+            {/* Password */ }
             <View style={authStyles.inputContainer}>
               <Text style={authStyles.label}>Password</Text>
               <View style={authStyles.inputWrapper}>
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your password"
-                  placeholderTextColor={colors.textMuted}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
+                <TextInput style={authStyles.input} placeholder="Enter your password" placeholderTextColor={colors.textMuted} value={password} onChangeText={setPassword} secureTextEntry={!showPassword} />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={authStyles.eyeIcon}>
                   <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={colors.textMuted} />
                 </TouchableOpacity>
