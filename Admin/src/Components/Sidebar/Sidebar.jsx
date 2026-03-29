@@ -1,6 +1,6 @@
 // Imports.
 import { Layout, Menu, Avatar, Button, Divider } from 'antd';
-import { AppstoreOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, MoreOutlined, UserOutlined, TeamOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUser } from '../../services/auth';
 import { colors } from '../../styles/colors';
@@ -16,7 +16,8 @@ const Sidebar = () => {
   // Menu items.
   const menuItems = [
     { key: '/admin/dashboard', icon: <AppstoreOutlined />, label: 'Dashboard' },
-    { key: '/admin/seller',   icon: <UserOutlined />,     label: 'Sellers'   },
+    { key: '/admin/seller',    icon: <UserOutlined />,     label: 'Sellers'   },
+    { key: '/admin/buyer',     icon: <TeamOutlined />,     label: 'Buyers'    },
   ];
 
   const handleMenuClick = ({ key }) => {

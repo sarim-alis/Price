@@ -82,18 +82,6 @@ export default function Seller() {
           <Users className="w-16 h-16 text-text-muted mb-4" />
           <h3 className="text-lg font-semibold text-text-primary mb-2">No Sellers Found</h3>
           <p className="text-text-secondary mb-6">No sellers have been registered yet.</p>
-          <Button
-            type="primary"
-            size="large"
-            icon={<Plus className="w-5 h-5" />}
-            onClick={() => navigate("/admin/seller/add")}
-            style={{
-              backgroundColor: colors.primary,
-              borderColor: colors.primary,
-            }}
-          >
-            Add First Seller
-          </Button>
         </div>
       </div>
     );

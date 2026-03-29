@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/"                element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login"     element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/admin/register"  element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/admin/register"  element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller"    element={<ProtectedRoute><Layout><Seller /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller/add" element={<ProtectedRoute><Layout><AddSeller /></Layout></ProtectedRoute>} />
