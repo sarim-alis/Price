@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 // Register user.
 export const register = async (req, res) => {
   try {
-s    const { name, email, password, role, phone, cnic } = req.body;
+    const { name, email, password, role, phone, cnic } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -29,7 +29,7 @@ s    const { name, email, password, role, phone, cnic } = req.body;
 
     if (role === "seller") {
       const Seller = (await import("../../models/Seller.js")).default;
-      await Seller.create({ sellerId: user._id, cnic, shopName: "My Shop", sellerPic: null });
+      await Seller.create({ sellerId: user._id, cnic, shopName: "My Shop", shopPic: null });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });

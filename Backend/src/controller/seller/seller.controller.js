@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const createSeller = async (req, res) => {
   try {
-    const { name, email, password, phone, cnic, shopName, sellerPic } = req.body;
+    const { name, email, password, phone, cnic, shopName, shopPic } = req.body;
 
     if (!name || !email || !password || !cnic) {
       return res.status(400).json({ message: "Name, email, password, and CNIC are required" });
@@ -36,7 +36,7 @@ export const createSeller = async (req, res) => {
       sellerId: user._id,
       cnic,
       shopName: shopName || "My Shop",
-      sellerPic: sellerPic || null
+      shopPic: shopPic || null
     });
 
     res.status(201).json({
@@ -48,7 +48,7 @@ export const createSeller = async (req, res) => {
         phone: user.phone,
         cnic: seller.cnic,
         shopName: seller.shopName,
-        sellerPic: seller.sellerPic
+        shopPic: seller.shopPic
       }
     });
   } catch (error) {
@@ -72,7 +72,7 @@ export const getAllSellers = async (req, res) => {
       profileImage: seller.sellerId.profileImage,
       cnic: seller.cnic,
       shopName: seller.shopName,
-      sellerPic: seller.sellerPic,
+      shopPic: seller.shopPic,
       createdAt: seller.createdAt
     }));
 
@@ -103,7 +103,7 @@ export const getSellerById = async (req, res) => {
         profileImage: seller.sellerId.profileImage,
         cnic: seller.cnic,
         shopName: seller.shopName,
-        sellerPic: seller.sellerPic,
+        shopPic: seller.shopPic,
         createdAt: seller.createdAt
       }
     });
