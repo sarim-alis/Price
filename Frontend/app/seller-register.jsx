@@ -15,10 +15,7 @@ export default function SellerRegister() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
   const [cnic, setCnic] = useState("");
-  const [sellerShopPic, setSellerShopPic] = useState("");
-  const [sellerProfilePic, setSellerProfilePic] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -45,13 +42,13 @@ export default function SellerRegister() {
 
   // Handle register.
   const handleRegister = async () => {
-    if (!name || !email || !password || !phone || !cnic) {
+    if (!name || !email || !password || !cnic) {
       Toast.show({ type: "error", text1: "Error", text2: "Please fill in all required fields" });
       return;
     }
     setLoading(true);
     try {
-      await sellerRegister(name, email, password, phone, cnic, sellerShopPic, sellerProfilePic);
+      await sellerRegister(name, email, password, cnic);
       Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
       router.replace("/(seller-tabs)/dashboard");
     } catch (error) {
@@ -113,22 +110,6 @@ export default function SellerRegister() {
               </View>
             </View>
 
-            {/* Phone */}
-            <View style={authStyles.inputContainer}>
-              <Text style={authStyles.label}>Phone</Text>
-              <View style={authStyles.inputWrapper}>
-                <Ionicons name="call-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter your phone number"
-                  placeholderTextColor={colors.textMuted}
-                  value={phone}
-                  onChangeText={setPhone}
-                  keyboardType="phone-pad"
-                />
-              </View>
-            </View>
-
             {/* CNIC */}
             <View style={authStyles.inputContainer}>
               <Text style={authStyles.label}>CNIC</Text>
@@ -146,39 +127,7 @@ export default function SellerRegister() {
               </View>
             </View>
 
-            {/* Seller Shop Picture */}
-            <View style={authStyles.inputContainer}>
-              <Text style={authStyles.label}>Shop Picture URL (Optional)</Text>
-              <View style={authStyles.inputWrapper}>
-                <Ionicons name="storefront-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter shop picture URL"
-                  placeholderTextColor={colors.textMuted}
-                  value={sellerShopPic}
-                  onChangeText={setSellerShopPic}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
-            {/* Seller Profile Picture */}
-            <View style={authStyles.inputContainer}>
-              <Text style={authStyles.label}>Profile Picture URL (Optional)</Text>
-              <View style={authStyles.inputWrapper}>
-                <Ionicons name="image-outline" size={20} color={colors.textMuted} style={authStyles.inputIcon} />
-                <TextInput
-                  style={authStyles.input}
-                  placeholder="Enter profile picture URL"
-                  placeholderTextColor={colors.textMuted}
-                  value={sellerProfilePic}
-                  onChangeText={setSellerProfilePic}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
-            {/* Password */}
+            {/* Password */
             <View style={authStyles.inputContainer}>
               <Text style={authStyles.label}>Password</Text>
               <View style={authStyles.inputWrapper}>

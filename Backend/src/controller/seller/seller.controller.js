@@ -6,8 +6,8 @@ export const createSeller = async (req, res) => {
   try {
     const { name, email, password, phone, cnic, shopName, sellerPic } = req.body;
 
-    if (!name || !email || !password || !cnic || !shopName) {
-      return res.status(400).json({ message: "Name, email, password, CNIC, and Shop Name are required" });
+    if (!name || !email || !password || !cnic) {
+      return res.status(400).json({ message: "Name, email, password, and CNIC are required" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -31,12 +31,12 @@ export const createSeller = async (req, res) => {
       role: "seller"
     });
 
-    // Create seller profile
+    // Create seller profile.
     const seller = await Seller.create({
       sellerId: user._id,
       cnic,
-      shopName,
-      sellerPic
+      shopName: shopName || "My Shop",
+      sellerPic: sellerPic || null
     });
 
     res.status(201).json({

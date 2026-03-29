@@ -6,15 +6,15 @@ import jwt from "jsonwebtoken";
 // Register user.
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, phone, cnic, shopName, sellerPic } = req.body;
+    const { name, email, password, role, phone, cnic } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     if (role === "seller") {
-      if (!cnic || !shopName) {
-        return res.status(400).json({ message: "CNIC and Shop Name are required for sellers" });
+      if (!cnic) {
+        return res.status(400).json({ message: "CNIC is required for sellers" });
       }
 
       const Seller = (await import("../../models/Seller.js")).default;
@@ -25,11 +25,11 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword, role, phone, profileImage: sellerPic });
+    const user = await User.create({ name, email, password: hashedPassword, role, phone });
 
     if (role === "seller") {
       const Seller = (await import("../../models/Seller.js")).default;
-      await Seller.create({ sellerId: user._id, cnic, shopName, sellerPic });
+      await Seller.create({ sellerId: user._id, cnic, shopName: "My Shop", sellerPic: null });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });

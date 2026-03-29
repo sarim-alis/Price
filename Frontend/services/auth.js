@@ -74,7 +74,7 @@ export const sellerLogin = async (email, password) => {
 };
 
 // Seller Register.
-export const sellerRegister = async (name, email, password, phone, cnic, sellerShopPic, sellerProfilePic) => {
+export const sellerRegister = async (name, email, password, cnic) => {
   const response = await fetch(`${API_URL}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -82,10 +82,7 @@ export const sellerRegister = async (name, email, password, phone, cnic, sellerS
       name, 
       email, 
       password, 
-      phone, 
-      cnic, 
-      seller_shop_pic: sellerShopPic,
-      seller_profile_pic: sellerProfilePic,
+      cnic,
       role: "seller" 
     }),
   });
