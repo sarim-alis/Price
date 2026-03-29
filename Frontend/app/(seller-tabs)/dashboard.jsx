@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMobilesBySellerId } from "../../services/api";
+import { getMobilesBySellerId, getUserConversations } from "../../services/api";
 import { colors } from "../../styles/colors";
 import { sellerDashboardStyles as styles } from "../../styles/seller-dashboard";
 import AddMobileForm from "../../components/AddMobileForm";
@@ -35,17 +35,32 @@ export default function SellerDashboard() {
   // Fetch mobiles.
   const { data: mobilesData, isLoading: mobilesLoading } = useQuery({
     queryKey: ["sellerMobiles", sellerId],
-    queryFn: () => getMobilesBySellerId(sellerId, 1, 3),
+    queryFn: () => getMobilesBySellerId(sellerId, 1, 3), // Get first page, 3 items
+    enabled: !!sellerId,
+  });
+
+  // Fetch conversations to count unique buyers
+  const { data: conversationsData } = useQuery({
+    queryKey: ["userConversations", sellerId],
+    queryFn: getUserConversations,
     enabled: !!sellerId,
   });
 
   const recentMobiles = mobilesData?.mobiles?.slice(0, 3) || [];
+  const totalMobiles = mobilesData?.total || 0;
+  
+  // Count unique buyers from conversations
+  const uniqueBuyers = conversationsData?.reduce((unique, conversation) => {
+    const otherUserId = conversation.participants?.find(id => id !== sellerId);
+    if (otherUserId) {
+      unique.add(otherUserId);
+    }
+    return unique;
+  }, new Set()).size || 0;
   
   const stats = [
-    { title: "Active Listings", value: "24", icon: "phone-portrait", color: colors.info },
-    { title: "Total Sales", value: "156", icon: "cart", color: colors.success },
-    { title: "Pending Orders", value: "8", icon: "cube", color: colors.warning },
-    { title: "Revenue", value: "₨ 245K", icon: "trending-up", color: colors.primary },
+    { title: "Total Mobiles", value: totalMobiles.toString(), icon: "phone-portrait", color: colors.primary },
+    { title: "Total Buyers", value: uniqueBuyers.toString(), icon: "people", color: colors.success },
   ];
 
   return (
