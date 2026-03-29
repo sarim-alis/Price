@@ -4,10 +4,10 @@ import bcrypt from "bcryptjs";
 
 export const createSeller = async (req, res) => {
   try {
-    const { name, email, password, phone, cnic } = req.body;
+    const { name, email, password, phone, cnic, shopName, sellerPic } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "Name, email, and password are required" });
+    if (!name || !email || !password || !cnic || !shopName) {
+      return res.status(400).json({ message: "Name, email, password, CNIC, and Shop Name are required" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -34,11 +34,9 @@ export const createSeller = async (req, res) => {
     // Create seller profile
     const seller = await Seller.create({
       sellerId: user._id,
-      cnic: cnic || undefined,
-      isVerified: false,
-      badge: "none",
-      rating: 0,
-      fraudScore: 0
+      cnic,
+      shopName,
+      sellerPic
     });
 
     res.status(201).json({
@@ -49,9 +47,8 @@ export const createSeller = async (req, res) => {
         email: user.email,
         phone: user.phone,
         cnic: seller.cnic,
-        isVerified: seller.isVerified,
-        badge: seller.badge,
-        rating: seller.rating
+        shopName: seller.shopName,
+        sellerPic: seller.sellerPic
       }
     });
   } catch (error) {
@@ -62,16 +59,8 @@ export const createSeller = async (req, res) => {
 
 export const getAllSellers = async (req, res) => {
   try {
-    // First get all users with seller role
-    const User = (await import("../../models/User.js")).default;
-    const sellerUsers = await User.find({ role: "seller" })
-      .select("_id name email phone createdAt")
-      .sort({ createdAt: -1 });
-
-    // Then get seller profiles for these users
-    const sellerIds = sellerUsers.map(user => user._id);
-    const sellerProfiles = await Seller.find({ sellerId: { $in: sellerIds } })
-      .populate("sellerId", "name email phone createdAt")
+    const sellerProfiles = await Seller.find()
+      .populate("sellerId", "name email phone profileImage createdAt")
       .sort({ createdAt: -1 });
 
     const sellersData = sellerProfiles.map(seller => ({
@@ -80,11 +69,10 @@ export const getAllSellers = async (req, res) => {
       name: seller.sellerId.name,
       email: seller.sellerId.email,
       phone: seller.sellerId.phone,
+      profileImage: seller.sellerId.profileImage,
       cnic: seller.cnic,
-      isVerified: seller.isVerified,
-      badge: seller.badge,
-      rating: seller.rating,
-      fraudScore: seller.fraudScore,
+      shopName: seller.shopName,
+      sellerPic: seller.sellerPic,
       createdAt: seller.createdAt
     }));
 
@@ -99,7 +87,7 @@ export const getSellerById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const seller = await Seller.findById(id).populate("sellerId", "name email phone createdAt");
+    const seller = await Seller.findById(id).populate("sellerId", "name email phone profileImage createdAt");
 
     if (!seller) {
       return res.status(404).json({ message: "Seller not found" });
@@ -112,11 +100,10 @@ export const getSellerById = async (req, res) => {
         name: seller.sellerId.name,
         email: seller.sellerId.email,
         phone: seller.sellerId.phone,
+        profileImage: seller.sellerId.profileImage,
         cnic: seller.cnic,
-        isVerified: seller.isVerified,
-        badge: seller.badge,
-        rating: seller.rating,
-        fraudScore: seller.fraudScore,
+        shopName: seller.shopName,
+        sellerPic: seller.sellerPic,
         createdAt: seller.createdAt
       }
     });

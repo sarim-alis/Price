@@ -6,15 +6,15 @@ import jwt from "jsonwebtoken";
 // Register user.
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, phone, cnic, seller_shop_pic, seller_profile_pic } = req.body;
+    const { name, email, password, role, phone, cnic, shopName, sellerPic } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     if (role === "seller") {
-      if (!phone || !cnic) {
-        return res.status(400).json({ message: "Phone and CNIC are required for sellers" });
+      if (!cnic || !shopName) {
+        return res.status(400).json({ message: "CNIC and Shop Name are required for sellers" });
       }
 
       const Seller = (await import("../../models/Seller.js")).default;
@@ -25,11 +25,11 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword, role, phone, seller_shop_pic, seller_profile_pic});
+    const user = await User.create({ name, email, password: hashedPassword, role, phone, profileImage: sellerPic });
 
     if (role === "seller") {
       const Seller = (await import("../../models/Seller.js")).default;
-      await Seller.create({ sellerId: user._id, cnic, isVerified: false, badge: "none", rating: 0, fraudScore: 0 });
+      await Seller.create({ sellerId: user._id, cnic, shopName, sellerPic });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -74,10 +74,10 @@ export const getProfile = async (req, res) => {
 // Update user profile.
 export const updateProfile = async (req, res) => {
   try {
-    const { name, phone, profileImage, seller_shop_pic, seller_profile_pic } = req.body;
+    const { name, phone, profileImage } = req.body;
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { name, phone, profileImage, seller_shop_pic, seller_profile_pic },
+      { name, phone, profileImage },
       { new: true }
     ).select("-password");
     res.json({ message: "Profile updated", user });
