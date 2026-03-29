@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 // Register user.
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, phone, cnic, shopName, shopPic, address, bankDetail, easypaisaDetail, jazzcashDetail } = req.body;
+    const { name, email, password, role, phone, profileImage, cnic, shopName, shopPic, address, bankDetail, easypaisaDetail, jazzcashDetail } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword, role, phone });
+    const user = await User.create({ name, email, password: hashedPassword, role, phone, profileImage });
 
     if (role === "seller") {
       const Seller = (await import("../../models/Seller.js")).default;

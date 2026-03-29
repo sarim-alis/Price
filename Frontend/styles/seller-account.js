@@ -248,4 +248,22 @@ export const sellerAccountStyles = {
     fontWeight: "600",
     color: colors.textLight,
   },
+  imagePickerOptions: {
+    gap: 12,
+  },
+  imagePickerOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.background,
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+  },
+  imagePickerText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textPrimary,
+    marginLeft: 12,
+  },
 };
