@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const createSeller = async (req, res) => {
   try {
-    const { name, email, password, phone, cnic, shopName, shopPic, address, bank_detail, easypaisa_detail, jazzcash_detail } = req.body;
+    const { name, email, password, phone, cnic, shopName, shopPic, address, bankDetail, easypaisaDetail, jazzcashDetail } = req.body;
 
     if (!name || !email || !password || !cnic) {
       return res.status(400).json({ message: "Name, email, password, and CNIC are required" });
@@ -40,9 +40,9 @@ export const createSeller = async (req, res) => {
     if (shopName) sellerData.shopName = shopName;
     if (shopPic) sellerData.shopPic = shopPic;
     if (address) sellerData.address = address;
-    if (bank_detail) sellerData.bank_detail = bank_detail;
-    if (easypaisa_detail) sellerData.easypaisa_detail = easypaisa_detail;
-    if (jazzcash_detail) sellerData.jazzcash_detail = jazzcash_detail;
+    if (bankDetail) sellerData.bankDetail = bankDetail;
+    if (easypaisaDetail) sellerData.easypaisaDetail = easypaisaDetail;
+    if (jazzcashDetail) sellerData.jazzcashDetail = jazzcashDetail;
     
     const seller = await Seller.create(sellerData);
 
@@ -57,9 +57,9 @@ export const createSeller = async (req, res) => {
         shopName: seller.shopName,
         shopPic: seller.shopPic,
         address: seller.address,
-        bank_detail: seller.bank_detail,
-        easypaisa_detail: seller.easypaisa_detail,
-        jazzcash_detail: seller.jazzcash_detail
+        bankDetail: seller.bankDetail,
+        easypaisaDetail: seller.easypaisaDetail,
+        jazzcashDetail: seller.jazzcashDetail
       }
     });
   } catch (error) {
@@ -85,9 +85,9 @@ export const getAllSellers = async (req, res) => {
       shopName: seller.shopName,
       shopPic: seller.shopPic,
       address: seller.address,
-      bank_detail: seller.bank_detail,
-      easypaisa_detail: seller.easypaisa_detail,
-      jazzcash_detail: seller.jazzcash_detail,
+      bankDetail: seller.bankDetail,
+      easypaisaDetail: seller.easypaisaDetail,
+      jazzcashDetail: seller.jazzcashDetail,
       createdAt: seller.createdAt
     }));
 
@@ -120,9 +120,9 @@ export const getSellerById = async (req, res) => {
         shopName: seller.shopName,
         shopPic: seller.shopPic,
         address: seller.address,
-        bank_detail: seller.bank_detail,
-        easypaisa_detail: seller.easypaisa_detail,
-        jazzcash_detail: seller.jazzcash_detail,
+        bankDetail: seller.bankDetail,
+        easypaisaDetail: seller.easypaisaDetail,
+        jazzcashDetail: seller.jazzcashDetail,
         createdAt: seller.createdAt
       }
     });

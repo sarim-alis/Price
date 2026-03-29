@@ -7,9 +7,9 @@ const sellerSchema = new mongoose.Schema(
     shopName:        { type: String, trim: true },
     shopPic:         { type: String },
     address:         { type: String },
-    bank_detail:     { type: String },
-    easypaisa_detail:{ type: String },
-    jazzcash_detail: { type: String },
+    bankDetail:      { type: String },
+    easypaisaDetail: { type: String },
+    jazzcashDetail:  { type: String },
   }, { timestamps: true }
 );
 
