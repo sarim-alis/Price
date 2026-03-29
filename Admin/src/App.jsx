@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Seller from "./pages/Seller";
 import AddSeller from "./pages/AddSeller";
+import Buyer from "./pages/Buyer";
 import Layout from "./Components/Layout/Layout";
 import { isLoggedIn } from "./services/auth";
 
@@ -24,6 +24,7 @@ function App() {
         <Route path="/admin/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller"    element={<ProtectedRoute><Layout><Seller /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller/add" element={<ProtectedRoute><Layout><AddSeller /></Layout></ProtectedRoute>} />
+        <Route path="/admin/buyer"     element={<ProtectedRoute><Layout><Buyer /></Layout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

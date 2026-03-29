@@ -40,22 +40,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navbar */}
-      <nav className="bg-surface border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-primary"></h1>
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-background rounded-lg text-text-secondary">
-              <Bell className="w-5 h-5" />
-            </button>
-            <div className="h-6 w-px bg-border" />
-            <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 text-error hover:bg-error/10 rounded-lg transition-colors">
-              <span className="text-sm font-medium">Logout</span>
-            </button>
-          </div>
-        </div>
-      </nav>
-
       {/* Content */}
       <div className="p-6">
         {/* Welcome */}
