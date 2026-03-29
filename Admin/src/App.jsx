@@ -25,6 +25,7 @@ function App() {
         <Route path="/admin/seller"    element={<ProtectedRoute><Layout><Seller /></Layout></ProtectedRoute>} />
         <Route path="/admin/seller/add" element={<ProtectedRoute><Layout><AddSeller /></Layout></ProtectedRoute>} />
         <Route path="/admin/buyer"     element={<ProtectedRoute><Layout><Buyer /></Layout></ProtectedRoute>} />
+        <Route path="/admin/buyer/add" element={<ProtectedRoute><Layout><AddBuyer /></Layout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
