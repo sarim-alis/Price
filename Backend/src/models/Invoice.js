@@ -13,7 +13,6 @@ const invoiceSchema = new mongoose.Schema(
   }, { timestamps: true }
 );
 
-// Generate invoice number before saving
 invoiceSchema.pre('save', async function(next) {
   if (!this.invoiceNumber) {
     const count = await mongoose.model('Invoice').countDocuments();
