@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Seller from "./pages/Seller";
 import AddSeller from "./pages/AddSeller";
 import Buyer from "./pages/Buyer";
+import AddBuyer from "./pages/AddBuyer";
 import Layout from "./Components/Layout/Layout";
 import { isLoggedIn } from "./services/auth";
 
