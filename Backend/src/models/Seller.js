@@ -2,11 +2,14 @@ import mongoose from "mongoose";
 
 const sellerSchema = new mongoose.Schema(
   {
-    sellerId:   { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
-    cnic:       { type: String, required: true, unique: true },
-    shopName:   { type: String, trim: true },
-    shopPic:    { type: String },
-    address:    { type: String },
+    sellerId:        { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
+    cnic:            { type: String, required: true, unique: true },
+    shopName:        { type: String, trim: true },
+    shopPic:         { type: String },
+    address:         { type: String },
+    bank_detail:     { type: String },
+    easypaisa_detail:{ type: String },
+    jazzcash_detail: { type: String },
   }, { timestamps: true }
 );
 
