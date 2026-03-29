@@ -227,7 +227,7 @@ export default function AccountScreen() {
         {/* Profile Section */}
         <View style={styles.profileCard}>
           <TouchableOpacity style={styles.profileImageContainer} onPress={showImagePickerOptions}>
-            {formData.profileImage ? (
+            {formData.profileImage && formData.profileImage.trim() !== '' ? (
               <Image source={{ uri: formData.profileImage }} style={styles.profileImage} />
             ) : (
               <View style={styles.profileImagePlaceholder}>

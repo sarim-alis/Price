@@ -21,7 +21,12 @@ export const register = async (name, email, password) => {
   const response = await fetch(`${API_URL}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ 
+      name, 
+      email, 
+      password,
+      profileImage: ''
+    }),
   });
   const data = await response.json();
   if (!response.ok) throw new Error(data.message);
@@ -83,7 +88,13 @@ export const sellerRegister = async (name, email, password, cnic) => {
       email, 
       password, 
       cnic,
-      role: "seller" 
+      role: "seller",
+      profileImage: '',
+      shopPic: '',
+      address: '',
+      bankDetail: '',
+      easypaisaDetail: '',
+      jazzcashDetail: ''
     }),
   });
   const data = await response.json();
