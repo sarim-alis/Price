@@ -1,24 +1,51 @@
 // Imports.
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getMobilesBySellerId } from "../../services/api";
 import { colors } from "../../styles/colors";
 import { sellerDashboardStyles as styles } from "../../styles/seller-dashboard";
+import AddMobileForm from "../../components/AddMobileForm";
 
 
 // Frontend.
 export default function SellerDashboard() {
+  // States.
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [sellerId, setSellerId] = useState(null);
+
+  // Get user data.
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        setSellerId(user.id);
+      }
+    };
+    getUserData();
+  }, []);
+
+  // Fetch mobiles.
+  const { data: mobilesData, isLoading: mobilesLoading } = useQuery({
+    queryKey: ["sellerMobiles", sellerId],
+    queryFn: () => getMobilesBySellerId(sellerId, 1, 3),
+    enabled: !!sellerId,
+  });
+
+  const recentMobiles = mobilesData?.mobiles?.slice(0, 3) || [];
+  
   const stats = [
     { title: "Active Listings", value: "24", icon: "phone-portrait", color: colors.info },
     { title: "Total Sales", value: "156", icon: "cart", color: colors.success },
     { title: "Pending Orders", value: "8", icon: "cube", color: colors.warning },
     { title: "Revenue", value: "₨ 245K", icon: "trending-up", color: colors.primary },
-  ];
-
-  const recentOrders = [
-    { id: "ORD-001", customer: "Ali Ahmed", product: "iPhone 14 Pro", amount: "₨ 425,000", status: "Pending" },
-    { id: "ORD-002", customer: "Sara Khan", product: "Samsung S23", amount: "₨ 389,000", status: "Processing" },
-    { id: "ORD-003", customer: "Hassan Raza", product: "Google Pixel 8", amount: "₨ 285,000", status: "Shipped" },
   ];
 
   return (
@@ -45,46 +72,65 @@ export default function SellerDashboard() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recent Orders</Text>
-            <TouchableOpacity>
+            <Text style={styles.sectionTitle}>Recent Mobiles</Text>
+            <TouchableOpacity onPress={() => router.push('/(seller-tabs)/products')}>
               <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
-
-          {recentOrders.map((order) => (
-            <View key={order.id} style={styles.orderCard}>
-              <View style={styles.orderHeader}>
-                <Text style={styles.orderId}>{order.id}</Text>
-                <View style={[
-                  styles.statusBadge,
-                  order.status === "Pending" && styles.statusPending,
-                  order.status === "Processing" && styles.statusProcessing,
-                  order.status === "Shipped" && styles.statusShipped,
-                ]}>
-                  <Text style={styles.statusText}>{order.status}</Text>
-                </View>
-              </View>
-              <Text style={styles.orderCustomer}>{order.customer}</Text>
-              <Text style={styles.orderProduct}>{order.product}</Text>
-              <Text style={styles.orderAmount}>{order.amount}</Text>
+          {mobilesLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color={colors.primary} />
+              <Text style={styles.loadingText}>Loading recent mobiles...</Text>
             </View>
-          ))}
+          ) : recentMobiles.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Ionicons name="phone-portrait-outline" size={48} color={colors.textMuted} />
+              <Text style={styles.emptyText}>No mobiles listed yet</Text>
+              <Text style={styles.emptySubtext}>Add your first mobile to get started</Text>
+            </View>
+          ) : (
+            <View style={styles.mobilesList}>
+              {recentMobiles.map((mobile, index) => (
+                <TouchableOpacity key={mobile._id} style={styles.mobileCard} onPress={() => router.push(`/mobile/${mobile._id}`)}>
+                  <View style={styles.mobileImage}>
+                    {mobile.images && mobile.images.length > 0 ? (
+                      <Image source={{ uri: mobile.images[0] }} style={styles.mobileImageImg} />
+                    ) : (
+                      <Ionicons name="phone-portrait" size={24} color={colors.textMuted} />
+                    )}
+                  </View>
+                  <View style={styles.mobileInfo}>
+                    <Text style={styles.mobileBrand}>{mobile.brand}</Text>
+                    <Text style={styles.mobileModel}>{mobile.model}</Text>
+                    <Text style={styles.mobilePrice}>Rs. {mobile.price?.toLocaleString()}</Text>
+                    <View style={styles.mobileCondition}>
+                      <Text style={styles.conditionText}>{mobile.condition}</Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity  style={styles.actionCard} onPress={() => setAddModalVisible(true)}>
               <Ionicons name="add-circle" size={32} color={colors.primary} />
               <Text style={styles.actionText}>Add Product</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard}>
-              <Ionicons name="stats-chart" size={32} color={colors.success} />
-              <Text style={styles.actionText}>View Analytics</Text>
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/(seller-tabs)/account')}>
+              <Ionicons name="person-circle" size={32} color={colors.success} />
+              <Text style={styles.actionText}>View Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
+
+      {/* Add Mobile Modal */}
+      <AddMobileForm visible={addModalVisible} onClose={() => setAddModalVisible(false)} onSuccess={() => { queryClient.invalidateQueries(['sellerMobiles']); setAddModalVisible(false);}} />
     </SafeAreaView>
   );
 }

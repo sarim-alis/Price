@@ -158,4 +158,89 @@ export const sellerDashboardStyles = {
     marginTop: 8,
     textAlign: "center",
   },
+  mobilesList: {
+    gap: 12,
+  },
+  mobileCard: {
+    flexDirection: "row",
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    alignItems: "center",
+  },
+  mobileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: colors.backgroundDark,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  mobileImageImg: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+  },
+  mobileInfo: {
+    flex: 1,
+  },
+  mobileBrand: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+  mobileModel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  mobilePrice: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: colors.primary,
+    marginTop: 4,
+  },
+  mobileCondition: {
+    marginTop: 6,
+  },
+  conditionText: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: colors.textLight,
+    backgroundColor: "#b45309", // amber/brown color
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: "flex-start", // only take width of text
+  },
+  // Loading and empty states
+  loadingContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    gap: 8,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  emptyContainer: {
+    alignItems: "center",
+    paddingVertical: 30,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textSecondary,
+    marginTop: 12,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: colors.textMuted,
+    marginTop: 4,
+  },
 };
