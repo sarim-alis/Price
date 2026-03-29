@@ -1,7 +1,7 @@
 // Imports.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, Mail, Phone, Package, ShoppingCart, TrendingUp, Plus } from "lucide-react";
+import { Users, Mail, Phone, Package, ShoppingCart, TrendingUp, Plus, Team } from "lucide-react";
 import { Pagination, ConfigProvider, Button } from "antd";
 import { colors } from "../styles/colors";
 
