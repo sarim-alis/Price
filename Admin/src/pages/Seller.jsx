@@ -1,8 +1,10 @@
 // Imports.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, Mail, Phone, Package, ShoppingCart, TrendingUp, Plus } from "lucide-react";
-import { Pagination, ConfigProvider, Button } from "antd";
+import { Users, Mail, Phone, Package, Store, MapPin, Plus, CreditCard } from "lucide-react";
+import { Pagination, ConfigProvider, Button, Spin } from "antd";
+import { motion } from "framer-motion";
+import { getAllSellers } from "../services/api";
 import { colors } from "../styles/colors";
 
 // Frontend.
@@ -12,24 +14,14 @@ export default function Seller() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const pageSize = 6;
+  const pageSize = 9;
 
   // Fetch sellers from API
   const fetchSellers = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/sellers/all`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSellers(data.sellers || []);
-      } else {
-        console.error("Failed to fetch sellers");
-      }
+      setLoading(true);
+      const data = await getAllSellers();
+      setSellers(data || []);
     } catch (error) {
       console.error("Error fetching sellers:", error);
     } finally {
@@ -46,8 +38,9 @@ export default function Seller() {
   if (loading) {
     return (
       <div className="p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-lg text-text-secondary">Loading sellers...</div>
+        <div className="flex flex-col items-center justify-center h-96">
+          <Spin size="large" />
+          <div className="text-lg text-text-secondary mt-4">Loading sellers...</div>
         </div>
       </div>
     );
@@ -119,56 +112,96 @@ export default function Seller() {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentSellers.map((seller) => (
-          <div key={seller.id} className="bg-surface rounded-xl border border-border p-6 hover:shadow-lg transition-shadow">
-            {/* Card */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">
-                  {seller.name.charAt(0)}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-text-primary">{seller.name}</h4>
-                  <span className={`text-xs px-2 py-1 rounded-full ${seller.isVerified ? 'bg-success/10 text-success' : 'bg-warning/10 text-success'}`}>
-                    {seller.isVerified ? 'Verified' : 'Verified'}
-                  </span>
-                </div>
+        {currentSellers.map((seller, index) => (
+          <motion.div
+            key={seller.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="bg-white rounded-xl border border-gray-200 p-6 cursor-pointer"
+          >
+            {/* Header */}
+            <div className="flex items-start gap-4 mb-4">
+              <div className="relative">
+                {seller.profileImage ? (
+                  <img 
+                    src={seller.profileImage} 
+                    alt={seller.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    {seller.name?.charAt(0).toUpperCase() || 'S'}
+                  </div>
+                )}
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-2 border-white"></div>
               </div>
-              <div className="flex items-center gap-1 text-warning">
-                <span className="text-sm font-semibold">★ {seller.rating.toFixed(1)}</span>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-bold text-lg text-gray-900 truncate">{seller.name || 'Unknown Seller'}</h4>
+                <p className="text-sm text-gray-500 truncate">{seller.email}</p>
+                {seller.shopName && (
+                  <div className="flex items-center gap-1 mt-1">
+                    <Store className="w-3 h-3 text-primary" />
+                    <span className="text-xs text-primary font-medium truncate">{seller.shopName}</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-2 mb-4 pb-4 border-b border-border">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Mail className="w-4 h-4" />
-                <span className="truncate">{seller.email}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Phone className="w-4 h-4" />
-                <span>{seller.phone || 'Not provided'}</span>
-              </div>
+            <div className="space-y-2.5 mb-4 pb-4 border-b border-gray-100">
+              {seller.phone && (
+                <div className="flex items-center gap-2.5 text-sm text-gray-600">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="font-medium">{seller.phone}</span>
+                </div>
+              )}
               {seller.cnic && (
-                <div className="flex items-center gap-2 text-sm text-text-secondary">
-                  <Package className="w-4 h-4" />
-                  <span className="truncate">CNIC: {seller.cnic}</span>
+                <div className="flex items-center gap-2.5 text-sm text-gray-600">
+                  <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                    <CreditCard className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <span className="font-medium">{seller.cnic}</span>
+                </div>
+              )}
+              {seller.address && (
+                <div className="flex items-center gap-2.5 text-sm text-gray-600">
+                  <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-green-600" />
+                  </div>
+                  <span className="font-medium truncate">{seller.address}</span>
                 </div>
               )}
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="text-center">
-                <div className="text-xs text-text-secondary mb-1">Badge</div>
-                <div className="text-sm font-bold text-text-primary capitalize">{seller.badge}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-text-secondary mb-1">Fraud Score</div>
-                <div className="text-sm font-bold text-text-primary">{seller.fraudScore}%</div>
+            {/* Payment Methods */}
+            <div className="space-y-2">
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Payment Methods</div>
+              <div className="flex flex-wrap gap-2">
+                {seller.bankDetail && (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                    Bank
+                  </span>
+                )}
+                {seller.easypaisaDetail && (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                    EasyPaisa
+                  </span>
+                )}
+                {seller.jazzcashDetail && (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                    JazzCash
+                  </span>
+                )}
+                {!seller.bankDetail && !seller.easypaisaDetail && !seller.jazzcashDetail && (
+                  <span className="text-xs text-gray-400 italic">No payment methods</span>
+                )}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 

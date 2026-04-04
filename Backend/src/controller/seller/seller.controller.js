@@ -74,22 +74,24 @@ export const getAllSellers = async (req, res) => {
       .populate("sellerId", "name email phone profileImage createdAt")
       .sort({ createdAt: -1 });
 
-    const sellersData = sellerProfiles.map(seller => ({
-      id: seller._id,
-      userId: seller.sellerId._id,
-      name: seller.sellerId.name,
-      email: seller.sellerId.email,
-      phone: seller.sellerId.phone,
-      profileImage: seller.sellerId.profileImage,
-      cnic: seller.cnic,
-      shopName: seller.shopName,
-      shopPic: seller.shopPic,
-      address: seller.address,
-      bankDetail: seller.bankDetail,
-      easypaisaDetail: seller.easypaisaDetail,
-      jazzcashDetail: seller.jazzcashDetail,
-      createdAt: seller.createdAt
-    }));
+    const sellersData = sellerProfiles
+      .filter(seller => seller.sellerId) // Filter out sellers with null sellerId
+      .map(seller => ({
+        id: seller._id,
+        userId: seller.sellerId._id,
+        name: seller.sellerId.name,
+        email: seller.sellerId.email,
+        phone: seller.sellerId.phone,
+        profileImage: seller.sellerId.profileImage,
+        cnic: seller.cnic,
+        shopName: seller.shopName,
+        shopPic: seller.shopPic,
+        address: seller.address,
+        bankDetail: seller.bankDetail,
+        easypaisaDetail: seller.easypaisaDetail,
+        jazzcashDetail: seller.jazzcashDetail,
+        createdAt: seller.createdAt
+      }));
 
     res.status(200).json({ sellers: sellersData });
   } catch (error) {
