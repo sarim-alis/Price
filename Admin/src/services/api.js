@@ -59,3 +59,41 @@ export const createSeller = async (sellerData) => {
   
   return data.seller;
 };
+
+// Get all buyers
+export const getAllBuyers = async () => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/buyers/all`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch buyers');
+  }
+  
+  return data.buyers;
+};
+
+// Get buyer by ID
+export const getBuyerById = async (id) => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/buyers/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch buyer');
+  }
+  
+  return data.buyer;
+};
