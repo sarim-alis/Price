@@ -1,7 +1,7 @@
 // Imports.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, Mail, Phone, Package, Store, MapPin, Plus, CreditCard } from "lucide-react";
+import { Users, Phone, Store, MapPin, Plus, CreditCard } from "lucide-react";
 import { Pagination, ConfigProvider, Button, Spin } from "antd";
 import { motion } from "framer-motion";
 import { getAllSellers } from "../services/api";
@@ -16,7 +16,7 @@ export default function Seller() {
   const [loading, setLoading] = useState(true);
   const pageSize = 9;
 
-  // Fetch sellers from API
+  // Fetch sellers.
   const fetchSellers = async () => {
     try {
       setLoading(true);
@@ -29,12 +29,11 @@ export default function Seller() {
     }
   };
 
-  // Fetch sellers on component mount
   useEffect(() => {
     fetchSellers();
   }, []);
 
-  // Add loading state display
+  // Loader.
   if (loading) {
     return (
       <div className="p-6">
@@ -46,7 +45,7 @@ export default function Seller() {
     );
   }
 
-  // Add empty state display
+  // Add empty state.
   if (!loading && sellers.length === 0) {
     return (
       <div className="p-6">
@@ -56,18 +55,7 @@ export default function Seller() {
             <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2"><Users className="w-7 h-7" />All Sellers</h2>
             <p className="text-text-secondary mt-1">Manage and monitor all registered sellers</p>
           </div>
-          <Button
-            type="primary"
-            size="large"
-            icon={<Plus className="w-5 h-5" />}
-            onClick={() => navigate("/admin/seller/add")}
-            style={{
-              backgroundColor: colors.primary,
-              borderColor: colors.primary,
-            }}
-          >
-            Add Seller
-          </Button>
+          <Button type="primary" size="large" icon={<Plus className="w-5 h-5" />} onClick={() => navigate("/admin/seller/add")} style={{ backgroundColor: colors.primary, borderColor: colors.primary}}>Add Seller</Button>
         </div>
 
         {/* Empty State */}
@@ -83,10 +71,7 @@ export default function Seller() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentSellers = sellers.slice(startIndex, endIndex);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const handlePageChange = (page) => {setCurrentPage(page);};
 
   return (
     <div className="p-6">
@@ -96,40 +81,18 @@ export default function Seller() {
           <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2"><Users className="w-7 h-7" />All Sellers</h2>
           <p className="text-text-secondary mt-1">Manage and monitor all registered sellers</p>
         </div>
-        <Button
-          type="primary"
-          size="large"
-          icon={<Plus className="w-5 h-5" />}
-          onClick={() => navigate("/admin/seller/add")}
-          style={{
-            backgroundColor: colors.primary,
-            borderColor: colors.primary,
-          }}
-        >
-          Add Seller
-        </Button>
+        <Button type="primary" size="large" icon={<Plus className="w-5 h-5" />} onClick={() => navigate("/admin/seller/add")} style={{ backgroundColor: colors.primary, borderColor: colors.primary }}>Add Seller</Button>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentSellers.map((seller, index) => (
-          <motion.div
-            key={seller.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
-            className="bg-white rounded-xl border border-gray-200 p-6 cursor-pointer"
-          >
+          <motion.div key={seller.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: index * 0.1 }} whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }} className="bg-white rounded-xl border border-gray-200 p-6 cursor-pointer">
             {/* Header */}
             <div className="flex items-start gap-4 mb-4">
               <div className="relative">
                 {seller.profileImage ? (
-                  <img 
-                    src={seller.profileImage} 
-                    alt={seller.name}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-                  />
+                  <img src={seller.profileImage} alt={seller.name}className="w-16 h-16 rounded-full object-cover border-2 border-primary" />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {seller.name?.charAt(0).toUpperCase() || 'S'}

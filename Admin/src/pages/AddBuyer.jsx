@@ -6,10 +6,12 @@ import { Input, Button, Form, message } from "antd";
 
 // Frontend.
 export default function AddBuyer() {
+  // States.
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
+  // Handle submit.
   const handleSubmit = async (values) => {
     setLoading(true);
     try {

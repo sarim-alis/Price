@@ -4,24 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { UserPlus, Mail, Lock, Phone, CreditCard, ArrowLeft } from "lucide-react";
 import { Input, Button, Form, message } from "antd";
 
+// Frontend.
 export default function AddSeller() {
+  // States.
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
+  // Handle submit.
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/sellers/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(values)
-      });
-
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/sellers/create`, { method: "POST", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`}, body: JSON.stringify(values)});
       const data = await response.json();
 
       if (response.ok) {
@@ -43,39 +38,17 @@ export default function AddSeller() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <button
-          onClick={() => navigate("/admin/seller")}
-          className="flex items-center gap-2 text-text-secondary hover:text-primary mb-4 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Sellers</span>
-        </button>
-        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2">
-          <UserPlus className="w-7 h-7" />
-          Add New Seller
-        </h2>
+        <button onClick={() => navigate("/admin/seller")} className="flex items-center gap-2 text-text-secondary hover:text-primary mb-4 transition-colors"><ArrowLeft className="w-5 h-5" /><span>Back to Sellers</span></button>
+        <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2"><UserPlus className="w-7 h-7" />Add New Seller</h2>
         <p className="text-text-secondary mt-1">Create a new seller account</p>
       </div>
 
       {/* Form */}
       <div className="bg-surface rounded-xl border border-border p-6 max-w-2xl">
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          autoComplete="off"
-        >
+        <Form form={form} layout="vertical" onFinish={handleSubmit} autoComplete="off">
           {/* Name */}
-          <Form.Item
-            label={<span className="text-text-primary font-medium">Full Name</span>}
-            name="name"
-            rules={[{ required: true, message: "Please enter seller name" }]}
-          >
-            <Input
-              prefix={<UserPlus className="w-4 h-4 text-text-secondary" />}
-              placeholder="Enter seller full name"
-              size="large"
-            />
+          <Form.Item label={<span className="text-text-primary font-medium">Full Name</span>} name="name" rules={[{ required: true, message: "Please enter seller name" }]}>
+            <Input prefix={<UserPlus className="w-4 h-4 text-text-secondary" />} placeholder="Enter seller full name" size="large" />
           </Form.Item>
 
           {/* Email */}

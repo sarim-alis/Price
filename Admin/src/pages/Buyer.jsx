@@ -81,6 +81,7 @@ export default function Buyer() {
           <h2 className="text-2xl font-bold text-text-primary flex items-center gap-2"><Users className="w-7 h-7" />All Buyers</h2>
           <p className="text-text-secondary mt-1">Manage and monitor all registered buyers</p>
         </div>
+        <Button type="primary" size="large" icon={<Plus className="w-5 h-5" />} onClick={() => navigate("/admin/buyer/add")} style={{ backgroundColor: colors.primary, borderColor: colors.primary }}>Add Buyer</Button>
       </div>
 
       {/* Grid */}
