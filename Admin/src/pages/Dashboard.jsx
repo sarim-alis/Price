@@ -1,7 +1,10 @@
 // Imports.
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, Smartphone, ShoppingCart, TrendingUp, LogOut, BarChart3, Settings, Bell } from "lucide-react";
 import { logout, getUser } from "../services/auth";
+import { getDashboardStats } from "../services/api";
+import { Spin } from "antd";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Frontend.
@@ -9,33 +12,66 @@ export default function Dashboard() {
   // States.
   const navigate = useNavigate();
   const user = getUser();
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
+      const data = await getDashboardStats();
+      setDashboardData(data);
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
     navigate("/admin/login");
   };
 
-  // Stats.
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  // Stats - Using real data from backend
   const stats = [
-    { title: "Total Users", value: "1,234", icon: Users, color: "bg-info" },
-    { title: "Total Mobiles", value: "567", icon: Smartphone, color: "bg-success" },
-    { title: "Total Orders", value: "890", icon: ShoppingCart, color: "bg-warning" },
-    { title: "Revenue", value: "₨ 1.2M", icon: TrendingUp, color: "bg-primary" },
+    { title: "Total Users", value: dashboardData?.stats?.totalUsers || 0, icon: Users, color: "bg-info" },
+    { title: "Total Buyers", value: dashboardData?.stats?.totalBuyers || 0, icon: ShoppingCart, color: "bg-success" },
+    { title: "Total Sellers", value: dashboardData?.stats?.totalSellers || 0, icon: TrendingUp, color: "bg-warning" },
+    { title: "Total Mobiles", value: dashboardData?.stats?.totalMobiles || 0, icon: Smartphone, color: "bg-primary" },
   ];
 
-  const monthlyData = [
-    { month: 'Jan', users: 400, mobiles: 240, orders: 340, revenue: 120000 },
-    { month: 'Feb', users: 600, mobiles: 300, orders: 450, revenue: 180000 },
-    { month: 'Mar', users: 800, mobiles: 400, orders: 600, revenue: 250000 },
-    { month: 'Apr', users: 1000, mobiles: 450, orders: 750, revenue: 320000 },
-    { month: 'May', users: 1100, mobiles: 500, orders: 800, revenue: 400000 },
-    { month: 'Jun', users: 1234, mobiles: 567, orders: 890, revenue: 500000 },
-  ];
+  // Format monthly data for charts
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthlyUsersData = dashboardData?.monthlyData?.users || [];
+  const monthlyMobilesData = dashboardData?.monthlyData?.mobiles || [];
+
+  // Combine and format monthly data
+  const monthlyData = monthlyUsersData.map((item, index) => {
+    const monthName = monthNames[item._id.month - 1];
+    const mobileItem = monthlyMobilesData.find(m => m._id.month === item._id.month && m._id.year === item._id.year);
+    return {
+      month: monthName,
+      users: item.count,
+      mobiles: mobileItem?.count || 0
+    };
+  });
 
   const pieData = [
-    { name: 'Users', value: 1234, color: '#2196F3' },
-    { name: 'Mobiles', value: 567, color: '#4CAF50' },
-    { name: 'Orders', value: 890, color: '#FFC107' },
+    { name: 'Buyers', value: dashboardData?.stats?.totalBuyers || 0, color: '#2196F3' },
+    { name: 'Sellers', value: dashboardData?.stats?.totalSellers || 0, color: '#4CAF50' },
+    { name: 'Mobiles', value: dashboardData?.stats?.totalMobiles || 0, color: '#FFC107' },
   ];
 
   return (
@@ -78,7 +114,6 @@ export default function Dashboard() {
                 <Legend />
                 <Bar dataKey="users" fill="#2196F3" name="Users" />
                 <Bar dataKey="mobiles" fill="#4CAF50" name="Mobiles" />
-                <Bar dataKey="orders" fill="#FFC107" name="Orders" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -97,21 +132,6 @@ export default function Dashboard() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
-
-        {/* Line Chart - Revenue Trend */}
-        <div className="bg-surface rounded-xl border border-border p-6">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Revenue Trend</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="revenue" stroke="#7b5740" strokeWidth={2} name="Revenue (₨)" />
-            </LineChart>
-          </ResponsiveContainer>
         </div>
       </div>
     </div>

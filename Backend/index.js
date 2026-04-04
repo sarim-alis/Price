@@ -13,6 +13,7 @@ import sellerRoutes from "./src/routes/seller/seller.route.js";
 import buyerRoutes from "./src/routes/buyer/buyer.route.js";
 import messageRoutes from "./src/routes/message/message.route.js";
 import orderRoutes from "./src/routes/order/order.route.js";
+import dashboardRoutes from "./src/routes/dashboard/dashboard.route.js";
 import { errorHandler, notFound } from "./src/middleware/errorHandler.js";
 import { initializeSocket } from "./src/config/socket.js";
 dotenv.config();
@@ -48,6 +49,7 @@ app.use("/api/sellers", sellerRoutes);
 app.use("/api/buyers", buyerRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Health check.
 app.get("/health", async (req, res) => {
