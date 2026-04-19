@@ -17,20 +17,6 @@ export const generateVerificationToken = () => {
 export const sendVerificationEmail = async (email, token, name) => {
   const verificationUrl = `http://192.168.18.203:8081/verify-email?token=${token}`;
   
-  // Log verification link to console for development
-  console.log(`
-╔════════════════════════════════════════════════════════════╗
-║              EMAIL VERIFICATION LINK                        ║
-╠════════════════════════════════════════════════════════════╣
-║  Name:  ${name.padEnd(48)} ║
-║  Email: ${email.padEnd(48)} ║
-║  Token: ${token.padEnd(48)} ║
-╠════════════════════════════════════════════════════════════╣
-║  Verification URL:                                           ║
-║  ${verificationUrl.padEnd(59)} ║
-╚════════════════════════════════════════════════════════════╝
-  `);
-  
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -65,10 +51,8 @@ export const sendVerificationEmail = async (email, token, name) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("✅ Email sent successfully to", email);
     return { success: true };
   } catch (error) {
-    console.error("❌ Email sending error:", error.message);
     return { success: false, error: error.message };
   }
 };
