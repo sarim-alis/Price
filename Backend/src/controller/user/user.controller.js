@@ -85,11 +85,9 @@ export const login = async (req, res) => {
         id: user._id, 
         name: user.name, 
         email, 
-        role: user.role,
-        phoneVerified: user.phoneVerified 
+        role: user.role
       }, 
-      token,
-      phoneVerified: user.phoneVerified
+      token
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -110,14 +108,10 @@ export const getProfile = async (req, res) => {
       
       res.json({
         ...user.toObject(),
-        phoneVerified: user.phoneVerified,
         seller: seller ? seller.toObject() : null
       });
     } else {
-      res.json({
-        ...user.toObject(),
-        phoneVerified: user.phoneVerified
-      });
+      res.json(user.toObject());
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

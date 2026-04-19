@@ -16,25 +16,6 @@ export const auth = async (req, res, next) => {
   }
 };
 
-// Check if phone is verified (for protected actions).
-export const requirePhoneVerified = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    if (!user.phoneVerified) {
-      return res.status(403).json({ 
-        message: "Phone verification required. Please verify your phone number to perform this action.",
-        phoneVerified: false 
-      });
-    }
-    next();
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 // Check if user is seller.
 export const isSeller = (req, res, next) => {
   if (req.user.role !== "seller" && req.user.role !== "admin") {

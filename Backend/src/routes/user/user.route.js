@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { register, login, getProfile, updateProfile, changePassword, getAllUsers, deleteUser } from "../../controller/user/user.controller.js";
-import { auth, isAdmin, requirePhoneVerified } from "../../middleware/auth.js";
+import { auth, isAdmin } from "../../middleware/auth.js";
 const router = Router();
 
 // Public routes.
@@ -9,8 +9,8 @@ router.post("/login", login);
 
 // Protected routes.
 router.get("/profile", auth, getProfile);
-router.put("/profile", auth, requirePhoneVerified, updateProfile);
-router.put("/change-password", auth, requirePhoneVerified, changePassword);
+router.put("/profile", auth, updateProfile);
+router.put("/change-password", auth, changePassword);
 
 // Admin routes.
 router.get("/", auth, isAdmin, getAllUsers);

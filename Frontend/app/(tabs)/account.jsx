@@ -248,15 +248,6 @@ export default function AccountScreen() {
             <Ionicons name="person" size={16} color={colors.primary} />
             <Text style={styles.roleText}>Buyer Account</Text>
           </View>
-          {!userProfile?.phoneVerified && (
-            <TouchableOpacity 
-              style={[styles.switchButton, { backgroundColor: colors.warning, marginTop: 12 }]}
-              onPress={() => router.push('/verify-phone')}
-            >
-              <Ionicons name="warning-outline" size={20} color={colors.textLight} />
-              <Text style={[styles.switchButtonText, { color: colors.textLight }]}>Verify Phone Number</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Personal Information */}
@@ -289,30 +280,6 @@ export default function AccountScreen() {
             </View>
             <Ionicons name="create-outline" size={20} color={colors.textMuted} />
           </TouchableOpacity>
-
-          <View style={styles.detailItem}>
-            <View style={styles.detailIcon}>
-              <Ionicons name="call-outline" size={20} color={colors.primary} />
-            </View>
-            <View style={styles.detailContent}>
-              <Text style={styles.detailLabel}>Phone Verification</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <Text style={styles.detailValue}>
-                  {userProfile?.phoneVerified ? 'Verified' : 'Not Verified'}
-                </Text>
-                <Ionicons 
-                  name={userProfile?.phoneVerified ? "checkmark-circle" : "close-circle"} 
-                  size={18} 
-                  color={userProfile?.phoneVerified ? colors.success : colors.error} 
-                />
-              </View>
-            </View>
-            {!userProfile?.phoneVerified && (
-              <TouchableOpacity onPress={() => router.push('/verify-phone')}>
-                <Ionicons name="arrow-forward" size={20} color={colors.textMuted} />
-              </TouchableOpacity>
-            )}
-          </View>
         </View>
 
         {/* Actions */}

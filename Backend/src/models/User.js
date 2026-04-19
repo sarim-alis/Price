@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     phone:         { type: String },
     profileImage:  { type: String },
     emailVerified: { type: Boolean, default: false },
-    phoneVerified: { type: Boolean, default: false },
   }, { timestamps: true }
 );
 
