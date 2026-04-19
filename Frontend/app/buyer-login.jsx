@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { login } from "../services/auth";
+import { login, resendVerificationEmail } from "../services/auth";
 import { authStyles } from "../styles/auth";
 import { colors } from "../styles/colors";
 
@@ -30,9 +30,32 @@ export default function BuyerLogin() {
       Toast.show({ type: "success", text1: "Success", text2: "Login successful!" });
       router.replace("/(tabs)");
     } catch (error) {
-      Toast.show({ type: "error", text1: "Login Failed", text2: error.message });
+      if (error.emailVerified === false) {
+        Toast.show({ 
+          type: "error", 
+          text1: "Email Not Verified", 
+          text2: "Please verify your email. Tap to resend.",
+          onPress: () => handleResendVerification()
+        });
+      } else {
+        Toast.show({ type: "error", text1: "Login Failed", text2: error.message });
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle resend verification.
+  const handleResendVerification = async () => {
+    try {
+      await resendVerificationEmail(email);
+      Toast.show({ 
+        type: "success", 
+        text1: "Email Sent", 
+        text2: "Verification email has been resent. Check your inbox." 
+      });
+    } catch (error) {
+      Toast.show({ type: "error", text1: "Error", text2: error.message });
     }
   };
 

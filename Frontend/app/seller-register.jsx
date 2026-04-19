@@ -48,8 +48,13 @@ export default function SellerRegister() {
     setLoading(true);
     try {
       await sellerRegister(name, email, password, cnic);
-      Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
-      router.replace("/(seller-tabs)/dashboard");
+      Toast.show({ 
+        type: "success", 
+        text1: "Registration Successful!", 
+        text2: "Please check your email to verify your account.",
+        visibilityTime: 5000
+      });
+      setTimeout(() => router.replace("/seller-login"), 2000);
     } catch (error) {
       Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
     } finally {

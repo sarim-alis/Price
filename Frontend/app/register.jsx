@@ -28,8 +28,13 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       await register(name, email, password);
-      Toast.show({ type: "success", text1: "Success", text2: "Account created successfully!" });
-      router.replace("/(tabs)");
+      Toast.show({ 
+        type: "success", 
+        text1: "Registration Successful!", 
+        text2: "Please check your email to verify your account.",
+        visibilityTime: 5000
+      });
+      setTimeout(() => router.replace("/buyer-login"), 2000);
     } catch (error) {
       Toast.show({ type: "error", text1: "Registration Failed", text2: error.message });
     } finally {

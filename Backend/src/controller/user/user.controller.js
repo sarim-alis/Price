@@ -1,7 +1,9 @@
 // Imports.
 import User from "../../models/User.js";
+import VerificationToken from "../../models/VerificationToken.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { generateVerificationToken, sendVerificationEmail } from "../../utils/emailService.js";
 
 // Register user.
 export const register = async (req, res) => {
@@ -40,8 +42,22 @@ export const register = async (req, res) => {
       await Seller.create(sellerData);
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.status(201).json({ message: "User registered", user: { id: user._id, name, email, role, phone }, token });
+    const verificationTokenString = generateVerificationToken();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    await VerificationToken.create({
+      userId: user._id,
+      token: verificationTokenString,
+      type: "email_verification",
+      expiresAt,
+    });
+
+    await sendVerificationEmail(user.email, verificationTokenString, user.name);
+
+    res.status(201).json({ 
+      message: "User registered successfully. Please check your email to verify your account.", 
+      user: { id: user._id, name, email, role, phone, emailVerified: false },
+      requiresVerification: true
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -59,8 +75,22 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
+    if (!user.emailVerified) {
+      return res.status(403).json({ message: "Email not verified. Please verify your email before logging in.", emailVerified: false });
+    }
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.json({ message: "Login successful", user: { id: user._id, name: user.name, email, role: user.role }, token });
+    res.json({ 
+      message: "Login successful", 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email, 
+        role: user.role,
+        phoneVerified: user.phoneVerified 
+      }, 
+      token,
+      phoneVerified: user.phoneVerified
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -80,10 +110,14 @@ export const getProfile = async (req, res) => {
       
       res.json({
         ...user.toObject(),
+        phoneVerified: user.phoneVerified,
         seller: seller ? seller.toObject() : null
       });
     } else {
-      res.json(user);
+      res.json({
+        ...user.toObject(),
+        phoneVerified: user.phoneVerified
+      });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
