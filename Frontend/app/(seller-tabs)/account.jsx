@@ -92,7 +92,7 @@ export default function SellerAccount() {
           style: "destructive",
           onPress: async () => {
             await logout();
-            router.replace("/role-selection");
+            router.replace("/login");
           }
         }
       ]

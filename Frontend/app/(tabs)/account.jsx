@@ -62,7 +62,7 @@ export default function AccountScreen() {
     }
   }, [userProfile]);
 
-  // Cloudinary upload function
+  // Cloudinary upload function.
   const uploadToCloudinary = async (imageUri) => {
     const uploadPreset = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'villas';
     const cloudName = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dgk3gaml0';
@@ -100,7 +100,7 @@ export default function AccountScreen() {
     }
   };
 
-  // Image picker functions
+  // Image picker.
   const showImagePickerOptions = () => {
     setImagePickerVisible(true);
   };
@@ -203,8 +203,19 @@ export default function AccountScreen() {
     );
   };
 
-  const handleSwitchToSeller = () => {
-    router.push('/(seller-tabs)/dashboard');
+  // Handle switch role.
+  const handleSwitchRole = () => {
+    Alert.alert(
+      "Switch Role",
+      "Are you sure you want to switch to buyer mode?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Switch",
+          onPress: () => router.replace("/role-selection")
+        }
+      ]
+    );
   };
 
   if (profileLoading) {
@@ -283,15 +294,17 @@ export default function AccountScreen() {
         </View>
 
         {/* Actions */}
-        <TouchableOpacity style={styles.switchButton} onPress={handleSwitchToSeller}>
-          <Ionicons name="storefront-outline" size={20} color={colors.primary} />
-          <Text style={styles.switchButtonText}>Switch to Seller</Text>
-        </TouchableOpacity>
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.switchButton} onPress={handleSwitchRole}>
+            <Ionicons name="swap-horizontal" size={20} color={colors.primary} />
+            <Text style={styles.switchButtonText}>Switch to Seller Mode</Text>
+          </TouchableOpacity>
         
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={20} color={colors.error} />
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color={colors.error} />
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
       {/* Edit Modal */}
