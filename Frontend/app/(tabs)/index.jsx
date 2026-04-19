@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator
-} from 'react-native';
+// Imports.
+import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { colors } from '../../styles/colors';
 import { getFlashSaleMobiles } from '../../services/api';
 
+// Brands.
 const BRAND_CATEGORIES = [
   { icon: 'pricetag', label: 'Apple', brand: 'apple', color: '#FFA726' },
   { icon: 'sparkles', label: 'Samsung', brand: 'samsung', color: '#EC407A' },
@@ -28,6 +21,7 @@ const BRAND_CATEGORIES = [
   { icon: 'game-controller', label: 'Google', brand: 'google', color: '#8D6E63' },
 ];
 
+// Frontend.
 export default function ForYouScreen() {
   const router = useRouter();
   const [flashSaleMobiles, setFlashSaleMobiles] = useState([]);
@@ -57,11 +51,7 @@ export default function ForYouScreen() {
       <View style={styles.header}>
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search for products..."
-            placeholderTextColor="#999"
-          />
+          <TextInput style={styles.searchInput} placeholder="Search for products..." placeholderTextColor="#999" />
           <TouchableOpacity style={styles.cameraButton}>
             <Ionicons name="camera-outline" size={20} color="#666" />
           </TouchableOpacity>
@@ -71,33 +61,23 @@ export default function ForYouScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        style={styles.content} 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 70 }}
-      >
-        {/* Banner Carousel */}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }}>
+        {/* Banner */}
         <View style={styles.bannerContainer}>
           <View style={styles.banner}>
-            <Text style={styles.bannerText}>FLASH SALE</Text>
-            <Text style={styles.bannerSubtext}>Up to 70% OFF</Text>
+            <Text style={styles.bannerText}>Zod Mobile</Text>
+            <Text style={styles.bannerSubtext}>Buy Better. Sell Faster.</Text>
           </View>
         </View>
 
-        {/* Quick Access Icons */}
+        {/* Icons */}
         <View style={styles.quickAccessContainer}>
           <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Categories</Text>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {BRAND_CATEGORIES.map((item) => (
-              <QuickAccessItem
-                key={item.brand}
-                icon={item.icon}
-                label={item.label}
-                color={item.color}
-                onPress={() => router.push({ pathname: '/mobiles', params: { brand: item.brand, category: item.label } })}
-              />
+              <QuickAccessItem key={item.brand} icon={item.icon} label={item.label} color={item.color} onPress={() => router.push({ pathname: '/mobiles', params: { brand: item.brand, category: item.label } })} />
             ))}
           </ScrollView>
         </View>
@@ -106,20 +86,7 @@ export default function ForYouScreen() {
         <View style={styles.flashSaleSection}>
           <View style={styles.sectionHeader}>
             <View style={styles.flashSaleHeader}>
-              <Text style={styles.flashSaleTitle}>Flash Sale</Text>
-              <View style={styles.countdown}>
-                <View style={styles.countdownBox}>
-                  <Text style={styles.countdownText}>18</Text>
-                </View>
-                <Text style={styles.countdownSeparator}>:</Text>
-                <View style={styles.countdownBox}>
-                  <Text style={styles.countdownText}>50</Text>
-                </View>
-                <Text style={styles.countdownSeparator}>:</Text>
-                <View style={styles.countdownBox}>
-                  <Text style={styles.countdownText}>03</Text>
-                </View>
-              </View>
+              <Text style={styles.flashSaleTitle}>Trending Mobiles</Text>
             </View>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
@@ -171,41 +138,12 @@ export default function ForYouScreen() {
             )}
           </ScrollView>
         </View>
-
-        {/* Daily Choice Section */}
-        <View style={styles.dailyChoiceSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Trending mobiles</Text>
-          </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789028/r1fubc2z7du0t5gnpm8o.jpg"
-              price="Rs.292"
-              badge="HOT"
-              label="BUY 1 GET 1 FREE"
-              onPress={() => router.push('/mobiles')}
-            />
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp"
-              price="Rs.191"
-              badge="HOT"
-              label="SUPER PACK"
-              onPress={() => router.push('/mobiles')}
-            />
-            <ProductCard
-              image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg"
-              price="Rs.240"
-              badge="HOT"
-              onPress={() => router.push('/mobiles')}
-            />
-          </ScrollView>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// Quick Access Item Component
+// Quick access item.
 function QuickAccessItem({ icon, label, color, onPress }) {
   return (
     <TouchableOpacity style={styles.quickAccessItem} onPress={onPress} activeOpacity={0.8}>
@@ -217,7 +155,7 @@ function QuickAccessItem({ icon, label, color, onPress }) {
   );
 }
 
-// Voucher Card Component
+// Voucher card.
 function VoucherCard({ discount, subtitle, color }) {
   return (
     <View style={[styles.voucherCard, { borderLeftColor: color }]}>
@@ -227,7 +165,7 @@ function VoucherCard({ discount, subtitle, color }) {
   );
 }
 
-// Product Card Skeleton Component
+// Product card skeleton.
 function ProductCardSkeleton() {
   return (
     <View style={styles.productCard}>
@@ -243,7 +181,7 @@ function ProductCardSkeleton() {
   );
 }
 
-// Product Card Component
+// Product card.
 function ProductCard({ image, price, originalPrice, discount, sold, badge, label, onPress }) {
   return (
     <TouchableOpacity style={styles.productCard} onPress={onPress} activeOpacity={0.8}>
@@ -265,12 +203,6 @@ function ProductCard({ image, price, originalPrice, discount, sold, badge, label
           <Text style={styles.productPrice}>{price}</Text>
           {badge && <View style={styles.hotBadge}><Text style={styles.hotBadgeText}>{badge}</Text></View>}
         </View>
-        {originalPrice && (
-          <View style={styles.discountRow}>
-            <Text style={styles.originalPrice}>{originalPrice}</Text>
-            {discount && <Text style={styles.discountBadge}>{discount}</Text>}
-          </View>
-        )}
       </View>
     </TouchableOpacity>
   );
@@ -342,9 +274,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bannerSubtext: {
-    color: colors.primaryLight,
+    color: colors.textLight,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '400',
     marginTop: 4,
   },
   quickAccessContainer: {

@@ -137,17 +137,11 @@ export default function MobileDetailScreen() {
         {/* Price Prediction - Hide if current user is the seller */}
         {mobile.prediction && currentUserId !== sellerId && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Price Prediction (ARIMA)</Text>
+            <Text style={styles.sectionTitle}>Price Prediction</Text>
             <View style={styles.predictionCard}>
               <View style={styles.predictionRow}>
                 <Text style={styles.predictionLabel}>Current</Text>
                 <Text style={styles.predictionValue}>Rs. {mobile.price?.toLocaleString()}</Text>
-              </View>
-              <View style={styles.predictionRow}>
-                <Text style={styles.predictionLabel}>Predicted</Text>
-                <Text style={[styles.predictionValue, styles.predictionHighlight]}>
-                  Rs. {mobile.prediction.predictedPrice?.toLocaleString()}
-                </Text>
               </View>
               <View style={styles.predictionRow}>
                 <Text style={styles.predictionLabel}>Trend</Text>
@@ -160,7 +154,6 @@ export default function MobileDetailScreen() {
                   <Text style={styles.trendText}>{mobile.prediction.trend === "up" ? "Up" : "Down"}</Text>
                 </View>
               </View>
-              <Text style={styles.predictionNote}>Confidence: {mobile.prediction.confidence}% • {mobile.prediction.note || "Dummy forecast"}</Text>
             </View>
           </View>
         )}
