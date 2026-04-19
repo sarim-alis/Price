@@ -62,7 +62,7 @@ export default function VerifyEmail() {
                 style={[authStyles.buttonContainer, { marginTop: 40 }]}
               >
                 <View style={authStyles.primaryButton}>
-                  <Text style={authStyles.buttonText}>Go to Login</Text>
+                  <Text style={authStyles.buttonText}>Login</Text>
                 </View>
               </TouchableOpacity>
             </>
