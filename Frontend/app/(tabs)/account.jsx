@@ -196,7 +196,7 @@ export default function AccountScreen() {
           style: "destructive",
           onPress: async () => {
             await logout();
-            router.replace('/login');
+            router.replace('/buyer-login');
           }
         }
       ]
@@ -207,7 +207,7 @@ export default function AccountScreen() {
   const handleSwitchRole = () => {
     Alert.alert(
       "Switch Role",
-      "Are you sure you want to switch to buyer mode?",
+      "Are you sure you want to switch to seller mode?",
       [
         { text: "Cancel", style: "cancel" },
         {
