@@ -1,12 +1,12 @@
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+const FRONTEND_URL = "http://192.168.18.227:8081";
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE || "gmail",
   auth: {
     user: "sarimslayerali786@gmail.com",
     pass: "hmsn ilgt swrn wkds",
-    // pass: "hchi vsvf ebxr xivl",
   },
 });
 
@@ -15,7 +15,7 @@ export const generateVerificationToken = () => {
 };
 
 export const sendVerificationEmail = async (email, token, name) => {
-  const verificationUrl = `http://192.168.18.203:8081/verify-email?token=${token}`;
+  const verificationUrl = `${FRONTEND_URL}/verify-email?token=${token}`;
   
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -58,7 +58,7 @@ export const sendVerificationEmail = async (email, token, name) => {
 };
 
 export const sendPasswordResetEmail = async (email, token, name) => {
-  const resetUrl = `http://192.168.18.203:8081/reset-password?token=${token}`;
+  const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
   
   const mailOptions = {
     from: process.env.EMAIL_USER,
