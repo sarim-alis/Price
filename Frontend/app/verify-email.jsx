@@ -61,7 +61,7 @@ export default function VerifyEmail() {
                 onPress={() => router.replace("/role-selection")} 
                 style={[authStyles.buttonContainer, { marginTop: 40 }]}
               >
-                <View style={authStyles.primaryButton}>
+                <View style={authStyles.primaryButtonLogin}>
                   <Text style={authStyles.buttonText}>Login</Text>
                 </View>
               </TouchableOpacity>

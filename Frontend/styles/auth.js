@@ -82,6 +82,14 @@ export const authStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  primaryButtonLogin: {
+    backgroundColor: colors.primary,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   buttonText: {
     color: colors.textLight,
     fontSize: 18,
