@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SOCKET_URL = process.env.EXPO_PUBLIC_API_URL?.replace("/api", "") || "http://192.168.100.39:5000";
+const SOCKET_URL = process.env.EXPO_PUBLIC_API_URL?.replace("/api", "") || "http://192.168.18.203:5000";
 
 class SocketService {
   constructor() {
@@ -23,14 +23,21 @@ class SocketService {
         return;
       }
 
-      // console.log("🔌 Connecting to Socket.IO server:", SOCKET_URL);
+      console.log("🔌 Connecting to Socket.IO server:", SOCKET_URL);
+      console.log("📍 EXPO_PUBLIC_API_URL:", process.env.EXPO_PUBLIC_API_URL);
 
       this.socket = io(SOCKET_URL, {
         auth: { token },
         transports: ["websocket", "polling"],
         reconnection: true,
         reconnectionDelay: 1000,
-        reconnectionAttempts: 5
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: 10,
+        timeout: 20000,
+        autoConnect: true,
+        forceNew: false,
+        upgrade: true,
+        rememberUpgrade: true
       });
 
       // Wait for connection
@@ -48,17 +55,37 @@ class SocketService {
 
         this.socket.on("connect_error", (error) => {
           console.error("❌ Socket connection error:", error.message);
+          console.error("❌ Error details:", error);
           this.connected = false;
           reject(error);
         });
 
-        // Timeout after 10 seconds
-        setTimeout(() => {
+        this.socket.on("reconnect_attempt", (attemptNumber) => {
+          console.log(`🔄 Reconnection attempt ${attemptNumber}...`);
+        });
+
+        this.socket.on("reconnect_failed", () => {
+          console.error("❌ All reconnection attempts failed");
+        });
+
+        this.socket.on("reconnect", (attemptNumber) => {
+          console.log(`✅ Reconnected after ${attemptNumber} attempts`);
+          this.connected = true;
+        });
+
+        // Timeout after 30 seconds
+        const timeoutId = setTimeout(() => {
           if (!this.connected) {
-            console.error("❌ Socket connection timeout");
-            reject(new Error("Connection timeout"));
+            console.error("❌ Socket connection timeout after 30s");
+            console.error("❌ Server URL:", SOCKET_URL);
+            this.socket?.disconnect();
+            reject(new Error("Connection timeout - please check your network and server"));
           }
-        }, 10000);
+        }, 30000);
+
+        this.socket.on("connect", () => {
+          clearTimeout(timeoutId);
+        });
       });
     } catch (error) {
       console.error("❌ Error connecting socket:", error);

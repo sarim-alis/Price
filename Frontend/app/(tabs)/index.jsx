@@ -110,32 +110,9 @@ export default function ForYouScreen() {
                 />
               ))
             ) : (
-              <>
-                <ProductCard
-                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768789028/r1fubc2z7du0t5gnpm8o.jpg"
-                  price="Rs.292"
-                  originalPrice="Rs.1,200"
-                  discount="-76%"
-                  sold="iPhone 15 Pro"
-                  onPress={() => router.push('/mobiles')}
-                />
-                <ProductCard
-                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788796/ob4nrnqdawiepvw4b1vc.webp"
-                  price="Rs.832"
-                  originalPrice="Rs.2,980"
-                  discount="-72%"
-                  sold="Samsung S24"
-                  onPress={() => router.push('/mobiles')}
-                />
-                <ProductCard
-                  image="https://res.cloudinary.com/dgk3gaml0/image/upload/v1768788851/dhzamx2qwfcpbfrh78jb.jpg"
-                  price="Rs.430"
-                  originalPrice="Rs.1,000"
-                  discount="-57%"
-                  sold="Realme 12"
-                  onPress={() => router.push('/mobiles')}
-                />
-              </>
+              <View style={forYouStyles.productCard}>
+                <Text style={{ textAlign: 'center', color: '#999' }}>No trending mobiles available</Text>
+              </View>
             )}
           </ScrollView>
         </View>

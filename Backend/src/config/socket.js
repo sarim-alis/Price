@@ -13,7 +13,14 @@ export const initializeSocket = (server) => {
         : "*",
       methods: ["GET", "POST"],
       credentials: true
-    }
+    },
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    connectTimeout: 45000,
+    transports: ["websocket", "polling"],
+    allowEIO3: true,
+    upgradeTimeout: 30000,
+    maxHttpBufferSize: 1e8
   });
 
   // Socket.IO authentication middleware
