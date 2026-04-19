@@ -121,12 +121,18 @@ export const sendPhoneVerification = async (req, res) => {
     const { phone } = req.body;
     const userId = req.user.id;
 
+    console.log('=== SEND PHONE VERIFICATION OTP ===');
+    console.log('User ID:', userId);
+    console.log('Phone:', phone);
+
     const user = await User.findById(userId);
     if (!user) {
+      console.log('❌ User not found');
       return res.status(404).json({ message: "User not found" });
     }
 
     if (user.phoneVerified) {
+      console.log('❌ Phone already verified');
       return res.status(400).json({ message: "Phone already verified" });
     }
 
@@ -134,6 +140,9 @@ export const sendPhoneVerification = async (req, res) => {
 
     const code = generatePhoneOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    console.log('Generated OTP:', code);
+    console.log('Expires at:', expiresAt);
 
     await VerificationToken.create({
       userId: user._id,
@@ -144,8 +153,10 @@ export const sendPhoneVerification = async (req, res) => {
 
     await sendPhoneOTP(phone, code, user.name);
 
+    console.log('✅ OTP sent successfully');
     res.json({ message: "OTP sent successfully. Check console for code.", phone });
   } catch (error) {
+    console.error('❌ Send OTP error:', error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -155,17 +166,36 @@ export const verifyPhone = async (req, res) => {
     const { code } = req.body;
     const userId = req.user.id;
 
+    console.log('=== PHONE VERIFICATION ATTEMPT ===');
+    console.log('User ID:', userId);
+    console.log('Submitted Code:', code);
+    console.log('Code Type:', typeof code);
+
+    // Find all tokens for this user
+    const allTokens = await VerificationToken.find({
+      userId,
+      type: "phone_verification",
+    });
+    console.log('All tokens found:', allTokens.length);
+    allTokens.forEach(t => {
+      console.log(`  - Code: ${t.code}, Expires: ${t.expiresAt}`);
+    });
+
     const verificationToken = await VerificationToken.findOne({
       userId,
       code,
       type: "phone_verification",
     });
 
+    console.log('Matching token found:', !!verificationToken);
+
     if (!verificationToken) {
+      console.log('❌ No matching token found');
       return res.status(400).json({ message: "Invalid or expired OTP code" });
     }
 
     if (verificationToken.expiresAt < new Date()) {
+      console.log('❌ Token expired');
       await VerificationToken.deleteOne({ _id: verificationToken._id });
       return res.status(400).json({ message: "OTP code has expired. Please request a new one." });
     }
@@ -176,6 +206,7 @@ export const verifyPhone = async (req, res) => {
     }
 
     if (user.phoneVerified) {
+      console.log('❌ Phone already verified');
       await VerificationToken.deleteOne({ _id: verificationToken._id });
       return res.status(400).json({ message: "Phone already verified" });
     }
@@ -185,8 +216,10 @@ export const verifyPhone = async (req, res) => {
 
     await VerificationToken.deleteOne({ _id: verificationToken._id });
 
+    console.log('✅ Phone verified successfully');
     res.json({ message: "Phone verified successfully" });
   } catch (error) {
+    console.error('❌ Phone verification error:', error);
     res.status(500).json({ message: error.message });
   }
 };
