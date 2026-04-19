@@ -1,5 +1,5 @@
 // Imports.
-import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { colors } from '../../styles/colors';
 import { getFlashSaleMobiles } from '../../services/api';
+import { forYouStyles } from '../../styles/for-you';
 
 // Brands.
 const BRAND_CATEGORIES = [
@@ -44,36 +45,36 @@ export default function ForYouScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={forYouStyles.container} edges={['top']}>
       <StatusBar style="dark" />
       
       {/* Search Header */}
-      <View style={styles.header}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-          <TextInput style={styles.searchInput} placeholder="Search for products..." placeholderTextColor="#999" />
-          <TouchableOpacity style={styles.cameraButton}>
+      <View style={forYouStyles.header}>
+        <View style={forYouStyles.searchContainer}>
+          <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
+          <TextInput style={forYouStyles.searchInput} placeholder="Search for products..." placeholderTextColor="#999" />
+          <TouchableOpacity style={forYouStyles.cameraButton}>
             <Ionicons name="camera-outline" size={20} color="#666" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.searchButton}>
-          <Text style={styles.searchButtonText}>Search</Text>
+        <TouchableOpacity style={forYouStyles.searchButton}>
+          <Text style={forYouStyles.searchButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }}>
+      <ScrollView style={forYouStyles.content} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }}>
         {/* Banner */}
-        <View style={styles.bannerContainer}>
-          <View style={styles.banner}>
-            <Text style={styles.bannerText}>Zod Mobile</Text>
-            <Text style={styles.bannerSubtext}>Buy Better. Sell Faster.</Text>
+        <View style={forYouStyles.bannerContainer}>
+          <View style={forYouStyles.banner}>
+            <Text style={forYouStyles.bannerText}>Zod Mobile</Text>
+            <Text style={forYouStyles.bannerSubtext}>Buy Better. Sell Faster.</Text>
           </View>
         </View>
 
         {/* Icons */}
-        <View style={styles.quickAccessContainer}>
-          <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Categories</Text>
+        <View style={forYouStyles.quickAccessContainer}>
+          <View style={forYouStyles.sectionHeader}>
+          <Text style={forYouStyles.sectionTitle}>Categories</Text>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {BRAND_CATEGORIES.map((item) => (
@@ -83,13 +84,13 @@ export default function ForYouScreen() {
         </View>
 
         {/* Flash Sale Section */}
-        <View style={styles.flashSaleSection}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.flashSaleHeader}>
-              <Text style={styles.flashSaleTitle}>Trending Mobiles</Text>
+        <View style={forYouStyles.flashSaleSection}>
+          <View style={forYouStyles.sectionHeader}>
+            <View style={forYouStyles.flashSaleHeader}>
+              <Text style={forYouStyles.flashSaleTitle}>Trending Mobiles</Text>
             </View>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={forYouStyles.productScroll}>
             {loadingFlashSale ? (
               <>
                 <ProductCardSkeleton />
@@ -146,11 +147,11 @@ export default function ForYouScreen() {
 // Quick access item.
 function QuickAccessItem({ icon, label, color, onPress }) {
   return (
-    <TouchableOpacity style={styles.quickAccessItem} onPress={onPress} activeOpacity={0.8}>
-      <View style={[styles.quickAccessIcon, { backgroundColor: color }]}>
+    <TouchableOpacity style={forYouStyles.quickAccessItem} onPress={onPress} activeOpacity={0.8}>
+      <View style={[forYouStyles.quickAccessIcon, { backgroundColor: color }]}>
         <Ionicons name={icon} size={24} color="#fff" />
       </View>
-      <Text style={styles.quickAccessLabel}>{label}</Text>
+      <Text style={forYouStyles.quickAccessLabel}>{label}</Text>
     </TouchableOpacity>
   );
 }
@@ -158,9 +159,9 @@ function QuickAccessItem({ icon, label, color, onPress }) {
 // Voucher card.
 function VoucherCard({ discount, subtitle, color }) {
   return (
-    <View style={[styles.voucherCard, { borderLeftColor: color }]}>
-      <Text style={[styles.voucherDiscount, { color }]}>{discount}</Text>
-      <Text style={styles.voucherSubtitle}>{subtitle}</Text>
+    <View style={[forYouStyles.voucherCard, { borderLeftColor: color }]}>
+      <Text style={[forYouStyles.voucherDiscount, { color }]}>{discount}</Text>
+      <Text style={forYouStyles.voucherSubtitle}>{subtitle}</Text>
     </View>
   );
 }
@@ -168,14 +169,14 @@ function VoucherCard({ discount, subtitle, color }) {
 // Product card skeleton.
 function ProductCardSkeleton() {
   return (
-    <View style={styles.productCard}>
-      <View style={styles.productImageContainer}>
-        <View style={styles.skeletonImage} />
-        <View style={styles.skeletonBadge} />
+    <View style={forYouStyles.productCard}>
+      <View style={forYouStyles.productImageContainer}>
+        <View style={forYouStyles.skeletonImage} />
+        <View style={forYouStyles.skeletonBadge} />
       </View>
-      <View style={styles.productInfo}>
-        <View style={styles.skeletonPrice} />
-        <View style={styles.skeletonOriginalPrice} />
+      <View style={forYouStyles.productInfo}>
+        <View style={forYouStyles.skeletonPrice} />
+        <View style={forYouStyles.skeletonOriginalPrice} />
       </View>
     </View>
   );
@@ -184,340 +185,26 @@ function ProductCardSkeleton() {
 // Product card.
 function ProductCard({ image, price, originalPrice, discount, sold, badge, label, onPress }) {
   return (
-    <TouchableOpacity style={styles.productCard} onPress={onPress} activeOpacity={0.8}>
-      <View style={styles.productImageContainer}>
-        <Image source={{ uri: image }} style={styles.productImage} />
+    <TouchableOpacity style={forYouStyles.productCard} onPress={onPress} activeOpacity={0.8}>
+      <View style={forYouStyles.productImageContainer}>
+        <Image source={{ uri: image }} style={forYouStyles.productImage} />
         {label && (
-          <View style={styles.productLabel}>
-            <Text style={styles.productLabelText}>{label}</Text>
+          <View style={forYouStyles.productLabel}>
+            <Text style={forYouStyles.productLabelText}>{label}</Text>
           </View>
         )}
         {sold && (
-          <View style={styles.soldBadge}>
-            <Text style={styles.soldText}>{sold}</Text>
+          <View style={forYouStyles.soldBadge}>
+            <Text style={forYouStyles.soldText}>{sold}</Text>
           </View>
         )}
       </View>
-      <View style={styles.productInfo}>
-        <View style={styles.priceRow}>
-          <Text style={styles.productPrice}>{price}</Text>
-          {badge && <View style={styles.hotBadge}><Text style={styles.hotBadgeText}>{badge}</Text></View>}
+      <View style={forYouStyles.productInfo}>
+        <View style={forYouStyles.priceRow}>
+          <Text style={forYouStyles.productPrice}>{price}</Text>
+          {badge && <View style={forYouStyles.hotBadge}><Text style={forYouStyles.hotBadgeText}>{badge}</Text></View>}
         </View>
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  searchContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    height: 42,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: colors.textPrimary,
-  },
-  cameraButton: {
-    padding: 4,
-  },
-  searchButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  searchButtonText: {
-    color: colors.textLight,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  content: {
-    flex: 1,
-  },
-  bannerContainer: {
-    paddingHorizontal: 12,
-    paddingTop: 12,
-  },
-  banner: {
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    padding: 20,
-    height: 140,
-    justifyContent: 'center',
-  },
-  bannerText: {
-    color: colors.textLight,
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  bannerSubtext: {
-    color: colors.textLight,
-    fontSize: 18,
-    fontWeight: '400',
-    marginTop: 4,
-  },
-  quickAccessContainer: {
-    backgroundColor: colors.surface,
-    paddingVertical: 16,
-    marginTop: 12,
-  },
-  quickAccessItem: {
-    alignItems: 'center',
-    marginHorizontal: 10,
-    width: 78,
-    paddingHorizontal: 2,
-  },
-  quickAccessIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  quickAccessLabel: {
-    fontSize: 11,
-    color: colors.textPrimary,
-    textAlign: 'center',
-    paddingHorizontal: 2,
-  },
-  voucherSection: {
-    backgroundColor: colors.surface,
-    padding: 16,
-    marginTop: 12,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    marginLeft: 12,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-  },
-  moreLink: {
-    fontSize: 12,
-    color: colors.primary,
-  },
-  voucherCards: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12,
-  },
-  voucherCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    padding: 12,
-    borderLeftWidth: 4,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  voucherDiscount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  voucherSubtitle: {
-    fontSize: 12,
-    color: colors.info,
-    marginTop: 4,
-  },
-  collectAllButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  collectAllText: {
-    color: colors.textLight,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  flashSaleSection: {
-    backgroundColor: colors.surface,
-    padding: 16,
-    marginTop: 12,
-  },
-  flashSaleHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  flashSaleTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-  },
-  countdown: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  countdownBox: {
-    backgroundColor: colors.error,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  countdownText: {
-    color: colors.textLight,
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  countdownSeparator: {
-    color: colors.error,
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginHorizontal: 2,
-  },
-  productScroll: {
-    marginTop: 8,
-  },
-  productCard: {
-    width: 140,
-    marginRight: 12,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  productImageContainer: {
-    position: 'relative',
-    width: '100%',
-    height: 140,
-    backgroundColor: colors.background,
-  },
-  productImage: {
-    width: 140,
-    height: 140,
-    resizeMode: 'contain',
-  },
-  productLabel: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 4,
-  },
-  productLabelText: {
-    color: colors.textLight,
-    fontSize: 9,
-    fontWeight: 'bold',
-  },
-  soldBadge: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    paddingVertical: 4,
-    alignItems: 'center',
-  },
-  soldText: {
-    color: colors.textLight,
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  productInfo: {
-    padding: 8,
-  },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.primary,
-  },
-  hotBadge: {
-    backgroundColor: colors.warning,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  hotBadgeText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-  },
-  discountRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  originalPrice: {
-    fontSize: 12,
-    color: colors.textMuted,
-    textDecorationLine: 'line-through',
-    marginRight: 6,
-  },
-  discountBadge: {
-    fontSize: 11,
-    color: colors.error,
-    fontWeight: '600',
-  },
-  dailyChoiceSection: {
-    backgroundColor: colors.surface,
-    padding: 16,
-    marginTop: 12,
-    marginBottom: 60,
-  },
-  // Skeleton loading styles
-  skeletonImage: {
-    width: '100%',
-    height: 140,
-    backgroundColor: colors.background,
-    borderRadius: 0,
-  },
-  skeletonBadge: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 24,
-    backgroundColor: colors.background,
-  },
-  skeletonPrice: {
-    width: 60,
-    height: 16,
-    backgroundColor: colors.background,
-    borderRadius: 4,
-    marginBottom: 4,
-  },
-  skeletonOriginalPrice: {
-    width: 80,
-    height: 12,
-    backgroundColor: colors.background,
-    borderRadius: 4,
-  },
-});

@@ -1,5 +1,8 @@
+import { StyleSheet } from 'react-native';
 import { colors } from "./colors";
- container: {
+
+export const forYouStyles = StyleSheet.create({
+  container: {
     flex: 1,
     backgroundColor: colors.background,
   },
@@ -310,3 +313,4 @@ import { colors } from "./colors";
     backgroundColor: colors.background,
     borderRadius: 4,
   },
+});
