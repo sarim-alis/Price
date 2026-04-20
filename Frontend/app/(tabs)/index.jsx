@@ -1,13 +1,13 @@
 // Imports.
-import { View, Text, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
-import { colors } from '../../styles/colors';
+import { useQuery } from '@tanstack/react-query';
 import { getFlashSaleMobiles } from '../../services/api';
 import { forYouStyles } from '../../styles/for-you';
+import ProductCard, { ProductCardSkeleton, QuickAccessItem } from '../ProductCard';
 
 // Brands.
 const BRAND_CATEGORIES = [
@@ -22,33 +22,22 @@ const BRAND_CATEGORIES = [
   { icon: 'game-controller', label: 'Google', brand: 'google', color: '#8D6E63' },
 ];
 
+
 // Frontend.
 export default function ForYouScreen() {
+  // States.
   const router = useRouter();
-  const [flashSaleMobiles, setFlashSaleMobiles] = useState([]);
-  const [loadingFlashSale, setLoadingFlashSale] = useState(true);
-
-  useEffect(() => {
-    fetchFlashSaleMobiles();
-  }, []);
-
-  const fetchFlashSaleMobiles = async () => {
-    try {
-      setLoadingFlashSale(true);
-      const mobiles = await getFlashSaleMobiles();
-      setFlashSaleMobiles(mobiles);
-    } catch (error) {
-      console.error('Error fetching flash sale mobiles:', error);
-    } finally {
-      setLoadingFlashSale(false);
-    }
-  };
+  const { data: flashSaleMobiles = [], isLoading: loadingFlashSale } = useQuery({
+    queryKey: ['flashSaleMobiles'],
+    queryFn: getFlashSaleMobiles,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
     <SafeAreaView style={forYouStyles.container} edges={['top']}>
       <StatusBar style="dark" />
       
-      {/* Search Header */}
+      {/* Search */}
       <View style={forYouStyles.header}>
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
@@ -71,7 +60,7 @@ export default function ForYouScreen() {
           </View>
         </View>
 
-        {/* Icons */}
+        {/* Categories */}
         <View style={forYouStyles.quickAccessContainer}>
           <View style={forYouStyles.sectionHeader}>
           <Text style={forYouStyles.sectionTitle}>Categories</Text>
@@ -83,7 +72,7 @@ export default function ForYouScreen() {
           </ScrollView>
         </View>
 
-        {/* Flash Sale Section */}
+        {/* Trending Mobiles */}
         <View style={forYouStyles.flashSaleSection}>
           <View style={forYouStyles.sectionHeader}>
             <View style={forYouStyles.flashSaleHeader}>
@@ -121,67 +110,3 @@ export default function ForYouScreen() {
   );
 }
 
-// Quick access item.
-function QuickAccessItem({ icon, label, color, onPress }) {
-  return (
-    <TouchableOpacity style={forYouStyles.quickAccessItem} onPress={onPress} activeOpacity={0.8}>
-      <View style={[forYouStyles.quickAccessIcon, { backgroundColor: color }]}>
-        <Ionicons name={icon} size={24} color="#fff" />
-      </View>
-      <Text style={forYouStyles.quickAccessLabel}>{label}</Text>
-    </TouchableOpacity>
-  );
-}
-
-// Voucher card.
-function VoucherCard({ discount, subtitle, color }) {
-  return (
-    <View style={[forYouStyles.voucherCard, { borderLeftColor: color }]}>
-      <Text style={[forYouStyles.voucherDiscount, { color }]}>{discount}</Text>
-      <Text style={forYouStyles.voucherSubtitle}>{subtitle}</Text>
-    </View>
-  );
-}
-
-// Product card skeleton.
-function ProductCardSkeleton() {
-  return (
-    <View style={forYouStyles.productCard}>
-      <View style={forYouStyles.productImageContainer}>
-        <View style={forYouStyles.skeletonImage} />
-        <View style={forYouStyles.skeletonBadge} />
-      </View>
-      <View style={forYouStyles.productInfo}>
-        <View style={forYouStyles.skeletonPrice} />
-        <View style={forYouStyles.skeletonOriginalPrice} />
-      </View>
-    </View>
-  );
-}
-
-// Product card.
-function ProductCard({ image, price, originalPrice, discount, sold, badge, label, onPress }) {
-  return (
-    <TouchableOpacity style={forYouStyles.productCard} onPress={onPress} activeOpacity={0.8}>
-      <View style={forYouStyles.productImageContainer}>
-        <Image source={{ uri: image }} style={forYouStyles.productImage} />
-        {label && (
-          <View style={forYouStyles.productLabel}>
-            <Text style={forYouStyles.productLabelText}>{label}</Text>
-          </View>
-        )}
-        {sold && (
-          <View style={forYouStyles.soldBadge}>
-            <Text style={forYouStyles.soldText}>{sold}</Text>
-          </View>
-        )}
-      </View>
-      <View style={forYouStyles.productInfo}>
-        <View style={forYouStyles.priceRow}>
-          <Text style={forYouStyles.productPrice}>{price}</Text>
-          {badge && <View style={forYouStyles.hotBadge}><Text style={forYouStyles.hotBadgeText}>{badge}</Text></View>}
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
