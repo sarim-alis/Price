@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
 import { getMobileById, getOrCreateConversation } from "../../services/api";
+import { predictPriceTrend } from "../../services/prediction";
 import { colors } from "../../styles/colors";
 import { detailStyles as styles } from "../../styles/detail";
 
@@ -27,6 +28,8 @@ export default function MobileDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [prediction, setPrediction] = useState(null);
+  const [loadingPrediction, setLoadingPrediction] = useState(false);
   const { data: mobile, isLoading, isError, error } = useQuery({queryKey: ["mobile", id], queryFn: () => getMobileById(id), enabled: !!id});
 
   // Get current user
@@ -40,6 +43,23 @@ export default function MobileDetailScreen() {
     };
     getUserData();
   }, []);
+
+  useEffect(() => {
+    const fetchPrediction = async () => {
+      if (mobile) {
+        setLoadingPrediction(true);
+        try {
+          const result = await predictPriceTrend(mobile);
+          setPrediction(result);
+        } catch (error) {
+          console.error('Failed to fetch prediction:', error);
+        } finally {
+          setLoadingPrediction(false);
+        }
+      }
+    };
+    fetchPrediction();
+  }, [mobile]);
 
   if (isLoading) {
     return (
@@ -135,26 +155,36 @@ export default function MobileDetailScreen() {
         </View>
 
         {/* Price Prediction - Hide if current user is the seller */}
-        {mobile.prediction && currentUserId !== sellerId && (
+        {currentUserId !== sellerId && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Price Prediction</Text>
-            <View style={styles.predictionCard}>
-              <View style={styles.predictionRow}>
-                <Text style={styles.predictionLabel}>Current</Text>
-                <Text style={styles.predictionValue}>Rs. {mobile.price?.toLocaleString()}</Text>
+            <Text style={styles.sectionTitle}>AI Price Prediction</Text>
+            {loadingPrediction ? (
+              <View style={styles.predictionCard}>
+                <ActivityIndicator size="small" color={colors.primary} />
+                <Text style={{ color: colors.textSecondary, marginTop: 8 }}>Analyzing market data...</Text>
               </View>
-              <View style={styles.predictionRow}>
-                <Text style={styles.predictionLabel}>Trend</Text>
-                <View style={[styles.trendBadge, mobile.prediction.trend === "up" ? styles.trendUp : styles.trendDown]}>
-                  <Ionicons
-                    name={mobile.prediction.trend === "up" ? "trending-up" : "trending-down"}
-                    size={16}
-                    color={colors.textLight}
-                  />
-                  <Text style={styles.trendText}>{mobile.prediction.trend === "up" ? "Up" : "Down"}</Text>
+            ) : prediction ? (
+              <View style={styles.predictionCard}>
+                <View style={styles.predictionRow}>
+                  <Text style={styles.predictionLabel}>Current</Text>
+                  <Text style={styles.predictionValue}>Rs. {mobile.price?.toLocaleString()}</Text>
                 </View>
+                <View style={styles.predictionRow}>
+                  <Text style={styles.predictionLabel}>AI Trend</Text>
+                  <View style={[styles.trendBadge, prediction.prediction === "increase" ? styles.trendUp : styles.trendDown]}>
+                    <Ionicons
+                      name={prediction.prediction === "increase" ? "trending-up" : "trending-down"}
+                      size={16}
+                      color={colors.textLight}
+                    />
+                    <Text style={styles.trendText}>{prediction.prediction === "increase" ? "Increase" : "Decrease"}</Text>
+                  </View>
+                </View>
+                <Text style={{ fontSize: 12, color: colors.textSecondary, marginTop: 8 }}>
+                  Based on AI analysis of specs and market data
+                </Text>
               </View>
-            </View>
+            ) : null}
           </View>
         )}
 

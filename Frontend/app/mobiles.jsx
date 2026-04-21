@@ -128,8 +128,8 @@ export default function MobilesScreen() {
                   <Text style={styles.cardPrice}>Rs. {mobile.price?.toLocaleString()}</Text>
                   {mobile.prediction && (
                     <View style={styles.predictionRow}>
-                      <Text style={styles.predictionLabel}>Pred: Rs. {mobile.prediction.predictedPrice?.toLocaleString()}</Text>
-                      <View style={[styles.trendDot, mobile.prediction.trend === "up" ? styles.trendUp : styles.trendDown]} />
+                      {/* <Text style={styles.predictionLabel}>Pred: Rs. {mobile.prediction.predictedPrice?.toLocaleString()}</Text>
+                      <View style={[styles.trendDot, mobile.prediction.trend === "up" ? styles.trendUp : styles.trendDown]} /> */}
                     </View>
                   )}
                 </View>

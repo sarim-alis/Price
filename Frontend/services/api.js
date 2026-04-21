@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.18.203:5000/api";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.18.203:5000/api";
 
 // Profile APIs
 export const getProfile = async () => {
