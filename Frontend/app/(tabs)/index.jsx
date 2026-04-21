@@ -1,12 +1,13 @@
 // Imports.
-import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFlashSaleMobiles } from '../../services/api';
+import { searchWithGemini } from '../../services/gemini';
 import { forYouStyles } from '../../styles/for-you';
 import ProductCard, { ProductCardSkeleton, QuickAccessItem } from '../ProductCard';
 
@@ -29,22 +30,56 @@ export default function ForYouScreen() {
   // States.
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('name'); // 'name' or 'price'
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filteredMobiles, setFilteredMobiles] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const { data: flashSaleMobiles = [], isLoading: loadingFlashSale } = useQuery({
     queryKey: ['flashSaleMobiles'],
     queryFn: getFlashSaleMobiles,
     staleTime: 1000 * 60 * 5,
   });
 
-  // Filter mobiles by search query
-  const filteredMobiles = useMemo(() => {
-    if (!searchQuery.trim()) return flashSaleMobiles;
-    
-    const query = searchQuery.toLowerCase();
-    return flashSaleMobiles.filter(mobile => 
-      mobile.brand?.toLowerCase().includes(query) ||
-      mobile.model?.toLowerCase().includes(query)
-    );
-  }, [flashSaleMobiles, searchQuery]);
+  // Filter options
+  const filterOptions = [
+    { id: 'name', label: 'Search by Name', icon: 'search' },
+    { id: 'price', label: 'Search by Specs', icon: 'options' },
+  ];
+
+  // Handle search with Gemini for spec-based searches
+  useEffect(() => {
+    const performSearch = async () => {
+      if (!searchQuery.trim()) {
+        setFilteredMobiles(flashSaleMobiles);
+        return;
+      }
+
+      setIsSearching(true);
+      
+      try {
+        if (filterType === 'price') {
+          // Use Gemini for smart spec searches
+          const results = await searchWithGemini(searchQuery, flashSaleMobiles);
+          setFilteredMobiles(results.slice(0, 2)); // Limit to 2 results
+        } else {
+          // Basic name search
+          const query = searchQuery.toLowerCase();
+          const results = flashSaleMobiles.filter(mobile => 
+            mobile.brand?.toLowerCase().includes(query) ||
+            mobile.model?.toLowerCase().includes(query)
+          );
+          setFilteredMobiles(results.slice(0, 2));
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        setFilteredMobiles([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    performSearch();
+  }, [searchQuery, filterType, flashSaleMobiles]);
 
   return (
     <SafeAreaView style={forYouStyles.container} edges={['top']}>
@@ -55,6 +90,12 @@ export default function ForYouScreen() {
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
           <TextInput style={forYouStyles.searchInput} placeholder="Search for mobile..." placeholderTextColor="#999"value={searchQuery}onChangeText={setSearchQuery} />
+          <TouchableOpacity 
+            style={forYouStyles.filterButton}
+            onPress={() => setShowFilterModal(true)}
+          >
+            <Ionicons name="options" size={20} color="#666" />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={forYouStyles.searchButton} onPress={() => searchQuery.trim() && setSearchQuery('')}>
           <Text style={forYouStyles.searchButtonText}>
@@ -85,17 +126,30 @@ export default function ForYouScreen() {
         </View>
 
         {/* Search Results */}
-        {searchQuery.trim() && filteredMobiles.length > 0 && (
+        {searchQuery.trim() && (
           <View style={forYouStyles.flashSaleSection}>
             <View style={forYouStyles.sectionHeader}>
               <View style={forYouStyles.flashSaleHeader}>
-                <Text style={forYouStyles.flashSaleTitle}>Search Results</Text>
+                <Text style={forYouStyles.flashSaleTitle}>
+                  {isSearching ? 'Searching...' : 'Search Results'}
+                </Text>
               </View>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={forYouStyles.productScroll}>
-              {filteredMobiles.slice(0, 2).map((mobile, index) => (
-                <ProductCard key={mobile._id || index} image={mobile.image || mobile.images?.[0]} price={`Rs.${mobile.price}`} originalPrice={`Rs.${mobile.originalPrice}`} discount={`-${mobile.discount}%`} sold={mobile.sold} onPress={() => router.push(`/mobile/${mobile._id}`)} />
-              ))}
+              {isSearching ? (
+                <>
+                  <ProductCardSkeleton />
+                  <ProductCardSkeleton />
+                </>
+              ) : filteredMobiles.length > 0 ? (
+                filteredMobiles.map((mobile, index) => (
+                  <ProductCard key={mobile._id || index} image={mobile.image || mobile.images?.[0]} price={`Rs.${mobile.price}`} originalPrice={`Rs.${mobile.originalPrice}`} discount={`-${mobile.discount}%`} sold={mobile.sold} onPress={() => router.push(`/mobile/${mobile._id}`)} />
+                ))
+              ) : (
+                <View style={forYouStyles.productCard}>
+                  <Text style={{ textAlign: 'center', color: '#999' }}>No mobiles found</Text>
+                </View>
+              )}
             </ScrollView>
           </View>
         )}
@@ -126,6 +180,43 @@ export default function ForYouScreen() {
           </ScrollView>
         </View>
       </ScrollView>
+
+      {/* Filter Modal */}
+      <Modal visible={showFilterModal} transparent={true} animationType="fade" onRequestClose={() => setShowFilterModal(false)}>
+        <View style={forYouStyles.modalOverlay}>
+          <View style={forYouStyles.modalContent}>
+            <View style={forYouStyles.modalHeader}>
+              <Text style={forYouStyles.modalTitle}>Search Filter</Text>
+              <TouchableOpacity onPress={() => setShowFilterModal(false)}>
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={filterOptions}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    forYouStyles.filterOption,
+                    filterType === item.id && forYouStyles.filterOptionActive
+                  ]}
+                  onPress={() => {
+                    setFilterType(item.id);
+                  }}
+                >
+                  <Ionicons name={item.icon} size={20} color={filterType === item.id ? '#fff' : '#666'} />
+                  <Text style={[
+                    forYouStyles.filterOptionText,
+                    filterType === item.id && forYouStyles.filterOptionTextActive
+                  ]}>
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

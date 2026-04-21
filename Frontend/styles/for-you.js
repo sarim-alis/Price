@@ -42,6 +42,12 @@ export const forYouStyles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  filterButton: {
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#f5f5f5',
+    marginLeft: 8,
+  },
   searchButtonText: {
     color: colors.textLight,
     fontSize: 14,
@@ -312,5 +318,49 @@ export const forYouStyles = StyleSheet.create({
     height: 12,
     backgroundColor: colors.background,
     borderRadius: 4,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    width: '80%',
+    maxWidth: 300,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  filterOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 8,
+    backgroundColor: '#f8f8f8',
+    marginBottom: 10,
+  },
+  filterOptionActive: {
+    backgroundColor: colors.primary,
+  },
+  filterOptionText: {
+    marginLeft: 12,
+    fontSize: 16,
+    color: '#666',
+  },
+  filterOptionTextActive: {
+    color: 'white',
   },
 });
