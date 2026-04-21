@@ -13,7 +13,14 @@ export async function searchWithOpenAI(query, mobiles) {
 Available phones:
 ${mobileList}
 
-Return ONLY a JSON array of indices of the most relevant phones (max 2). Example: [0, 2]`;
+IMPORTANT: If user mentions a price (like "under 30k", "below 20000", etc.), ONLY return phones that match that price constraint.
+Return ONLY a JSON array of indices of the most relevant phones (max 2). Example: [0, 2]
+
+Rules:
+- Price "under 30k" means price <= 30000
+- Price "below 20k" means price <= 20000
+- Always respect price limits mentioned in the query
+- Return empty array [] if no phones match the criteria`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

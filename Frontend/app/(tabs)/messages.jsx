@@ -153,6 +153,11 @@ export default function MessagesScreen() {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
+        {searchQuery.trim() && (
+          <TouchableOpacity style={styles.clearButton} onPress={() => setSearchQuery('')}>
+            <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Messages List */}
@@ -247,8 +252,13 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 16,
     color: colors.textPrimary,
+    marginLeft: 12,
+  },
+  clearButton: {
+    padding: 4,
+    marginLeft: 8,
   },
   messageItem: {
     flexDirection: 'row',
