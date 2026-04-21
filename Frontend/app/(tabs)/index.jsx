@@ -54,21 +54,9 @@ export default function ForYouScreen() {
       <View style={forYouStyles.header}>
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
-          <TextInput 
-            style={forYouStyles.searchInput} 
-            placeholder="Search for products..." 
-            placeholderTextColor="#999"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          <TouchableOpacity style={forYouStyles.cameraButton}>
-            <Ionicons name="camera-outline" size={20} color="#666" />
-          </TouchableOpacity>
+          <TextInput style={forYouStyles.searchInput} placeholder="Search for mobile phones..." placeholderTextColor="#999"value={searchQuery}onChangeText={setSearchQuery} />
         </View>
-        <TouchableOpacity 
-          style={forYouStyles.searchButton} 
-          onPress={() => searchQuery.trim() && setSearchQuery('')}
-        >
+        <TouchableOpacity style={forYouStyles.searchButton} onPress={() => searchQuery.trim() && setSearchQuery('')}>
           <Text style={forYouStyles.searchButtonText}>
             {searchQuery.trim() ? 'Clear' : 'Search'}
           </Text>
@@ -106,15 +94,7 @@ export default function ForYouScreen() {
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={forYouStyles.productScroll}>
               {filteredMobiles.slice(0, 2).map((mobile, index) => (
-                <ProductCard
-                  key={mobile._id || index}
-                  image={mobile.image || mobile.images?.[0]}
-                  price={`Rs.${mobile.price}`}
-                  originalPrice={`Rs.${mobile.originalPrice}`}
-                  discount={`-${mobile.discount}%`}
-                  sold={mobile.sold}
-                  onPress={() => router.push(`/mobile/${mobile._id}`)}
-                />
+                <ProductCard key={mobile._id || index} image={mobile.image || mobile.images?.[0]} price={`Rs.${mobile.price}`} originalPrice={`Rs.${mobile.originalPrice}`} discount={`-${mobile.discount}%`} sold={mobile.sold} onPress={() => router.push(`/mobile/${mobile._id}`)} />
               ))}
             </ScrollView>
           </View>
@@ -136,15 +116,7 @@ export default function ForYouScreen() {
               </>
             ) : flashSaleMobiles.length > 0 ? (
               flashSaleMobiles.map((mobile, index) => (
-                <ProductCard
-                  key={mobile._id || index}
-                  image={mobile.image || mobile.images?.[0]}
-                  price={`Rs.${mobile.price}`}
-                  originalPrice={`Rs.${mobile.originalPrice}`}
-                  discount={`-${mobile.discount}%`}
-                  sold={mobile.sold}
-                  onPress={() => router.push(`/mobile/${mobile._id}`)}
-                />
+                <ProductCard key={mobile._id || index} image={mobile.image || mobile.images?.[0]} price={`Rs.${mobile.price}`} originalPrice={`Rs.${mobile.originalPrice}`} discount={`-${mobile.discount}%`} sold={mobile.sold} onPress={() => router.push(`/mobile/${mobile._id}`)} />
               ))
             ) : (
               <View style={forYouStyles.productCard}>
