@@ -54,7 +54,7 @@ export default function ForYouScreen() {
       <View style={forYouStyles.header}>
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
-          <TextInput style={forYouStyles.searchInput} placeholder="Search for mobile phones..." placeholderTextColor="#999"value={searchQuery}onChangeText={setSearchQuery} />
+          <TextInput style={forYouStyles.searchInput} placeholder="Search for mobile..." placeholderTextColor="#999"value={searchQuery}onChangeText={setSearchQuery} />
         </View>
         <TouchableOpacity style={forYouStyles.searchButton} onPress={() => searchQuery.trim() && setSearchQuery('')}>
           <Text style={forYouStyles.searchButtonText}>

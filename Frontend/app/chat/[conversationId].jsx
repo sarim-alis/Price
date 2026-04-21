@@ -432,6 +432,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
+    marginBottom: 38,
   },
   input: {
     flex: 1,
