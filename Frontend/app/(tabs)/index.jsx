@@ -7,8 +7,9 @@ import { useRouter } from 'expo-router';
 import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFlashSaleMobiles } from '../../services/api';
-import { searchWithGemini } from '../../services/gemini';
+import { searchWithOpenAI } from '../../services/openai';
 import { forYouStyles } from '../../styles/for-you';
+import { colors } from '../../styles/colors';
 import ProductCard, { ProductCardSkeleton, QuickAccessItem } from '../ProductCard';
 
 // Brands.
@@ -46,40 +47,39 @@ export default function ForYouScreen() {
     { id: 'price', label: 'Search by Specs', icon: 'options' },
   ];
 
-  // Handle search with Gemini for spec-based searches
+  // Handle basic name search (auto-search)
   useEffect(() => {
-    const performSearch = async () => {
+    if (filterType !== 'name' || !searchQuery.trim()) {
       if (!searchQuery.trim()) {
         setFilteredMobiles(flashSaleMobiles);
-        return;
       }
+      return;
+    }
 
-      setIsSearching(true);
-      
-      try {
-        if (filterType === 'price') {
-          // Use Gemini for smart spec searches
-          const results = await searchWithGemini(searchQuery, flashSaleMobiles);
-          setFilteredMobiles(results.slice(0, 2)); // Limit to 2 results
-        } else {
-          // Basic name search
-          const query = searchQuery.toLowerCase();
-          const results = flashSaleMobiles.filter(mobile => 
-            mobile.brand?.toLowerCase().includes(query) ||
-            mobile.model?.toLowerCase().includes(query)
-          );
-          setFilteredMobiles(results.slice(0, 2));
-        }
-      } catch (error) {
-        console.error('Search error:', error);
-        setFilteredMobiles([]);
-      } finally {
-        setIsSearching(false);
-      }
-    };
-
-    performSearch();
+    // Basic name search
+    const query = searchQuery.toLowerCase();
+    const results = flashSaleMobiles.filter(mobile => 
+      mobile.brand?.toLowerCase().includes(query) ||
+      mobile.model?.toLowerCase().includes(query)
+    );
+    setFilteredMobiles(results.slice(0, 2));
   }, [searchQuery, filterType, flashSaleMobiles]);
+
+  // Handle AI search when icon is clicked
+  const handleAISearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const results = await searchWithOpenAI(searchQuery, flashSaleMobiles);
+      setFilteredMobiles(results.slice(0, 2));
+    } catch (error) {
+      console.error('AI search error:', error);
+      setFilteredMobiles([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   return (
     <SafeAreaView style={forYouStyles.container} edges={['top']}>
@@ -89,7 +89,23 @@ export default function ForYouScreen() {
       <View style={forYouStyles.header}>
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
-          <TextInput style={forYouStyles.searchInput} placeholder="Search for mobile..." placeholderTextColor="#999"value={searchQuery}onChangeText={setSearchQuery} />
+          <TextInput 
+            style={forYouStyles.searchInputLarge} 
+            placeholder={filterType === 'name' ? "Search for mobile..." : "Search"} 
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {filterType === 'price' && (
+            <TouchableOpacity style={forYouStyles.aiSearchButton} onPress={handleAISearch}>
+              <Ionicons name="search" size={16} color={colors.primary} />
+            </TouchableOpacity>
+          )}
+          {searchQuery.trim() && (
+            <TouchableOpacity style={forYouStyles.clearButton} onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={20} color="#666" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity 
             style={forYouStyles.filterButton}
             onPress={() => setShowFilterModal(true)}
@@ -97,11 +113,6 @@ export default function ForYouScreen() {
             <Ionicons name="options" size={20} color="#666" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={forYouStyles.searchButton} onPress={() => searchQuery.trim() && setSearchQuery('')}>
-          <Text style={forYouStyles.searchButtonText}>
-            {searchQuery.trim() ? 'Clear' : 'Search'}
-          </Text>
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={forYouStyles.content} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 70 }}>

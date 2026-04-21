@@ -33,6 +33,12 @@ export const forYouStyles = StyleSheet.create({
     fontSize: 14,
     color: colors.textPrimary,
   },
+  searchInputLarge: {
+    flex: 1,
+    fontSize: 16,
+    color: colors.textPrimary,
+    paddingVertical: 2,
+  },
   cameraButton: {
     padding: 4,
   },
@@ -47,6 +53,18 @@ export const forYouStyles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: '#f5f5f5',
     marginLeft: 8,
+  },
+  aiSearchButton: {
+    padding: 6,
+    borderRadius: 4,
+    backgroundColor: '#f0f8ff',
+    marginLeft: 6,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+  },
+  clearButton: {
+    padding: 4,
+    marginLeft: 6,
   },
   searchButtonText: {
     color: colors.textLight,

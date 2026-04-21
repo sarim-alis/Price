@@ -3,24 +3,19 @@ const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || 'AIzaSyBndmovbX
 
 export async function searchWithGemini(query, mobiles) {
   try {
-    const prompt = `
-    You are a mobile phone expert. Based on the user's query "${query}", find the best matching phones from this list:
-    
-    ${mobiles.map(mobile => `
-    - ${mobile.brand} ${mobile.model}: 
-      Price: Rs.${mobile.price}
-      RAM: ${mobile.ram}GB
-      Storage: ${mobile.storage}GB
-      Camera: ${mobile.frontCamera}MP front, ${mobile.rearCamera}MP rear
-      Battery: ${mobile.battery}mAh
-      Screen: ${mobile.screenSize}"
-    `).join('\n')}
-    
-    Return ONLY a JSON array of matching phone indices in order of relevance. If no phones match, return [].
-    Example: [0, 3, 1]
-    `;
+    // Create a simpler prompt for better results
+    const mobileList = mobiles.map((mobile, index) => 
+      `${index}: ${mobile.brand} ${mobile.model} - Rs.${mobile.price} - ${mobile.ram}GB RAM - ${mobile.rearCamera}MP camera`
+    ).join('\n');
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+    const prompt = `User wants: "${query}"
+
+Available phones:
+${mobileList}
+
+Return ONLY a JSON array of indices of the most relevant phones (max 2). Example: [0, 2]`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,19 +25,31 @@ export async function searchWithGemini(query, mobiles) {
           parts: [{
             text: prompt
           }]
-        }]
+        }],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 100,
+        }
       })
     });
 
     if (!response.ok) {
-      throw new Error('Gemini API error');
+      const errorData = await response.text();
+      console.error('Gemini API response error:', errorData);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const result = data.candidates[0]?.content?.parts[0]?.text?.trim();
+    const result = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     
-    // Parse the result to get indices
-    const indices = JSON.parse(result || '[]');
+    if (!result) {
+      throw new Error('No response from Gemini');
+    }
+    
+    // Clean and parse the result
+    const cleanResult = result.replace(/```json\n?|\n?```/g, '');
+    const indices = JSON.parse(cleanResult || '[]');
+    
     return indices.map(index => mobiles[index]).filter(Boolean);
     
   } catch (error) {
