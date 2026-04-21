@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFlashSaleMobiles } from '../../services/api';
 import { forYouStyles } from '../../styles/for-you';
@@ -27,11 +28,23 @@ const BRAND_CATEGORIES = [
 export default function ForYouScreen() {
   // States.
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
   const { data: flashSaleMobiles = [], isLoading: loadingFlashSale } = useQuery({
     queryKey: ['flashSaleMobiles'],
     queryFn: getFlashSaleMobiles,
     staleTime: 1000 * 60 * 5,
   });
+
+  // Filter mobiles by search query
+  const filteredMobiles = useMemo(() => {
+    if (!searchQuery.trim()) return flashSaleMobiles;
+    
+    const query = searchQuery.toLowerCase();
+    return flashSaleMobiles.filter(mobile => 
+      mobile.brand?.toLowerCase().includes(query) ||
+      mobile.model?.toLowerCase().includes(query)
+    );
+  }, [flashSaleMobiles, searchQuery]);
 
   return (
     <SafeAreaView style={forYouStyles.container} edges={['top']}>
@@ -41,13 +54,24 @@ export default function ForYouScreen() {
       <View style={forYouStyles.header}>
         <View style={forYouStyles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={forYouStyles.searchIcon} />
-          <TextInput style={forYouStyles.searchInput} placeholder="Search for products..." placeholderTextColor="#999" />
+          <TextInput 
+            style={forYouStyles.searchInput} 
+            placeholder="Search for products..." 
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
           <TouchableOpacity style={forYouStyles.cameraButton}>
             <Ionicons name="camera-outline" size={20} color="#666" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={forYouStyles.searchButton}>
-          <Text style={forYouStyles.searchButtonText}>Search</Text>
+        <TouchableOpacity 
+          style={forYouStyles.searchButton} 
+          onPress={() => searchQuery.trim() && setSearchQuery('')}
+        >
+          <Text style={forYouStyles.searchButtonText}>
+            {searchQuery.trim() ? 'Clear' : 'Search'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -71,6 +95,30 @@ export default function ForYouScreen() {
             ))}
           </ScrollView>
         </View>
+
+        {/* Search Results */}
+        {searchQuery.trim() && filteredMobiles.length > 0 && (
+          <View style={forYouStyles.flashSaleSection}>
+            <View style={forYouStyles.sectionHeader}>
+              <View style={forYouStyles.flashSaleHeader}>
+                <Text style={forYouStyles.flashSaleTitle}>Search Results</Text>
+              </View>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={forYouStyles.productScroll}>
+              {filteredMobiles.slice(0, 2).map((mobile, index) => (
+                <ProductCard
+                  key={mobile._id || index}
+                  image={mobile.image || mobile.images?.[0]}
+                  price={`Rs.${mobile.price}`}
+                  originalPrice={`Rs.${mobile.originalPrice}`}
+                  discount={`-${mobile.discount}%`}
+                  sold={mobile.sold}
+                  onPress={() => router.push(`/mobile/${mobile._id}`)}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
         {/* Trending Mobiles */}
         <View style={forYouStyles.flashSaleSection}>
