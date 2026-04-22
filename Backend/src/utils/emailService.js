@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-const FRONTEND_URL = "http://192.168.18.203:8081";
+import { serverConfig } from '../config/server.js';
+const FRONTEND_URL = process.env.FRONTEND_URL || serverConfig.FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE || "gmail",

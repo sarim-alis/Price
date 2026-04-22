@@ -1,3 +1,5 @@
+import { serverConfig } from '../config/server';
+
 // Brand encoding map (matches transform.py)
 const BRAND_MAP = {
   'apple': 0,
@@ -91,7 +93,7 @@ export async function predictPriceTrend(mobile) {
     const features = transformMobileToModelInput(mobile);
     
     // Flask API URL - update this to your Flask server URL
-    const FLASK_URL = process.env.EXPO_PUBLIC_FLASK_URL || 'http://192.168.18.203:5001';
+    const FLASK_URL = process.env.EXPO_PUBLIC_FLASK_URL || serverConfig.FLASK_URL;
     const url = `${FLASK_URL}/predict`;
     
     console.log('🔮 Prediction Request URL:', url);
